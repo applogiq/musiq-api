@@ -8,7 +8,6 @@ def genre_detail(db: Session,genre):
     genrename =db.query(genres).filter(genres.name == genre.name,genres.is_delete == 0).first()
     a ="GN00"
     if genrename:
-        # return ("genre is already register")
         raise HTTPException(status_code=400, detail="genre is already register")
     while db.query(genres).filter(genres.genre_id == a + genre.name[0:3].upper(),genres.is_delete == 0).first():
         a = "GN0" + str(int(a[-1])+1)
@@ -40,7 +39,6 @@ def genre_update(db: Session,gen_id: int,genre):
     if user_temp1:
         pass
     else:
-        # return {"message":"genre detail doesn't exist"}
         raise HTTPException(status_code=404, detail="genre detail doesn't exist")
 
     if genre.name:
@@ -49,7 +47,6 @@ def genre_update(db: Session,gen_id: int,genre):
 
         tempname = db.query(genres).filter(genres.name ==genre.name,genres.is_delete == 0).first()
         if tempname:
-            # return ("Genre is already register")
             raise HTTPException(status_code=400, detail="genre is already register")
         else:
             user_temp1.name = genre.name
@@ -73,7 +70,6 @@ def genre_delete(db: Session,gen_id):
     if temp:
         pass
     else:
-    #     return {"message":"genre details doesn't exist"}
         raise HTTPException(status_code=404, detail="genre detail doesn't exist")
     temp.is_delete = 1
     db.commit()

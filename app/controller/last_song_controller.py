@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 from fastapi import HTTPException
-from app.model.last_song_model import last_songs
 
+from app.model.last_song_model import last_songs
 from app.model.song_model import songs
-from app.model.album_model import albums
+
 
 
 def user_last_song(db: Session,song):
@@ -32,7 +32,6 @@ def user_last_song(db: Session,song):
 
 def get_last_song(db: Session, user_id: int):
     user = db.query(last_songs).filter(last_songs.id == user_id,last_songs.is_delete == 0).first()
-    # print(str(user.duration)>"5:00:00")
     if user:
         return user
     else:

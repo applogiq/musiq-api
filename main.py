@@ -6,8 +6,8 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 
-from app.model.aura_song_model import aura_songs
-from app.routers import user_routers,song_routers,artist_routers,genre_routers,album_routers,last_song_routers,aura_routers,aura_song_routers
+from app.model.recent_model import recents
+from app.routers import user_routers,song_routers,artist_routers,genre_routers,album_routers,last_song_routers,aura_routers,aura_song_routers,recent_routers,favourite_routers
 from fastapi.openapi.utils import get_openapi
 
 
@@ -47,6 +47,8 @@ app.include_router(album_routers.router)
 app.include_router(last_song_routers.router)
 app.include_router(aura_routers.router)
 app.include_router(aura_song_routers.router)
+app.include_router(recent_routers.router)
+app.include_router(favourite_routers.router)
 
 app.mount("/song", StaticFiles(directory="song"), name="song")
 

@@ -10,6 +10,6 @@ class LastSchema(BaseModel):
             "example":{
                 "user_id" : 220202,
                 "song_id" : "SG001",
-                "paused_timing": "2:00"
+                "paused_timing": "00:02:00"
             }
         }

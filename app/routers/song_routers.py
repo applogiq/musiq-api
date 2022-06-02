@@ -29,22 +29,10 @@ async def upload_song_file(song_id: str,uploaded_file: UploadFile = File(...),db
     song = upload_new_song_file(db,song_id,uploaded_file)
     return song
        
-
-# @router.post("/songs/image/{song_id}",tags=["songs"])
-# async def upload_image_file(song_id: str,uploaded_file: UploadFile = File(...),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-#     song = upload_new_image_file(db,song_id,uploaded_file) 
-#     return song
-
 @router.post("/songs/music-base64/{song_id}",tags=["songs"])
 async def upload_b64_song_file(song_id: str,song: str = Body(...) ,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     song = upload_base64_song_file(db,song_id,song)
     return song 
-
-# @router.post("/songs/image-base64/{song_id}",tags=["songs"])
-# async def upload_b64_img_file(song_id: str,img: str = Body(...) ,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-#     song = upload_base64_song_file(db,song_id,)
-#     return song
-
 
 @router.get("/songs", tags=["songs"])
 async def view_all_song_details(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
@@ -52,7 +40,6 @@ async def view_all_song_details(db: Session = Depends(get_db),skip: int = 0, lim
         users = get_songs(db, skip=skip, limit=limit)
         return {"records": users,"total_records" : len(users),"success":True}
     except:
-        # return {"message": "couldn't fetch","success":False}
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
 @router.get("/songs/{song_id}", tags=["songs"])
@@ -61,27 +48,20 @@ async def view_song_details(song_id: int,db: Session = Depends(get_db),token: st
     if db_user:
         return {"records": db_user,"total_records" : 1,"sucess":True}
     else:
-        # return {"message": "couldn't fetch,check your id","sucess":False}
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
- 
-
-# @router.get("/songs/image/{song_id}", tags=["songs"])
-# async def get_song_images(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-#     temp = get_song_image(db,song_id)
-#     return temp
-
 
 @router.put("/songs/{song_id}", tags=["songs"])
 async def update_song_details(song_id: int,song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     temp = song_update(db,song_id,song)
     return temp
 
-
 @router.delete("/song/{song_id}", tags=["songs"])
 async def delete_song(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     song = delete_song_details(db,song_id)
     return song
     
+
+#########------- AUDIO STREAMING ---------#########
 
 @router.get("/audio",tags=["songs"])
 def stream_audio(song_id: str,request: Request,db: Session = Depends(get_db)):
@@ -93,9 +73,10 @@ def stream_audio(song_id: str,request: Request,db: Session = Depends(get_db)):
         else:
             alphabet = "Mis" 
         file_location = f"song/tamil/{alphabet}/{temp.name}/songs/{user_temp.song_name}.wav"
-        # filename = "music/song_files/song"+user_temp.song_name+".wav"
         return range_requests_response(
             request, file_path=file_location, content_type="audio/wav"
         )
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False}) 
+
+#########------- AUDIO STREAMING ---------#########

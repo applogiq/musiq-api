@@ -7,17 +7,15 @@ from fastapi import HTTPException
 import os
 from app.model.song_model import songs
 
-def artist_detail(db: Session,artists):
+def artist_detail(db: Session,artists,keyword):
     artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == 0).first()
     a ="AR00"
     if artistname:
-        # return ("Artist is already register")
         raise HTTPException(status_code=400, detail="Artist is already register")
-    while db.query(artist).filter(artist.artist_id == a + artists.name[0:3].upper(),artist.is_delete == 0).first():
-        # return(True)
+    while db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
         a = "AR0" + str(int(a[-1])+1)
     db_user = artist(name = artists.name,
-                    artist_id = a+artists.name[0:3].upper(),
+                    artist_id = a+keyword.upper(),
                     is_image = 0,
                     is_delete = 0,
                     created_by = 1,
@@ -56,7 +54,6 @@ def upload_base64_art_file(db: Session,artist_id: int,img):
         db.commit()
         return {"info": f"file '{filename1}' saved at '{file_location}'"}
     else:
-        #  return {'message': "song details doesn't exist"},{"info": "check your details"}
         raise HTTPException(status_code=404, detail="artist details doesn't exist")
 
 
@@ -81,64 +78,45 @@ def artist_song(db: Session, art_id: int):
         return s
     except:
         raise HTTPException(status_code=404, detail="artist detail doesn't exist")
-            # artists = db.query(songs).filter(songs[i].artist_id["artist"] == art_id,songs.is_delete == 0).first()
-        # return artist
-
-def artist_update(db: Session,art_id: int,artists):
+        
+def artist_update(db: Session,art_id: int,artists,keyword):
     user_temp1 = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0).first()
     if user_temp1:
-        pass
+        a ="AR00"
+        if artists.name:
+            tempname = db.query(artist).filter(artist.name ==artists.name,artist.is_delete == 0).first()
+            if tempname:
+                raise HTTPException(status_code=400, detail="Artist is already register")
+            else:
+                user_temp1.name = artists.name
+        if keyword:
+            if db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
+                a = "AR0" + str(int(a[-1])+1)
+                user_temp1.artist_id = a + keyword.upper()
+            else: 
+                user_temp1.artist_id = a +keyword.upper()
+        user_temp1.is_active = 1 
+        user_temp1.is_delete = 0
+        user_temp1.created_by = 1
+        user_temp1.updated_at = datetime.now()
+        user_temp1.updated_by = 1
+
+        db.commit()
+
+        return {'message': "data updated"}
+
     else:
-        # return {"message":"artist detail doesn't exist"}
         raise HTTPException(status_code=404, detail="artist detail doesn't exist")
 
-    if artists.name:
-        a ="AR00"
-       
-        a = "AR0" + str(int(a[-1])+1)
-        tempname = db.query(artist).filter(artist.name ==artists.name,artist.is_delete == 0).first()
-        if tempname:
-            # return ("Artist is already register")
-            raise HTTPException(status_code=400, detail="Artist is already register")
-        else:
-            user_temp1.name = artists.name
-            if db.query(artist).filter(artist.artist_id == a + artists.name[0:3].upper(),artist.is_delete == 0).first():
-                a = "AR0" + str(int(a[-1])+1)
-                user_temp1.artist_id = a + artists.name[0:3].upper()
-            else: 
-                user_temp1.artist_id = a +artists.name[0:3].upper()
-    user_temp1.is_active = 1 
-    user_temp1.is_delete = 0
-    user_temp1.created_by = 1
-    user_temp1.updated_at = datetime.now()
-    user_temp1.updated_by = 1
-
-    db.commit()
-
-    return {'message': "data updated"}
-
-def artist_delete(db: Session,art_id):
-    user_temp = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0).first()
-    if user_temp:
-        pass
-    else:
-        # return {"message":"artist details doesn't exist"}
-        raise HTTPException(status_code=404, detail="artist details doesn't exist")
-    user_temp.is_delete = 1
-    db.commit()
-    return {"message":"Deleted"}
-
+    
 def get_image(db: Session,art_id):
     temp = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0).first()
     if temp:
         user_temp = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0,artist.is_image == 1).first()
         if user_temp:
-            # filename = f"music/artist_images/{user_temp.artist_id}.png"
-            # print(filename)
             link = f"http://127.0.0.1:8000/song/artists/{user_temp.artist_id}.png"
             return link
         else:
-            # return {"message":"Image doesn't exist for this id"}
             raise HTTPException(status_code=404, detail="Image doesn't exist for this id")
     else:
         raise HTTPException(status_code=404, detail="check your id")
@@ -155,3 +133,13 @@ def delete_image(db: Session,art_id: int):
         return {'message': "artist image removed"}
     else:
         return {'message': "Check your id"}
+
+def artist_delete(db: Session,art_id):
+    user_temp = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0).first()
+    if user_temp:
+        user_temp.is_delete = 1
+        db.commit()
+        return {"message":"Deleted"}
+    else:
+        raise HTTPException(status_code=404, detail="artist details doesn't exist")
+

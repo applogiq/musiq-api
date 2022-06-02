@@ -9,6 +9,7 @@ import base64
 
 from app.model.artist_model import artist
 from app.model.last_song_model import last_songs
+from app.model.recent_model import recents
 from app.model.user_model import users
 from app.model.user_model import token
 from app.auth.auth_handler import create_refresh_token,create_token, decodeJWT
@@ -29,33 +30,27 @@ def update_tokens(db: Session, email,access_token, refresh_token):
     db.commit()
 
 def password_check(passwd):  
-    SpecialSym =['$', '@', '#', '%']
+    SpecialSym =['$', '@', '#', '%','!']
     val = True  
     if len(passwd) < 6:
         val == False
-        #  return('length should be at least 6')
         raise HTTPException(status_code=422, detail='length should be at least 6')    
     if len(passwd) > 20:
         val = False
-        # return('length should be not be greater than 8')
         raise HTTPException(status_code=422, detail='length should be not be greater than 8')      
     if not any(char.isdigit() for char in passwd):
         val = False
-        # return('Password should have at least one numeral') 
         raise HTTPException(status_code=422, detail='Password should have at least one numeral')      
     if not any(char.isupper() for char in passwd):
-        val = False
-        # return('Password should have at least one uppercase letter') 
+        val = False 
         raise HTTPException(status_code=422, detail='Password should have at least one uppercase letter')     
     if not any(char.islower() for char in passwd):
         val = False
-        # return('Password should have at least one lowercase letter') 
         raise HTTPException(status_code=422, detail='Password should have at least one lowercase letter')
 
     if not any(char in SpecialSym for char in passwd):
         val = False
-        # return('Password should have at least one of the symbols $@#')
-        raise HTTPException(status_code=422, detail='Password should have at least one of the symbols $@#')
+        raise HTTPException(status_code=422, detail='Password should have at least one of the symbols $@#!%')
     return val
 
 def email_check(email):
@@ -83,25 +78,18 @@ def register_user(db: Session,user,response):
         return("Invalid Password !!"),(password_check(user.password))
     user_name =db.query(users).filter(users.username == user.username,users.is_delete == 0).first()
     if user_name:
-        # return ("Username already exist")
         raise HTTPException(status_code=400, detail="Username already exist")
     else:
         pass
     user_temp = db.query(users).filter(users.email == user.email,users.is_delete==0).first()
     if user_temp:
-        # return("Email Already Register")
         raise HTTPException(status_code=400, detail="Email Already Register")
     else:
         a = 202201
         while db.query(users).filter(users.register_id == a).first():
             a = a+1
-        # if len(user_temp.preference) > 1:
-        
-        # for i in range(0,len(user_temp.preference["artist"])):
-        #     user_temp = db.query(artist).filter(artist.id == user.preference["artist"][i],users.is_delete==0).first()
-        #     num = user_temp.followers 
-        #     user_temp.followers = num+1
         db_last_song = last_songs(user_id=a,is_active =1,is_delete=0,created_by=1,updated_by=0)
+        db_recent = recents(user_id=a,song_id ={"songs":[]}, is_active =1,is_delete=0,created_by=1,updated_by=0)
         db_user = users(username = user.username,
                         register_id = a,
                         fullname = user.fullname,
@@ -117,15 +105,11 @@ def register_user(db: Session,user,response):
         refresh_token = create_refresh_token(user.email)
         refresh_token_str = refresh_token.decode('UTF-8')
         db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
         db_token = token(email = user.email, access_token=access_token_str, refresh_token = refresh_token_str)
         db.add(db_token)
-        db.commit()
-        db.refresh(db_token)
         db.add(db_last_song)
+        db.add(db_recent)
         db.commit()
-        db.refresh(db_last_song)
         response.status_code = status.HTTP_201_CREATED
         return {'message': "data added"},{"access_token": access_token, "refresh_token": refresh_token}
 
@@ -138,16 +122,12 @@ def login_user(db:Session,user):
         refresh_token_str = refresh_token.decode('UTF-8')
         add =update_tokens(db,user.email,access_token_str,refresh_token_str)
         return {"access_token": access_token, "refresh_token": refresh_token},user
-    # return{
-    #     "error": "Wrong login details"
-    # }
     raise HTTPException(status_code=404, detail="Wrong login details")
 
 def follower_details(db:Session,user):
-    # try:
-    temp = db.query(users).filter(users.register_id == user.user_id).first()
+    temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==0).first()
     if temp:
-        art = db.query(artist).filter(artist.artist_id == user.artist_id).first()
+        art = db.query(artist).filter(artist.artist_id == user.artist_id,artist.is_delete==0).first()
         if art:
             num = art.followers
             if num:
@@ -178,18 +158,6 @@ def follower_details(db:Session,user):
         raise HTTPException(status_code=400, detail="Check your user id")
     db.commit()
     return {'message': "Success"}
-    # except:
-    #     raise HTTPException(status_code=400, detail="Check your details")
-
-# def add_follower(artist_id,temp):
-#     s = temp.preference["artist"]
-#     s.append(artist_id)
-#     t = {"artist": s}
-#     print(t)
-#     return t
-
-
-
 
 
 def token_refresh(db:Session,user):
@@ -203,7 +171,6 @@ def token_refresh(db:Session,user):
         add =update_tokens(db,user.email,access_token_str,refresh_token_str)
         return {"access_token": new_access_token, "refresh_token": new_refresh_token}
     else:
-        # return {"message":"check your token!!"}
         raise HTTPException(status_code=404, detail="check your token!!")
 
 
@@ -266,15 +233,17 @@ def user_update(db: Session,user_id,user):
 
 def user_delete(db:Session,user_id):
     user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0).first()
-    last_song = db.query(last_songs).filter(last_songs.user_id == user_temp.register_id,last_songs.is_delete == 0).first() 
     if user_temp:
-        pass
+        last_song = db.query(last_songs).filter(last_songs.user_id == user_temp.register_id,last_songs.is_delete == 0).first() 
+        recent_song = db.query(recents).filter(recents.user_id == user_temp.register_id,recents.is_delete == 0).first()
+        user_temp.is_delete = 1
+        last_song.is_delete = 1
+        recent_song.is_delete = 1
+        db.commit()
+        return {"message":"Deleted"}
     else:
         raise HTTPException(status_code=404, detail="user doesn't exist")
-    user_temp.is_delete = 1
-    last_song.is_delete = 1
-    db.commit()
-    return {"message":"Deleted"}
+    
 
 def upload_new_profile(db: Session,user_id: int,uploaded_file):
     user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0).first()
@@ -291,7 +260,7 @@ def upload_new_profile(db: Session,user_id: int,uploaded_file):
         return {'message': "user details doesn't exist"}
 
 def upload_base64_profile(db: Session,user_id: int,img):
-    user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0,users.is_image==1).first()
+    user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0).first()
     if user_temp:
         s = base64.b64decode(img)
         filename1 = str(user_temp.register_id)+".png"
