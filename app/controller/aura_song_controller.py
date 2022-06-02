@@ -1,9 +1,6 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
-import shutil
-import base64
 from fastapi import HTTPException
-import os
 
 from app.model.song_model import songs
 from app.model.aura_model import aura

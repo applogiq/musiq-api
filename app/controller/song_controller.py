@@ -16,7 +16,6 @@ def song_detail(db: Session, song = SongSchema):
     user_name =db.query(songs).filter(songs.song_name == song.song_name,songs.is_delete == 0).first()
     if user_name:
         if (user_name.artist_id["artist"])== (song.artist_id["artist"]):
-            # return ("This song alreay exist")
             raise HTTPException(status_code=400, detail="This song alreay exist")
         else:
             pass
@@ -45,7 +44,6 @@ def song_detail(db: Session, song = SongSchema):
 
 def get_song(db: Session, song_id: int):
     user = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0).first()
-    # print(str(user.duration)>"5:00:00")
     if user:
         return user
     else:
@@ -61,13 +59,10 @@ def song_update(db: Session,song_id: int,song):
         if song.song_name:
             songname =db.query(songs).filter(songs.song_name == song.song_name,songs.is_delete == 0).first()
             if songname:
-                print(222222)
                 if (songname.artist_id["artist"])== (song.artist_id["artist"]):
-                    # return ("This song already exist")
                     raise HTTPException(status_code=400, detail="This song alreay exist")
                 else:
                     pass
-            print(111111111)
             songname1 =db.query(songs).filter(songs.song_name == user_temp1.song_name,songs.is_delete == 0,songs.is_music==1).first() 
             if songname1:  
                 temp = db.query(albums).filter(albums.album_id == songname1.album_id,albums.is_delete == 0).first()
@@ -75,9 +70,9 @@ def song_update(db: Session,song_id: int,song):
                     alphabet = temp.name[0].upper()
                 else:
                     alphabet = "Mis" 
-                demo = f"song/tamil/{alphabet}/{temp.name}/songs/{songname1.song_name}.wav"
+                demo = f"public/music/tamil/{alphabet}/{temp.name}/songs/{songname1.song_name}.wav"
                 print(demo)
-                dest1 = f"song/tamil/{alphabet}/{temp.name}/songs/{song.song_name}.wav"
+                dest1 = f"public/music/tamil/{alphabet}/{temp.name}/songs/{song.song_name}.wav"
                 print(dest1)
                 if os.path.exists(demo):
                     os.rename(demo,dest1)
@@ -112,7 +107,6 @@ def song_update(db: Session,song_id: int,song):
 
         return {'message': "data updated"}
     else:
-        # return {"message":"song detail doesn't exist"}
         raise HTTPException(status_code=404, detail="song detail doesn't exist")
    
 
@@ -121,13 +115,10 @@ def upload_new_song_file(db: Session,song_id: int,uploaded_file):
     if user_temp: 
         user_temp2 = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0,songs.is_music==1).first()
         if user_temp2:
-            # return {'message': "song is already uploaded for this id"}
             raise HTTPException(status_code=400, detail="song is already uploaded for this id")
         else:
             pass
-        # temp = uploaded_file.filename  
-        # s = temp.split('.')
-
+     
         filename1 = user_temp.song_name +"."+"wav"
 
         temp = db.query(albums).filter(albums.album_id == user_temp.album_id,albums.is_delete == 0).first()
@@ -139,7 +130,7 @@ def upload_new_song_file(db: Session,song_id: int,uploaded_file):
             else:
                 alphabet = "Mis"
 
-            file_location = f"song/tamil/{alphabet}/{name}/songs"
+            file_location = f"public/music/tamil/{alphabet}/{name}/songs"
 
             if os.path.exists(file_location):
                 pass    
@@ -151,44 +142,18 @@ def upload_new_song_file(db: Session,song_id: int,uploaded_file):
                 shutil.copyfileobj(uploaded_file.file, file_object)
             temp.no_of_songs = s+1        
         else:
-            # return {'message': "Couldn't fetch album details.Check your album ID"}
             raise HTTPException(status_code=404, detail="Couldn't fetch album details.Check your album ID")
 
         user_temp.is_music = 1
         db.commit()
         return {"info": f"file '{filename1}' saved at '{file_location2}'"}
     else:
-        # return {'message': "song details doesn't exist"}
         raise HTTPException(status_code=404, detail="song details doesn't exist")
-
-
-# def upload_new_image_file(db: Session,song_id: int,uploaded_file):
-#     user_temp = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0).first()
-#     if user_temp: 
-#         user_temp2 = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0,songs.is_image==1).first()
-#         if user_temp2:
-#             return {'message': "image is already uploaded for this id"}
-#         else:
-#             pass
-#         temp = uploaded_file.filename  
-#         s = temp.split('.')
-#         filename1 = "img"+ song_id +"."+"png"
-#         file_location = f"music/song_images/{filename1}"
-#         with open(file_location, "wb+") as file_object:
-#             shutil.copyfileobj(uploaded_file.file, file_object)  
-
-#         user_temp.image_id = "img"+ song_id 
-#         user_temp.is_image = 1
-#         db.commit()
-#         return {"info": f"file '{filename1}' saved at '{file_location}'"}
-#     else:
-#         return {'message': "song details doesn't exist"}
 
 
 def upload_base64_song_file(db: Session,song_id: int,song):
     user_temp = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0,songs.is_music==1).first()
     if user_temp:
-        # return {'message': "song is already uploaded for this id"}
         raise HTTPException(status_code=400, detail="song is already uploaded for this id")
     else:
         user = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0).first()
@@ -201,7 +166,7 @@ def upload_base64_song_file(db: Session,song_id: int,song):
                 alphabet = temp.name[0].upper()
             else:
                 alphabet = "Mis"
-            file_location = f"song/tamil/{alphabet}/{temp.name}/songs"
+            file_location = f"public/music/tamil/{alphabet}/{temp.name}/songs"
             if os.path.exists(file_location):
                 pass    
             else:
@@ -211,61 +176,21 @@ def upload_base64_song_file(db: Session,song_id: int,song):
                 f.write(s)
 
             temp.no_of_songs = num+1
-
-            # filename1 = user.song_name +".wav"
-            # file_location = f"music/song_files/{filename1}" 
-            # with open(file_location, 'wb') as f:
-            #     f.write(s)
-            
-    
             user.is_music = 1
             db.commit()
             return  {'message': "decoded"},{"info": f"file '{filename1}' saved at '{file_location2}'"}
         else:
-            # return {'message': "song details doesn't exist"}
             raise HTTPException(status_code=404, detail="song details doesn't exist")
-
-# def upload_base64_image_file(db: Session,song_id: int,img):
-#     user_temp = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0,songs.is_image==1).first()
-#     if user_temp:
-#         return {'message': "image is already uploaded for this id"}
-#     else:
-#         user = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0).first()
-#         if user:
-#             s = base64.b64decode(img)
-#             filename1 = "img"+ song_id +".png"
-#             file_location = f"music/song_images/{filename1}" 
-#             with open(file_location, 'wb') as f:
-#                 f.write(s)
-            
-#             user.image_id = "img"+ song_id 
-#             user.is_image = 1
-#             db.commit()
-#             return  {'message': "decoded"},{"info": f"file '{filename1}' saved at '{file_location}'"}
-#         else:
-#              return {'message': "song details doesn't exist"},{"info": "check your details"}
 
 def delete_song_details(db: Session,song_id):
     user_temp = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0).first()
     if user_temp:
         pass
     else:
-        # return {"message":"song doesn't exist"}
         raise HTTPException(status_code=404, detail="song details doesn't exist")
     user_temp.is_delete = 1
     db.commit()
     return {"message":"Deleted"}
-
-# def get_song_image(db: Session,song_id):
-#     user_temp = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0,songs.is_image == 1).first()
-#     if user_temp:
-#         filename = f"music/song_file/{user_temp.artist_id}.png"
-#         link = f"http://127.0.0.1:8000/music/song_images/{user_temp.image_id}.png"
-#         return link
-#     else:
-#         return {"message":"Image doesn't exist for this id"}
-
-
 
 
 ####### AUDIO STREAMING ########

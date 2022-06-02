@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Dict,Optional
+from typing import Dict,Optional,List
 
 
 class UserSchema(BaseModel):
@@ -61,3 +61,33 @@ class FollowerSchema(BaseModel):
                 "follow": 0
             }
         }
+
+class UserresponseSchema(UserSchema):
+    id: int = Field(...)
+    register_id: int = Field(...)
+    # username : str = Field(...)
+    # fullname : str = Field(...)
+    # email: str = Field(...)
+    # password: str = Field(...)
+    preference: dict = Field(...)
+    # is_image: int = Field(...)
+
+    class Config:
+        orm_mode = True
+
+class ResponseSchema(BaseModel):
+    records: List[UserresponseSchema] = []
+    totalrecords: int
+    success: bool
+    class Config:
+        orm_mode = True
+
+class ResponseuserSchema(BaseModel):
+    records: UserresponseSchema
+    totalrecords: int
+    success: bool
+    class Config:
+        orm_mode = True
+
+
+

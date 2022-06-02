@@ -12,7 +12,6 @@ def album_detail(db: Session,album,keyword):
     albumname =db.query(albums).filter(albums.name == album.name,albums.is_delete == 0).first()
     a ="AL00"
     if albumname:
-        # return ("Album is already register")
         raise HTTPException(status_code=400, detail="Album is already register")
 
     while db.query(albums).filter(albums.album_id == a + keyword.upper(),albums.is_delete == 0).first():
@@ -29,14 +28,12 @@ def album_detail(db: Session,album,keyword):
                     updated_by = 0,
                     is_active = 1)
 
-    # path = "song/tamil" 
-
     if album.name[0].isalpha():
         alphabet = album.name[0].upper()
     else:
         alphabet = "Mis"
 
-    path1 = f"song/tamil/{alphabet}/{album.name}"
+    path1 = f"public/music/tamil/{alphabet}/{album.name}"
 
     if os.path.exists(path1):
         pass
@@ -64,7 +61,6 @@ def album_update(db: Session,album_id: int,album,keyword):
     if user_temp1:
         pass
     else:
-        # return {"message":"album detail doesn't exist"}
         raise HTTPException(status_code=404, detail="album detail doesn't exist")
 
     if album.name:
@@ -77,8 +73,8 @@ def album_update(db: Session,album_id: int,album,keyword):
         else:
             alphabet1 = "Mis"
    
-        source = f"song/tamil/{alphabet}/{user_temp1.name}"
-        dest = f"song/tamil/{alphabet1}/{album.name}"
+        source = f"public/music/tamil/{alphabet}/{user_temp1.name}"
+        dest = f"public/music/tamil/{alphabet1}/{album.name}"
 
         if os.path.exists(source):
             os.rename(source, dest)    
@@ -87,8 +83,8 @@ def album_update(db: Session,album_id: int,album,keyword):
 
         temp = db.query(albums).filter(albums.id == album_id,albums.is_delete == 0,albums.is_image==1).first()
         if temp:
-            demo = f"song/tamil/{alphabet1}/{album.name}/image/{user_temp1.name}.png"
-            dest1 = f"song/tamil/{alphabet1}/{album.name}/image/{album.name}.png"
+            demo = f"public/music/tamil/{alphabet1}/{album.name}/image/{user_temp1.name}.png"
+            dest1 = f"public/music/tamil/{alphabet1}/{album.name}/image/{album.name}.png"
             if os.path.exists(demo):
                 os.rename(demo,dest1)
             else:
@@ -97,7 +93,6 @@ def album_update(db: Session,album_id: int,album,keyword):
             pass
         tempname = db.query(albums).filter(albums.name ==album.name,albums.is_delete == 0).first()
         if tempname:
-            # return ("album is already register")
             raise HTTPException(status_code=400, detail="album is already register")
         else:
             user_temp1.name = album.name
@@ -138,14 +133,12 @@ def album_delete(db: Session,album_id):
     if temp:
         pass
     else:
-        # return {"message":"genre details doesn't exist"}
         raise HTTPException(status_code=404, detail="album details doesn't exist")
     temp.is_delete = 1
     db.commit()
     return {"message":"Deleted"}
 
 def upload_new_image_file(db: Session,album_id: int,uploaded_file):
-
     user_temp = db.query(albums).filter(albums.id == album_id,albums.is_delete == 0).first()
     if user_temp:
         filename1 = user_temp.name +"."+"png"
@@ -153,7 +146,7 @@ def upload_new_image_file(db: Session,album_id: int,uploaded_file):
             alphabet = user_temp.name[0].upper()
         else:
             alphabet = "Mis"
-        file_location = f"song/tamil/{alphabet}/{user_temp.name}/image"
+        file_location = f"public/music/tamil/{alphabet}/{user_temp.name}/image"
         if os.path.exists(file_location):
             pass    
         else:
@@ -177,7 +170,7 @@ def upload_base64_image_file(db: Session,album_id: int,img):
             alphabet = user_temp.name[0].upper()
         else:
             alphabet = "Mis"
-        file_location = f"song/tamil/{alphabet}/{user_temp.name}/image"
+        file_location = f"public/music/tamil/{alphabet}/{user_temp.name}/image"
         if os.path.exists(file_location):
             pass    
         else:
@@ -190,7 +183,6 @@ def upload_base64_image_file(db: Session,album_id: int,img):
         db.commit()
         return  {'message': "decoded"},{"info": f"file '{filename1}' saved at '{file_location2}'"}
     else:
-        #  return {'message': "song details doesn't exist"},{"info": "check your details"}
         raise HTTPException(status_code=404, detail="album details doesn't exist")
 
 
@@ -199,18 +191,14 @@ def get_album_image(db: Session,album_id):
     if temp:
         user_temp = db.query(albums).filter(albums.id == album_id,albums.is_delete == 0,albums.is_image == 1).first()
         if user_temp:
-            # temp = db.query(albums).filter(albums.album_id == user_temp.album_id,albums.is_delete == 0).first()
             if user_temp.name[0].isalpha():
                 alphabet = user_temp.name[0].upper()
             else:
                 alphabet = "Mis" 
-            file_location = f"song/tamil/{alphabet}/{user_temp.name}/image/{user_temp.name}.png"
-            # filename = f"music/song_file/{user_temp.artist_id}.png"
-            # filename = f"tamil/{user_temp.name}/image/{user_temp.name}.png"
+            file_location = f"public/music/tamil/{alphabet}/{user_temp.name}/image/{user_temp.name}.png"
             link = f"http://127.0.0.1:8000/{file_location}"
             return link
         else:
-            # return {"message":"Image doesn't exist for this id"}
             raise HTTPException(status_code=404, detail="Image doesn't exist for this id")
     else:
         raise HTTPException(status_code=404, detail="check your id")
@@ -220,15 +208,13 @@ def delete_album_image(db: Session,album_id: int):
     user_temp = db.query(albums).filter(albums.id == album_id,albums.is_delete == 0,albums.is_image == 1).first()
     if user_temp:
         if user_temp:
-            # temp = db.query(albums).filter(albums.album_id == user_temp.album_id,albums.is_delete == 0).first()
             if user_temp.name[0].isalpha():
                 alphabet = user_temp.name[0].upper()
             else:
                 alphabet = "Mis" 
         user_temp.is_image = 0
 
-        # file = str(user_temp.register_id)+".png"
-        path =f"song/tamil/{alphabet}/{user_temp.name}/image/{user_temp.name}.png"
+        path =f"public/music/tamil/{alphabet}/{user_temp.name}/image/{user_temp.name}.png"
         os.remove(path)
         db.commit()
         return {'message': "album image removed"}

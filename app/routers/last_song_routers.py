@@ -1,13 +1,12 @@
-from fastapi import APIRouter, Depends,Body,UploadFile,File,Request,HTTPException
-import os
-from app.controller.last_song_controller import get_last_song, get_last_songs, user_last_song
-from app.model.album_model import albums
+from fastapi import APIRouter, Depends,HTTPException
 
-from app.schema.last_song_schema import LastSchema
-from app.model.last_song_model import last_songs
 from app.auth.auth_bearer import JWTBearer
 from app.controller.user_controller import get_db
 from sqlalchemy.orm import Session
+from app.schema.last_song_schema import LastSchema
+from app.controller.last_song_controller import get_last_song, get_last_songs, user_last_song
+
+
 
 router = APIRouter()
 

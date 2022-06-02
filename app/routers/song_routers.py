@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends,Body,UploadFile,File,Request,HTTPExceptio
 import os
 from app.model.album_model import albums
 
-from app.schema.song_schema import SongSchema
+from app.schema.song_schema import SongSchema,SongresponseSchema,AllresponseSchema
 from app.model.song_model import songs
 from app.auth.auth_bearer import JWTBearer
 from app.controller.user_controller import get_db

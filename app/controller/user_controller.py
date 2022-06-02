@@ -6,7 +6,9 @@ from datetime import datetime
 import os
 import shutil
 import base64
+from typing import List
 
+from app.schema.user_schema import UserresponseSchema
 from app.model.artist_model import artist
 from app.model.last_song_model import last_songs
 from app.model.recent_model import recents
@@ -88,8 +90,6 @@ def register_user(db: Session,user,response):
         a = 202201
         while db.query(users).filter(users.register_id == a).first():
             a = a+1
-        db_last_song = last_songs(user_id=a,is_active =1,is_delete=0,created_by=1,updated_by=0)
-        db_recent = recents(user_id=a,song_id ={"songs":[]}, is_active =1,is_delete=0,created_by=1,updated_by=0)
         db_user = users(username = user.username,
                         register_id = a,
                         fullname = user.fullname,
@@ -105,9 +105,12 @@ def register_user(db: Session,user,response):
         refresh_token = create_refresh_token(user.email)
         refresh_token_str = refresh_token.decode('UTF-8')
         db.add(db_user)
+        db.commit()
         db_token = token(email = user.email, access_token=access_token_str, refresh_token = refresh_token_str)
         db.add(db_token)
+        db_last_song = last_songs(user_id=a,is_active =1,is_delete=0,created_by=1,updated_by=0)
         db.add(db_last_song)
+        db_recent = recents(user_id=a,song_id ={"songs":[]}, is_active =1,is_delete=0,created_by=1,updated_by=0)
         db.add(db_recent)
         db.commit()
         response.status_code = status.HTTP_201_CREATED
@@ -249,7 +252,7 @@ def upload_new_profile(db: Session,user_id: int,uploaded_file):
     user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0).first()
     if user_temp: 
         filename1 = str(user_temp.register_id) +"."+"png"
-        file_location = f"song/users/{filename1}"
+        file_location = f"public/users/{filename1}"
         with open(file_location, "wb+") as file_object:
             shutil.copyfileobj(uploaded_file.file, file_object)  
 
@@ -264,7 +267,7 @@ def upload_base64_profile(db: Session,user_id: int,img):
     if user_temp:
         s = base64.b64decode(img)
         filename1 = str(user_temp.register_id)+".png"
-        file_location = f"song/users/{filename1}"
+        file_location = f"public/users/{filename1}"
         with open(file_location, "wb+") as f:
             f.write(s)  
 
@@ -282,7 +285,7 @@ def delete_profile(db: Session,user_id: int):
         user_temp.is_image = 0
 
         file = str(user_temp.register_id)+".png"
-        path = f"song/users/{file}"
+        path = f"public/users/{file}"
         os.remove(path)
         db.commit()
         return {'message': "profile image removed"}
@@ -295,7 +298,7 @@ def get_profile(db: Session,user_id):
         user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0,users.is_image == 1).first()
         if user_temp:
             filename = str(user_temp.register_id)
-            link = f"http://127.0.0.1:8000/song/users/{filename}.png"
+            link = f"http://127.0.0.1:8000/public/users/{filename}.png"
             return link
         else:
             raise HTTPException(status_code=404, detail="Image doesn't exist for this id")

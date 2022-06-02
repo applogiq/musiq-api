@@ -32,7 +32,7 @@ def upload_aura_image_file(db: Session,aura_id: int,uploaded_file):
     user_temp = db.query(aura).filter(aura.id == aura_id,aura.is_delete == 0).first()
     if user_temp: 
         filename1 = user_temp.aura_id+".png"
-        file_location = f"song/aura/{filename1}"
+        file_location = f"public/aura/{filename1}"
         with open(file_location, "wb+") as file_object:
             shutil.copyfileobj(uploaded_file.file, file_object)  
 
@@ -72,12 +72,9 @@ def get_aura_image(db: Session,aura_id):
     if temp:
         user_temp = db.query(aura).filter(aura.id == aura_id,aura.is_delete == 0,aura.is_image == 1).first()
         if user_temp:
-            # filename = f"music/aura_images/{user_temp.aura_id}.png"
-            # print(filename)
-            link = f"http://127.0.0.1:8000/song/aura/{user_temp.aura_id}.png"
+            link = f"http://127.0.0.1:8000/public/aura/{user_temp.aura_id}.png"
             return link
         else:
-            # return {"message":"Image doesn't exist for this id"}
             raise HTTPException(status_code=404, detail="Image doesn't exist for this id")
     else:
         raise HTTPException(status_code=404, detail="check your id")
@@ -105,7 +102,6 @@ def aura_delete(db: Session,aura_id):
         db.commit()
         return {"message":"Deleted"}
     else:
-        # return {"message":"aura details doesn't exist"}
         raise HTTPException(status_code=404, detail="aura details doesn't exist")
     
 
@@ -115,7 +111,7 @@ def delete_aura_image(db: Session,aura_id: int):
         user_temp.is_image = 0
 
         file = user_temp.aura_id+".png"
-        path = f"song/aura/{file}"
+        path = f"public/aura/{file}"
         os.remove(path)
         db.commit()
         return {'message': "aura image removed"}
@@ -123,19 +119,5 @@ def delete_aura_image(db: Session,aura_id: int):
         return {'message': "Check your id"}
 
 
-def aura_update(db,aura_id,auras):
-    user_temp = db.query(aura).filter(aura.id == aura_id,aura.is_delete == 0).first()
-    if user_temp:
-        if auras.aura_id:
-            user_temp.aura_id = auras.aura_id
-        if auras.song_id:
-            user_temp.song_id = auras.song_id
-        
-        user_temp.updated_by = 1
-        user_temp.updated_at = datetime.now()
-        db.commit()
-        return {'message': "data updated"}
-    else:
-        return {'message': "Check your id"}
 
     

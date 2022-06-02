@@ -8,7 +8,7 @@ from app.model.song_model import songs
 
 
 def user_last_song(db: Session,song):
-    user_temp = db.query(last_songs).filter(last_songs.user_id == song.user_id,songs.is_delete == 0).first()
+    user_temp = db.query(last_songs).filter(last_songs.user_id == song.user_id,last_songs.is_delete == 0).first()
     if user_temp:
         song_temp = db.query(songs).filter(songs.song_id == song.song_id,songs.is_delete == 0).first()
         user_temp.song_id = song.song_id
@@ -31,7 +31,7 @@ def user_last_song(db: Session,song):
 
 
 def get_last_song(db: Session, user_id: int):
-    user = db.query(last_songs).filter(last_songs.id == user_id,last_songs.is_delete == 0).first()
+    user = db.query(last_songs).filter(last_songs.user_id == user_id).first()
     if user:
         return user
     else:

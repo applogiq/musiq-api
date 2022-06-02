@@ -31,7 +31,7 @@ def upload_art_image_file(db: Session,art_id: int,uploaded_file):
     user_temp = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0).first()
     if user_temp: 
         filename1 = user_temp.artist_id+".png"
-        file_location = f"song/artists/{filename1}"
+        file_location = f"public/artists/{filename1}"
         with open(file_location, "wb+") as file_object:
             shutil.copyfileobj(uploaded_file.file, file_object)  
 
@@ -46,7 +46,7 @@ def upload_base64_art_file(db: Session,artist_id: int,img):
     if user:
         s = base64.b64decode(img)
         filename1 = user.artist_id+".png"
-        file_location = f"song/artists/{filename1}"
+        file_location = f"public/artists/{filename1}"
         with open(file_location, "wb+") as f:
             f.write(s)  
 
@@ -114,7 +114,7 @@ def get_image(db: Session,art_id):
     if temp:
         user_temp = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0,artist.is_image == 1).first()
         if user_temp:
-            link = f"http://127.0.0.1:8000/song/artists/{user_temp.artist_id}.png"
+            link = f"http://127.0.0.1:8000/public/artists/{user_temp.artist_id}.png"
             return link
         else:
             raise HTTPException(status_code=404, detail="Image doesn't exist for this id")
@@ -127,7 +127,7 @@ def delete_image(db: Session,art_id: int):
         user_temp.is_image = 0
 
         file = user_temp.artist_id+".png"
-        path = f"song/artists/{file}"
+        path = f"public/artists/{file}"
         os.remove(path)
         db.commit()
         return {'message': "artist image removed"}

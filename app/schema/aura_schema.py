@@ -11,13 +11,3 @@ class AuraSchema(BaseModel):
             }
         }
 
-class AurasongSchema(BaseModel):
-    name : str = Field(...)
-    song: list 
-    class Config:
-        schema_extra = {
-            "example":{
-                "aura_id" : "AUR001",
-                "songs" : ["SG001","SG002","SG003"]
-            }
-        }

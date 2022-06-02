@@ -50,7 +50,7 @@ app.include_router(aura_song_routers.router)
 app.include_router(recent_routers.router)
 app.include_router(favourite_routers.router)
 
-app.mount("/song", StaticFiles(directory="song"), name="song")
+app.mount("/public", StaticFiles(directory="public"), name="public")
 
 app.add_middleware(
     CORSMiddleware, 

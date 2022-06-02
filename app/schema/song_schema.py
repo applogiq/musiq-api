@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Dict,Optional
+from typing import Dict,Optional,List
 # from datetime import time,date
 
 class SongSchema(BaseModel):
@@ -13,6 +13,7 @@ class SongSchema(BaseModel):
     song_size : str
     label : str
     class Config:
+        orm_mode = True
         schema_extra = {
             "example":{
                 "song_name" : "Melody",
@@ -36,3 +37,22 @@ class Base64Schema(BaseModel):
                 "song" : "sdmfkfkfl"  
             }
         }
+
+class SongResponse(SongSchema):
+    song_id = str
+    class Config:
+        orm_mode = True
+
+class AllresponseSchema(BaseModel):
+    records: List[SongResponse] = []
+    totalrecords: int
+    success: bool
+    class Config:
+        orm_mode = True
+
+class SongresponseSchema(BaseModel):
+    records: SongResponse
+    totalrecords: int
+    success: bool
+    class Config:
+        orm_mode = True
