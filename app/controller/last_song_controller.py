@@ -6,7 +6,6 @@ from app.model.last_song_model import last_songs
 from app.model.song_model import songs
 
 
-
 def user_last_song(db: Session,song):
     user_temp = db.query(last_songs).filter(last_songs.user_id == song.user_id,last_songs.is_delete == 0).first()
     if user_temp:

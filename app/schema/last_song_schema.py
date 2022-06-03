@@ -1,7 +1,8 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Optional
 
-# from schema.user_schema import UserSchema
+from schema.user_schema import UserSchema
+# from app.schema.song_schema import 
 
 class LastSchema(BaseModel):
     user_id : int = Field(...)
@@ -16,3 +17,11 @@ class LastSchema(BaseModel):
                 "paused_timing": "00:02:00"
             }
         }
+
+class Recentresponse(BaseModel):
+    user_id : int = Field(...)
+    song_id : dict = Field(...)
+
+    class Config:
+        orm_mode = True
+

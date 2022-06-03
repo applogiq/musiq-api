@@ -8,8 +8,6 @@ from app.auth.auth_bearer import JWTBearer
 from app.controller.user_controller import get_db
 from app.controller.artist_controller import artist_delete, artist_detail, artist_song, artist_update, delete_image, get_artist, get_artists, get_image,upload_art_image_file, upload_base64_art_file
 
-
-
 router = APIRouter()
 
 http_bearer = JWTBearer()

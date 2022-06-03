@@ -2,6 +2,10 @@ from app.config.database import SessionLocal, engine
 from app.config.database import Base
 from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text
 import sqlalchemy
+from sqlalchemy.orm import relationship
+# from app.model.album_model import albums
+
+
 
 class artist(Base):
     __tablename__ = "artist"
@@ -19,6 +23,7 @@ class artist(Base):
     is_delete = Column(Integer)
     is_active = Column(Integer)
 
+    # album = relationship("albums", backref="artist")
 
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

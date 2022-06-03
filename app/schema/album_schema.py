@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Dict,Union
+from typing import Dict,Union,List
 
 class AlbumSchema(BaseModel):
     name : str = Field(...)
@@ -13,3 +13,27 @@ class AlbumSchema(BaseModel):
                 "music_director" : "AL00DOC"
             }
         }
+
+class Responsealbum(AlbumSchema):
+    album_id : str
+    no_of_songs: int
+
+    class Config:
+        orm_mode = True
+
+class AlbumResponse(BaseModel):
+    records: Responsealbum 
+    totalrecords: int
+    success: bool
+
+    class Config:
+        orm_mode = True
+
+class AllalbumResponse(BaseModel):
+    records: List[Responsealbum] = []
+    totalrecords: int
+    success: bool
+    
+    class Config:
+        orm_mode = True
+

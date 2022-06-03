@@ -62,28 +62,23 @@ class FollowerSchema(BaseModel):
             }
         }
 
-class UserresponseSchema(UserSchema):
+class UserResponse(UserSchema):
     id: int = Field(...)
     register_id: int = Field(...)
-    # username : str = Field(...)
-    # fullname : str = Field(...)
-    # email: str = Field(...)
-    # password: str = Field(...)
     preference: dict = Field(...)
-    # is_image: int = Field(...)
 
     class Config:
         orm_mode = True
 
-class ResponseSchema(BaseModel):
-    records: List[UserresponseSchema] = []
+class AlluserSchema(BaseModel):
+    records: List[UserResponse] = []
     totalrecords: int
     success: bool
     class Config:
         orm_mode = True
 
-class ResponseuserSchema(BaseModel):
-    records: UserresponseSchema
+class UserresponseSchema(BaseModel):
+    records: UserResponse
     totalrecords: int
     success: bool
     class Config:

@@ -1,6 +1,8 @@
 from pydantic import BaseModel,Field
-from typing import Dict,Optional,List
+from typing import Dict,List
 # from datetime import time,date
+
+from app.schema.album_schema import Responsealbum
 
 class SongSchema(BaseModel):
     song_name : str = Field(...)
@@ -39,9 +41,14 @@ class Base64Schema(BaseModel):
         }
 
 class SongResponse(SongSchema):
-    song_id = str
+    song_id: str = Field(...)
+    album_details: Responsealbum
+
     class Config:
         orm_mode = True
+
+
+
 
 class AllresponseSchema(BaseModel):
     records: List[SongResponse] = []

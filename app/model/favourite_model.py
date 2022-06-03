@@ -4,6 +4,9 @@ from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,T
 from sqlalchemy.orm import relationship
 import sqlalchemy
 
+from app.model.user_model import users
+from app.model.song_model import songs
+
 class favourites(Base):
     __tablename__ = "favourites"
      
@@ -15,8 +18,8 @@ class favourites(Base):
     created_by = Column(Integer)
     is_active = Column(Integer)
 
-    last = relationship("users")
-    last = relationship("songs")
+    # last = relationship("users")
+    # last = relationship("songs")
 
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

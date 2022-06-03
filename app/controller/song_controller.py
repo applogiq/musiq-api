@@ -11,6 +11,7 @@ import base64
 
 from app.config.database import  SessionLocal 
 from app.schema.song_schema import SongSchema
+from app.model.album_model import albums
 
 def song_detail(db: Session, song = SongSchema):
     user_name =db.query(songs).filter(songs.song_name == song.song_name,songs.is_delete == 0).first()
@@ -43,14 +44,26 @@ def song_detail(db: Session, song = SongSchema):
     return True
 
 def get_song(db: Session, song_id: int):
+    # user = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0).first()
     user = db.query(songs).filter(songs.id == song_id,songs.is_delete == 0).first()
+    album_details = db.query(albums).filter(albums.album_id == user.album_id,albums.is_delete == 0).first()
+    print(album_details,1111111)
     if user:
+        user.duration = str(user.duration)
+        user.released_date = str(user.released_date)
+        user.album_details = album_details
         return user
     else:
         return False
 
 def get_songs(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(songs).filter(songs.is_delete == 0).offset(skip).limit(limit).all()
+    user =  db.query(songs).filter(songs.is_delete == 0).offset(skip).limit(limit).all()
+    for i in range(0,len(user)):
+        user[i].duration = str(user[i].duration)
+        user[i].released_date = str(user[i].released_date)
+        album_details = db.query(albums).filter(albums.album_id == user[i].album_id,albums.is_delete == 0).first()
+        user[i].album_details = album_details
+    return user
 
 
 def song_update(db: Session,song_id: int,song):

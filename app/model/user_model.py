@@ -8,6 +8,9 @@ import sqlalchemy
 
 from app.config.database import SessionLocal, engine
 from app.config.database import Base
+# from app.model.recent_model import recents
+# from app.model.last_song_model import last_songs
+# from app.model.favourite_model import favourites
 
 
 
@@ -30,7 +33,9 @@ class users(Base):
     is_active = Column(Integer)
     
 
-    # token = relationship("Token", back_populates="owner")
+    recent = relationship("recents", backref="users")
+    last = relationship("last_songs", backref="users")
+    fav = relationship("favourites", backref="users")
 
 
 class token(Base):

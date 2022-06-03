@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from app.model.recent_model import recents
 from app.model.song_model import songs
-
+from app.model.user_model import users
 
 
 def user_recent_song(db: Session,song):
@@ -47,13 +47,21 @@ def user_recent_song(db: Session,song):
 
 def get_user_song(db: Session, user_id: int):
     user = db.query(recents).filter(recents.id == user_id,recents.is_delete == 0).first()
+    user_details = db.query(users).filter(users.register_id == user.user_id,users.is_delete == 0).first()
+    user.user_details = user_details
     if user:
+        print(user.user_id)
         return user
     else:
         return False
 
 def get_users_songs(db: Session):
-    return db.query(recents).filter(recents.is_delete == 0).all()
+    # return db.query(recents).filter(recents.is_delete == 0).all()
+    user =  db.query(recents).filter(recents.is_delete == 0).all()
+    for i in range(0,len(user)):
+        album_details = db.query(users).filter(users.register_id == user[i].user_id,users.is_delete == 0).first()
+        user[i].user_details = album_details
+    return user
 
 
     # {"songs": ["SG001", "SG002", "SG003", "SG004", "SG005", "SG006", "SG007", "SG008", "SG009", "SG0010", "SG0011", "SG0012", "SG0013", "SG0014", "SG0015", "SG0016", "SG0017", "SG0018", "SG0019", "SG0020", "SG0021", "SG0022", "SG0023", "SG0024", "SG0025", "SG0026", "SG0027", "SG0028", "SG0029", "SG0030"]}

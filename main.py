@@ -5,11 +5,24 @@ import sqlalchemy
 from starlette.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
-
-from app.model.recent_model import recents
-from app.routers import user_routers,song_routers,artist_routers,genre_routers,album_routers,last_song_routers,aura_routers,aura_song_routers,recent_routers,favourite_routers
 from fastapi.openapi.utils import get_openapi
 
+
+from app.model.user_model import users
+from app.model.song_model import songs
+from app.model.recent_model import recents
+from app.model.last_song_model import last_songs
+from app.model.genre_model import genres
+from app.model.favourite_model import favourites
+from app.model.aura_model import aura
+from app.model.aura_song_model import aura_songs
+from app.model.artist_model import artist
+from app.model.album_model import albums
+# from app.model.recent_model import recents
+from app.routers import user_routers,song_routers,artist_routers,genre_routers,album_routers,last_song_routers,aura_routers,aura_song_routers,recent_routers,favourite_routers
+
+
+from app.config.database import custom_openapi
 
 app = FastAPI()
 
@@ -31,13 +44,7 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-# path = "/music"
-
-# os_path = os.path.join(os.path.dirname(path))
-# print(os_path)
-
-
-# app.mount("/music", StaticFiles(directory=static_folder), name="music")
+# app.openapi = custom_openapi
 
 app.include_router(user_routers.router)
 app.include_router(song_routers.router)
@@ -63,5 +70,3 @@ app.add_middleware(
 
 if __name__ == "__main__":
     uvicorn.run("main:app",reload=True)
-    #uvicorn.run("main:app",host ="127.0.0.1",port=4000,reload=True)
-    # ,host = "0.0.0.0",debug = True,

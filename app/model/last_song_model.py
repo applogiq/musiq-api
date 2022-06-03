@@ -11,7 +11,7 @@ from app.model.user_model import users
 from app.model.song_model import songs
 
 class last_songs(Base):
-    __tablename__ = "last_songs"
+    __tablename__ = "last_song"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer,ForeignKey("users.register_id"),nullable=True) 
     song_id = Column(String,ForeignKey("songs.song_id"),nullable=True)
@@ -25,8 +25,8 @@ class last_songs(Base):
     is_delete = Column(Integer)
     is_active = Column(Integer)
 
-    last = relationship("users")
-    last = relationship("songs")
+    # last = relationship("users")
+    # last = relationship("songs")
     # songs = relationship("artist")
 
 metadata = sqlalchemy.MetaData()

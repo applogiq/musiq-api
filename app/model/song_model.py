@@ -7,8 +7,11 @@ import sqlalchemy
 
 from app.config.database import SessionLocal, engine
 from app.config.database import Base
-from app.model.recent_model import recents
+# from app.model.recent_model import recents
 from app.model.album_model import albums
+# from app.model.last_song_model import last_songs
+# from app.model.favourite_model import favourites
+# from app.model.aura_song_model import aura_songs
 
 class songs(Base):
     __tablename__ = "songs"
@@ -33,7 +36,10 @@ class songs(Base):
     is_delete = Column(Integer)
     is_active = Column(Integer)
 
-    songs = relationship("albums")
+    last_song = relationship("last_songs",backref="songs")
+    fav = relationship("favourites",backref="songs")
+    aura = relationship("aura_songs",backref="songs")
+
     # songs = relationship("artist")
     # songs = relationship("genres")
 

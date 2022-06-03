@@ -23,7 +23,6 @@ class recents(Base):
     is_delete = Column(Integer)
     is_active = Column(Integer)
 
-    recents = relationship("users")
 
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

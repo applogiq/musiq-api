@@ -3,6 +3,9 @@ from app.config.database import Base
 from sqlalchemy_json import NestedMutableJson
 from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text
 import sqlalchemy
+from sqlalchemy.orm import relationship
+# from app.model.aura_song_model import aura_songs
+
 
 class aura(Base):
     __tablename__ = "aura"
@@ -19,6 +22,7 @@ class aura(Base):
     is_delete = Column(Integer)
     is_active = Column(Integer)
 
+    aura_song = relationship("aura_songs", backref="aura")
 
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

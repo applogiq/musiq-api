@@ -18,8 +18,8 @@ class aura_songs(Base):
     is_delete = Column(Integer)
     is_active = Column(Integer)
 
-    aura = relationship("aura")
-    aura = relationship("songs")
+    # aura = relationship("aura")
+    # aura = relationship("songs")
 
 
 
