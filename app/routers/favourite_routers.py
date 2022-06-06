@@ -6,22 +6,22 @@ from app.schema.favourite_schema import FavouriteSchema
 from app.auth.auth_bearer import JWTBearer
 from app.controller.user_controller import get_db
 
-router = APIRouter()
+router = APIRouter(tags=["favourites"],prefix='/favourite')
 
 http_bearer = JWTBearer()
 
-@router.post("/favourite", tags=["favourites"])
+@router.post("/")
 async def enter_fav_details(fav:FavouriteSchema,db: Session = Depends(get_db)): #,token: str = Depends(http_bearer)
     temp = fav_song_detail(db,fav)
     return temp
 # fav_delete
 
-@router.delete("/favourite", tags=["favourites"])
+@router.delete("/")
 async def remove_favourites(fav:FavouriteSchema,db: Session = Depends(get_db)):
     user = fav_delete(db,fav)
     return user
 
-@router.get("/favourite", tags=["favourites"])
+@router.get("/")
 async def view_all_fav_details(db: Session = Depends(get_db)):
     try:
         users = get_favourites(db)
@@ -29,7 +29,7 @@ async def view_all_fav_details(db: Session = Depends(get_db)):
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
-@router.get("/favourite/{fav_id}", tags=["favourites"])
+@router.get("/{fav_id}")
 async def view_artist_details(fav_id: int,db: Session = Depends(get_db)):
     users = get_favourite(db, fav_id)
     if users:
@@ -37,7 +37,7 @@ async def view_artist_details(fav_id: int,db: Session = Depends(get_db)):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
-@router.get("/favourite/user/{user_id}", tags=["favourites"])
+@router.get("/user/{user_id}")
 async def view_fav_songs(user_id: int,db: Session = Depends(get_db)):
     users = get_favourite_songs(db, user_id)
     if users:

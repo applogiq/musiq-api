@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Dict
+from typing import Dict,Optional
 
 
 class AuraSchema(BaseModel):
@@ -11,3 +11,13 @@ class AuraSchema(BaseModel):
             }
         }
 
+class AuranewSchema(BaseModel):
+    name : str = Field(...)
+    image: Optional[str] = None 
+    class Config:
+        schema_extra = {
+            "example":{
+                "name" : "Melody",
+                "image" : "dfjhfhwerfhdfnslfwerwijerdjl"
+            }
+        }

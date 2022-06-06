@@ -8,12 +8,12 @@ from app.controller.last_song_controller import get_last_song, get_last_songs, u
 
 
 
-router = APIRouter()
+router = APIRouter(tags=["last song"],prefix='/last')
 
 http_bearer = JWTBearer()
 
 
-@router.get("/lasts", tags=["last song"])
+@router.get("/")
 async def view_all_song_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     try:
         users = get_last_songs(db)
@@ -25,7 +25,7 @@ async def view_all_song_details(db: Session = Depends(get_db),token: str = Depen
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
-@router.get("/lasts/{user_id}", tags=["last song"])
+@router.get("/{user_id}")
 async def view_song_details(user_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     db_user = get_last_song(db, user_id)
     if db_user:
@@ -33,7 +33,7 @@ async def view_song_details(user_id: int,db: Session = Depends(get_db),token: st
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
-@router.put("/lasts", tags=["last song"])
+@router.put("/")
 async def last_song_details(song: LastSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     user = user_last_song(db,song)
     if user:

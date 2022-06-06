@@ -70,23 +70,27 @@ def get_user_by_email(db: Session, email, password):
     return False
 
 def register_user(db: Session,user,response):
-    if (email_check(user.email)) == True:
-        pass
-    else:
-        raise HTTPException(status_code=422, detail="Invalid Email!!")
-    if (password_check(user.password)) == True:
+    if user:
+        if (email_check(user.email)) != True:
+            raise HTTPException(status_code=422, detail="Invalid Email!!")
+        else:
             pass
-    else:
-        return("Invalid Password !!"),(password_check(user.password))
-    user_name =db.query(users).filter(users.username == user.username,users.is_delete == 0).first()
-    if user_name:
-        raise HTTPException(status_code=400, detail="Username already exist")
-    else:
-        pass
-    user_temp = db.query(users).filter(users.email == user.email,users.is_delete==0).first()
-    if user_temp:
-        raise HTTPException(status_code=400, detail="Email Already Register")
-    else:
+        if (password_check(user.password)) != True:
+            return("Invalid Password !!"),(password_check(user.password))
+        else:
+            pass
+        if user.username:
+            user_name =db.query(users).filter(users.username == user.username,users.is_delete == 0).first()
+            if user_name:
+                raise HTTPException(status_code=400, detail="Username already exist")
+            else:
+                pass
+        else:
+            raise HTTPException(status_code=400, detail="Enter your username")
+        user_temp = db.query(users).filter(users.email == user.email,users.is_delete==0).first()
+        if user_temp:
+            raise HTTPException(status_code=400, detail="Email Already Register")
+    
         a = 202201
         while db.query(users).filter(users.register_id == a).first():
             a = a+1
@@ -114,7 +118,9 @@ def register_user(db: Session,user,response):
         db.add(db_recent)
         db.commit()
         response.status_code = status.HTTP_201_CREATED
-        return {'message': "data added"},{"access_token": access_token, "refresh_token": refresh_token}
+        return {'message': "data added","success":True},{"access_token": access_token, "refresh_token": refresh_token}
+    else:
+        return False
 
 
 def login_user(db:Session,user):
@@ -125,7 +131,7 @@ def login_user(db:Session,user):
         refresh_token_str = refresh_token.decode('UTF-8')
         add =update_tokens(db,user.email,access_token_str,refresh_token_str)
         return {"access_token": access_token, "refresh_token": refresh_token},user
-    raise HTTPException(status_code=404, detail="Wrong login details")
+    raise HTTPException(status_code=404, detail={"message": "Wrong login details","success":False})
 
 def follower_details(db:Session,user):
     temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==0).first()

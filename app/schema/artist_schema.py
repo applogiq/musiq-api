@@ -7,6 +7,17 @@ class ArtistSchema(BaseModel):
     class Config:
         schema_extra = {
             "example":{
-                "name" : "Melody"
+                "name" : "AR Rahman"
+            }
+        }
+
+class ArtistnewSchema(BaseModel):
+    name : str = Field(...)
+    image: bytes
+    class Config:
+        schema_extra = {
+            "example":{
+                "name" : "AR Rahman",
+                "image": "ndfjweoijwnfkmsdfnifjsdfmsndfka"
             }
         }

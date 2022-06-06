@@ -14,7 +14,10 @@ http_bearer = JWTBearer()
 @router.post("/register")
 async def user_register(user: UserSchema,response: Response, db: Session = Depends(get_db)):
     user = register_user(db,user,response)
-    return user
+    if user:
+        return user
+    else:
+        raise HTTPException(status_code=404, detail={"message": "couldn't register","success":False})
 
 @router.post("/login")
 async def user_login(user: UserLoginSchema = Body(...),db: Session = Depends(get_db)):

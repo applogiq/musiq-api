@@ -8,6 +8,39 @@ import os
 from app.model.song_model import songs
 from app.model.aura_model import aura
 
+def aura_new_detail(db: Session,auras):
+    auraname =db.query(aura).filter(aura.name == auras.name,aura.is_delete == 0).first()
+    if auraname:
+        raise HTTPException(status_code=400, detail="aura is already register")
+    a ="AUR001"
+    while db.query(aura).filter(aura.aura_id == a).first():
+        a = "AUR00" + str(int(a[-1])+1)
+
+    if auras.image:
+        s = base64.b64decode(auras.image)
+        filename1 = a+".png"
+        file_location = f"public/aura/{filename1}"
+        with open(file_location, "wb+") as f:
+            f.write(s)  
+        image = 1
+    else:
+        image = 0
+
+    db_user = aura(name = auras.name,
+                    aura_id = a,
+                    is_image = image,
+                    is_delete = 0,
+                    created_by = 1,
+                    updated_by = 0,
+                    is_active = 1)
+    
+
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return {"message":"data added"}
+
+
 def aura_detail(db: Session,auras):
     auraname =db.query(aura).filter(aura.name == auras.name,aura.is_delete == 0).first()
     if auraname:
@@ -84,6 +117,14 @@ def aura_update(db: Session,aura_id: int,auras):
     if user_temp1:
         if auras.name:
             user_temp1.name = auras.name
+        if auras.image:
+            s = base64.b64decode(auras.image)
+            filename1 = user_temp1.aura_id+".png"
+            file_location = f"public/aura/{filename1}"
+            with open(file_location, "wb+") as f:
+                f.write(s)  
+            user_temp1.is_image = 1
+
             
 
         user_temp1.updated_at = datetime.now()

@@ -8,6 +8,65 @@ from fastapi import HTTPException
 from app.model.song_model import songs
 from app.model.album_model import albums
 
+def album_new_detail(db: Session,album,keyword):
+    albumname =db.query(albums).filter(albums.name == album.name,albums.is_delete == 0).first()
+    a ="AL00"
+    if albumname:
+        raise HTTPException(status_code=400, detail="Album is already register")
+
+    while db.query(albums).filter(albums.album_id == a + keyword.upper(),albums.is_delete == 0).first():
+        a = "AL0" + str(int(a[-1])+1)
+    
+    if album.name[0].isalpha():
+        alphabet = album.name[0].upper()
+    else:
+        alphabet = "Mis"
+
+    path1 = f"public/music/tamil/{alphabet}/{album.name}"
+
+    if os.path.exists(path1):
+        pass
+    else:
+        os.makedirs(path1)
+    
+    if album.image:
+        s = base64.b64decode(album.image)
+        filename1 = a+keyword.upper() +".png"
+        if album.name[0].isalpha():
+            alphabet = album.name[0].upper()
+        else:
+            alphabet = "Mis"
+        file_location = f"public/music/tamil/{alphabet}/{album.name}/image"
+        if os.path.exists(file_location):
+            pass    
+        else:
+            os.makedirs(file_location)
+        file_location2 = f"{file_location}/{filename1}"
+        with open(file_location2, 'wb') as f:
+            f.write(s)
+        image = 1
+    else:
+        image = 0
+       
+        
+    db_album = albums(name = album.name,
+                    album_id = a+keyword.upper(),
+                    released_year = album.released_year,
+                    music_director = album.music_director,
+                    no_of_songs = 0,
+                    is_image = image,
+                    is_delete = 0,
+                    created_by = 1,
+                    updated_by = 0,
+                    is_active = 1)
+
+    
+
+    db.add(db_album)
+    db.commit()
+    db.refresh(db_album)
+    return {"message":"data added"}
+
 def album_detail(db: Session,album,keyword):
     albumname =db.query(albums).filter(albums.name == album.name,albums.is_delete == 0).first()
     a ="AL00"
@@ -108,7 +167,6 @@ def album_update(db: Session,album_id: int,album,keyword):
             temp2.album_id = a +keyword.upper()
         else:
             pass
-        
         user_temp1.album_id = a +keyword.upper()
     
     if album.released_year:
@@ -116,6 +174,23 @@ def album_update(db: Session,album_id: int,album,keyword):
     
     if album.music_director:
         user_temp1.music_director = album.music_director
+
+    if album.image:
+        s = base64.b64decode(album.image)
+        filename1 = a+keyword.upper() +".png"
+        if album.name[0].isalpha():
+            alphabet = album.name[0].upper()
+        else:
+            alphabet = "Mis"
+        file_location = f"public/music/tamil/{alphabet}/{album.name}/image"
+        if os.path.exists(file_location):
+            pass    
+        else:
+            os.makedirs(file_location)
+        file_location2 = f"{file_location}/{filename1}"
+        with open(file_location2, 'wb') as f:
+            f.write(s)
+
 
 
     user_temp1.is_active = 1 

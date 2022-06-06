@@ -1,7 +1,7 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Optional
 
-from schema.user_schema import UserSchema
+from app.schema.user_schema import UserSchema
 # from app.schema.song_schema import 
 
 class LastSchema(BaseModel):

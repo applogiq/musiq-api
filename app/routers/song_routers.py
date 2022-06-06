@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends,Body,UploadFile,File,Request,HTTPException
 import os
 from app.model.album_model import albums
+from typing import Optional
 
-from app.schema.song_schema import SongSchema,SongresponseSchema,AllresponseSchema
+from app.schema.song_schema import SongSchema,SongresponseSchema,AllresponseSchema,SongnewSchema
 from app.model.song_model import songs
 from app.auth.auth_bearer import JWTBearer
 from app.controller.user_controller import get_db
 from sqlalchemy.orm import Session
-from app.controller.song_controller import get_song, get_songs,song_update,song_detail,delete_song_details
+from app.controller.song_controller import get_song, get_songs, song_new_detail,song_update,song_detail,delete_song_details
 from app.controller.song_controller import upload_new_song_file,upload_base64_song_file,range_requests_response
 
 router = APIRouter(tags=["songs"])
@@ -15,6 +16,14 @@ router = APIRouter(tags=["songs"])
 http_bearer = JWTBearer()
 
 # templates = Jinja2Templates(directory=os.path.abspath(os.path.expanduser('templates')))
+
+@router.post("/songs/new")
+async def enter_song_details(song: SongnewSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    user = song_new_detail(db,song)
+    if user:
+        return {'message': "song details added","success":True}
+    # else:
+    #     return {'message': "Check your details","success": False}
 
 @router.post("/songs")
 async def enter_song_details(song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
@@ -51,7 +60,7 @@ async def view_song_details(song_id: int,db: Session = Depends(get_db),token: st
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
 @router.put("/songs/{song_id}")
-async def update_song_details(song_id: int,song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+async def update_song_details(song_id: int,song: SongnewSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     temp = song_update(db,song_id,song)
     return temp
 
@@ -72,7 +81,7 @@ def stream_audio(song_id: str,request: Request,db: Session = Depends(get_db)):
             alphabet = temp.name[0].upper()
         else:
             alphabet = "Mis" 
-        file_location = f"public/music/tamil/{alphabet}/{temp.name}/songs/{user_temp.song_name}.wav"
+        file_location = f"public/music/tamil/{alphabet}/{temp.name}/songs/{user_temp.song_id}.wav"
         return range_requests_response(
             request, file_path=file_location, content_type="audio/wav" 
         )

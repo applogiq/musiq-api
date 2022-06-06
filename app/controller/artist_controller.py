@@ -7,6 +7,36 @@ from fastapi import HTTPException
 import os
 from app.model.song_model import songs
 
+def artist_new_detail(db: Session,artists,keyword):
+    artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == 0).first()
+    a ="AR00"
+    if artistname:
+        raise HTTPException(status_code=400, detail="Artist is already register")
+    while db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
+        a = "AR0" + str(int(a[-1])+1)
+    if artists.image:
+        s = base64.b64decode(artists.image)
+        filename1 = a+keyword.upper()+".png"
+        file_location = f"public/artists/{filename1}"
+        with open(file_location, "wb+") as f:
+            f.write(s)  
+        image = 1
+    else:
+        image = 0
+
+    db_user = artist(name = artists.name,
+                    artist_id = a+keyword.upper(),
+                    is_image = image,
+                    is_delete = 0,
+                    created_by = 1,
+                    updated_by = 0,
+                    is_active = 1)
+
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return {"message":"data added"}
+
 def artist_detail(db: Session,artists,keyword):
     artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == 0).first()
     a ="AR00"
@@ -95,9 +125,14 @@ def artist_update(db: Session,art_id: int,artists,keyword):
                 user_temp1.artist_id = a + keyword.upper()
             else: 
                 user_temp1.artist_id = a +keyword.upper()
-        user_temp1.is_active = 1 
-        user_temp1.is_delete = 0
-        user_temp1.created_by = 1
+        if artists.image:
+            s = base64.b64decode(artists.image)
+            filename1 = user_temp1.artist_id+".png"
+            file_location = f"public/artists/{filename1}"
+            with open(file_location, "wb+") as f:
+                f.write(s)  
+            user_temp1.is_image = 1
+
         user_temp1.updated_at = datetime.now()
         user_temp1.updated_by = 1
 

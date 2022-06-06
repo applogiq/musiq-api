@@ -7,16 +7,16 @@ from app.auth.auth_bearer import JWTBearer
 from app.controller.user_controller import get_db
 
 
-router = APIRouter()
+router = APIRouter(tags=["genres"],prefix='/genres')
 
 http_bearer = JWTBearer()
 
-@router.post("/genres", tags=["genre"])
+@router.post("/")
 async def enter_genre_details(genre:GenreSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     temp = genre_detail(db,genre)
     return temp
 
-@router.get("/genres", tags=["genre"])
+@router.get("/")
 async def view_all_genre_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     try:
         temp = get_genres(db)
@@ -26,7 +26,7 @@ async def view_all_genre_details(db: Session = Depends(get_db),token: str = Depe
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
 
-@router.get("/genres/{id}", tags=["genre"])
+@router.get("/{id}")
 async def view_genre_details(genre_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     db_genre = get_genre(db, genre_id)
     if db_genre:
@@ -36,13 +36,13 @@ async def view_genre_details(genre_id: int,db: Session = Depends(get_db),token: 
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
 
-@router.put("/genres/{id}", tags=["genre"])
+@router.put("/{id}")
 async def update_genre_details(genre_id: int,genre: GenreSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     temp = genre_update(db,genre_id,genre)
     return temp
 
 
-@router.delete("/genres/{id}", tags=["genre"])
+@router.delete("/{id}")
 async def delete_genre(genre_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     temp = genre_delete(db,genre_id)
     return temp
