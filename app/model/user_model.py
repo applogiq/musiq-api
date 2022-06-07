@@ -36,6 +36,7 @@ class users(Base):
     recent = relationship("recents", backref="users")
     last = relationship("last_songs", backref="users")
     fav = relationship("favourites", backref="users")
+    playlist_song = relationship("playlist", backref="users")
 
 
 class token(Base):

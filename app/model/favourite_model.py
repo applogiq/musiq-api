@@ -11,8 +11,8 @@ class favourites(Base):
     __tablename__ = "favourites"
      
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer,ForeignKey("users.register_id"))
-    song_id = Column(String(255),ForeignKey("songs.song_id"))
+    user_id = Column(Integer,ForeignKey("users.id"))
+    song_id = Column(Integer,ForeignKey("songs.id"))
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     created_by = Column(Integer)

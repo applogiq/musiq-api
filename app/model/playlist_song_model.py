@@ -3,12 +3,15 @@ from app.config.database import Base
 from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text,ForeignKey
 from sqlalchemy.orm import relationship
 import sqlalchemy
+from app.model.playlist_model import playlist
+from app.model.song_model import songs
 
-class aura_songs(Base):
-    __tablename__ = "aura_songs"
+
+class playlist_songs(Base):
+    __tablename__ = "playlist_songs"
      
     id = Column(Integer, primary_key=True, index=True)
-    aura_id = Column(Integer,ForeignKey("aura.id"))
+    playlist_id = Column(Integer,ForeignKey("playlist.id"))
     song_id = Column(Integer,ForeignKey("songs.id"))
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))

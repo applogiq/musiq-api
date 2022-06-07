@@ -1,15 +1,20 @@
 from app.config.database import SessionLocal, engine
 from app.config.database import Base
+from sqlalchemy_json import NestedMutableJson
 from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text,ForeignKey
-from sqlalchemy.orm import relationship
 import sqlalchemy
+from sqlalchemy.orm import relationship
+# from app.model.aura_song_model import aura_songs
+from app.model.user_model import users
 
-class aura_songs(Base):
-    __tablename__ = "aura_songs"
+
+class playlist(Base):
+    __tablename__ = "playlist"
      
     id = Column(Integer, primary_key=True, index=True)
-    aura_id = Column(Integer,ForeignKey("aura.id"))
-    song_id = Column(Integer,ForeignKey("songs.id"))
+    user_id = Column(Integer,ForeignKey("users.id"))
+    name = Column(String(255), nullable=False)
+    no_of_songs = Column(Integer)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
@@ -18,10 +23,7 @@ class aura_songs(Base):
     is_delete = Column(Integer)
     is_active = Column(Integer)
 
-    # aura = relationship("aura")
-    # aura = relationship("songs")
-
-
+    playlist_song = relationship("playlist_songs", backref="playlist")
 
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

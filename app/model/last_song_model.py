@@ -14,7 +14,7 @@ class last_songs(Base):
     __tablename__ = "last_song"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer,ForeignKey("users.register_id"),nullable=True) 
-    song_id = Column(String,ForeignKey("songs.song_id"),nullable=True)
+    song_id = Column(Integer,ForeignKey("songs.id"),nullable=True)
     duration = Column(TIME,nullable=True)
     paused_timing = Column(TIME,nullable=True)
     created_at = Column(TIMESTAMP(timezone=True),

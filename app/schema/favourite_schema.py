@@ -3,11 +3,11 @@ from pydantic import BaseModel,Field
 
 class FavouriteSchema(BaseModel):
     user_id : int
-    song_id: str
+    song_id: int
     class Config:
         schema_extra = {
             "example":{
-                "user_id" : 202201,
-                "song_id" : "SG001"
+                "user_id" : 1,
+                "song_id" : 1
             }
         }

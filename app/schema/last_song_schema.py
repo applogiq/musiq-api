@@ -6,14 +6,14 @@ from app.schema.user_schema import UserSchema
 
 class LastSchema(BaseModel):
     user_id : int = Field(...)
-    song_id : str = Field(...)
+    song_id : int = Field(...)
     paused_timing : str = Field(...)
     class Config:
         orm_mode = True
         schema_extra = {
             "example":{
-                "user_id" : 220202,
-                "song_id" : "SG001",
+                "user_id" : 202201,
+                "song_id" : 1,
                 "paused_timing": "00:02:00"
             }
         }

@@ -19,7 +19,7 @@ class songs(Base):
     song_id = Column(String(255),unique = True)
     song_name = Column(String(255), nullable=True) 
     artist_id = Column(JSON, default=dict)
-    album_id = Column(String, ForeignKey("albums.album_id"))
+    album_id = Column(Integer, ForeignKey("albums.id"))
     genre_id = Column(JSON)
     duration = Column(TIME,nullable=True)
     lyrics = Column(String,nullable=True)  

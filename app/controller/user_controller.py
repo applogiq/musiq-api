@@ -124,13 +124,16 @@ def register_user(db: Session,user,response):
 
 
 def login_user(db:Session,user):
+    
+    # return temp
     if get_user_by_email(db,user.email,user.password):
         access_token = create_token(user.email)
         access_token_str = access_token.decode('UTF-8')
         refresh_token = create_refresh_token(user.email)
         refresh_token_str = refresh_token.decode('UTF-8')
         add =update_tokens(db,user.email,access_token_str,refresh_token_str)
-        return {"access_token": access_token, "refresh_token": refresh_token},user
+        temp = db.query(users).filter(users.email == user.email,users.is_delete==0).first()
+        return {"access_token": access_token, "refresh_token": refresh_token},temp
     raise HTTPException(status_code=404, detail={"message": "Wrong login details","success":False})
 
 def follower_details(db:Session,user):

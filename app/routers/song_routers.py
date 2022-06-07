@@ -22,8 +22,8 @@ async def enter_song_details(song: SongnewSchema,db: Session = Depends(get_db),t
     user = song_new_detail(db,song)
     if user:
         return {'message': "song details added","success":True}
-    # else:
-    #     return {'message': "Check your details","success": False}
+    else:
+        return {'message': "Check your details","success": False}
 
 @router.post("/songs")
 async def enter_song_details(song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):

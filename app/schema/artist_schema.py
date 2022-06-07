@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Dict
+from typing import Dict,Optional
 
 
 class ArtistSchema(BaseModel):
@@ -13,7 +13,7 @@ class ArtistSchema(BaseModel):
 
 class ArtistnewSchema(BaseModel):
     name : str = Field(...)
-    image: bytes
+    image: Optional[str]
     class Config:
         schema_extra = {
             "example":{

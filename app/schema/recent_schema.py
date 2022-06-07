@@ -5,19 +5,18 @@ from app.schema.user_schema import UserResponse
 
 class RecentSchema(BaseModel):
     user_id : int = Field(...)
-    song_id : str = Field(...)
+    song_id : int
     class Config:
         schema_extra = {
             "example":{
-                "user_id" : 220202,
-                "song_id" : "SG001"
+                "user_id" : 202201,
+                "song_id" : 1
             }
         }
 
 class Recentresponse(BaseModel):
     user_id : int = Field(...)
     song_id : dict = Field(...)
-    user_details : UserResponse
 
     class Config:
         orm_mode = True
