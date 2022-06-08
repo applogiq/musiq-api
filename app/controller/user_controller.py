@@ -7,6 +7,13 @@ import os
 import shutil
 import base64
 from typing import List
+import math, random
+import pyotp
+import time
+import smtplib,ssl
+from email.message import EmailMessage
+from mailer import Mailer
+
 
 from app.schema.user_schema import UserresponseSchema
 from app.model.artist_model import artist
@@ -133,7 +140,9 @@ def login_user(db:Session,user):
         refresh_token_str = refresh_token.decode('UTF-8')
         add =update_tokens(db,user.email,access_token_str,refresh_token_str)
         temp = db.query(users).filter(users.email == user.email,users.is_delete==0).first()
-        return {"access_token": access_token, "refresh_token": refresh_token},temp
+        temp.access_token = access_token
+        temp.refresh_token = refresh_token
+        return {"status": True,"message":"Login Successfully","result":temp}
     raise HTTPException(status_code=404, detail={"message": "Wrong login details","success":False})
 
 def follower_details(db:Session,user):
@@ -313,3 +322,67 @@ def get_profile(db: Session,user_id):
             raise HTTPException(status_code=404, detail="Image doesn't exist for this id")
     else:
         raise HTTPException(status_code=404, detail="check your id")
+
+
+###--------Forgot Password--------###
+
+
+ 
+# function to generate OTP
+def generateOTP() :
+    print(11111)
+    digits = "0123456789"
+    OTP = ""
+    for i in range(6) :
+        OTP += digits[math.floor(random.random() * 10)]
+ 
+    return OTP
+
+def email_otp(db,email):
+    user = db.query(users).filter(users.email == email,users.is_delete==0).first()
+    if user:
+        s = generateOTP()
+        user.otp = s
+        user.otp_time = time.time()
+        # mail = Mailer(email='srimathi.k.applogiq@gmail.com', password='Applogiq@123')
+        # mail.send(receiver='shajith.s.applogiq@example.com', subject='TEST', message='From Python!')
+        emailotp = EmailMessage() ## creating obj
+        emailotp["from"] = "srimathi.k.applogiq@123"
+        emailotp["to"] = "shajith.s.applogiq@example.com"
+        emailotp["subject"] = "checking"
+        emailotp.set_content('''Hi,
+            This is body of content''')
+        # context=ssl.create_default_context()
+
+        with smtplib.SMTP(host="smtp.gmail.com",port= 587) as server:
+            # server.ehlo() ##server object
+            # server.starttls(context=context)   ## used to send data b/w server & client
+            # server.ehlo()
+            server.login(emailotp["from"], "Applogiq@123")
+            
+            server.send_message(emailotp)
+        print("email send")
+
+        db.commit()
+        return True
+
+def verify_otp(db:Session,email,otp):
+    user = db.query(users).filter(users.email == email,users.is_delete==0).first()
+    if user:
+        if user.otp == otp:
+            s = time.time() - user.otp_time
+            print(s)
+            if s <= 100:
+                return("Verified Successfully")
+            else:
+                return("OTP expired")
+        else:
+            return("Check your OTP")
+    else:
+        return ("Check your email")
+            
+
+    # print(s)
+    # totp = pyotp.TOTP('base32secret3232',interval=100)
+    # t = totp.verify(s)
+    return t

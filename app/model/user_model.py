@@ -1,5 +1,8 @@
+from datetime import time
 from enum import unique
-from sqlalchemy import Column, Integer, String, ARRAY,JSON
+from sqlite3 import Time
+from pyparsing import col
+from sqlalchemy import Column, Float, Integer, String, ARRAY,JSON
 from sqlalchemy_json import NestedMutableJson
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
@@ -31,6 +34,8 @@ class users(Base):
     updated_by = Column(Integer)
     is_delete = Column(Integer)
     is_active = Column(Integer)
+    otp = Column(String)
+    otp_time = Column(Float)
     
 
     recent = relationship("recents", backref="users")

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends,UploadFile,File,Request,Body,Query,HTTPEx
 from pydantic import Required
 from typing import Union,List
 from sqlalchemy.orm import Session
-from app.controller.album_controller import album_delete, album_detail, album_new_detail, album_update, delete_album_image, get_album, get_album_image, get_albums, upload_base64_image_file, upload_new_image_file
+from app.controller.album_controller import album_delete,  album_new_detail, album_update, delete_album_image, get_album, get_album_image, get_albums, upload_base64_image_file, upload_new_image_file
 
 from app.schema.album_schema import AlbumSchema,AlbumResponse,AllalbumResponse,AlbumnewSchema
 from app.auth.auth_bearer import JWTBearer
@@ -17,10 +17,10 @@ async def enter_album_details(album:AlbumnewSchema,keyword: str = Query(default=
     temp = album_new_detail(db,album,keyword)
     return temp
 
-@router.post("/")
-async def enter_album_details(album:AlbumSchema,keyword: str = Query(default=Required, min_length=3, max_length=3),db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
-    temp = album_detail(db,album,keyword)
-    return temp
+# @router.post("/")
+# async def enter_album_details(album:AlbumSchema,keyword: str = Query(default=Required, min_length=3, max_length=3),db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
+#     temp = album_detail(db,album,keyword)
+#     return temp
     
 @router.post("/image/{id}")
 async def upload_image_file(album_id: str,uploaded_file: UploadFile = File(...),db: Session = Depends(get_db),token: str = Depends(http_bearer)):

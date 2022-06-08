@@ -67,42 +67,42 @@ def album_new_detail(db: Session,album,keyword):
     db.refresh(db_album)
     return {"message":"data added"}
 
-def album_detail(db: Session,album,keyword):
-    albumname =db.query(albums).filter(albums.name == album.name,albums.is_delete == 0).first()
-    a ="AL00"
-    if albumname:
-        raise HTTPException(status_code=400, detail="Album is already register")
+# def album_detail(db: Session,album,keyword):
+#     albumname =db.query(albums).filter(albums.name == album.name,albums.is_delete == 0).first()
+#     a ="AL00"
+#     if albumname:
+#         raise HTTPException(status_code=400, detail="Album is already register")
 
-    while db.query(albums).filter(albums.album_id == a + keyword.upper(),albums.is_delete == 0).first():
-        a = "AL0" + str(int(a[-1])+1)
+#     while db.query(albums).filter(albums.album_id == a + keyword.upper(),albums.is_delete == 0).first():
+#         a = "AL0" + str(int(a[-1])+1)
 
         
-    db_album = albums(name = album.name,
-                    album_id = a+keyword.upper(),
-                    released_year = album.released_year,
-                    music_director = album.music_director,
-                    no_of_songs = 0,
-                    is_delete = 0,
-                    created_by = 1,
-                    updated_by = 0,
-                    is_active = 1)
+#     db_album = albums(name = album.name,
+#                     album_id = a+keyword.upper(),
+#                     released_year = album.released_year,
+#                     music_director = album.music_director,
+#                     no_of_songs = 0,
+#                     is_delete = 0,
+#                     created_by = 1,
+#                     updated_by = 0,
+#                     is_active = 1)
 
-    if album.name[0].isalpha():
-        alphabet = album.name[0].upper()
-    else:
-        alphabet = "Mis"
+#     if album.name[0].isalpha():
+#         alphabet = album.name[0].upper()
+#     else:
+#         alphabet = "Mis"
 
-    path1 = f"public/music/tamil/{alphabet}/{album.name}"
+#     path1 = f"public/music/tamil/{alphabet}/{album.name}"
 
-    if os.path.exists(path1):
-        pass
-    else:
-        os.makedirs(path1)
+#     if os.path.exists(path1):
+#         pass
+#     else:
+#         os.makedirs(path1)
 
-    db.add(db_album)
-    db.commit()
-    db.refresh(db_album)
-    return {"message":"data added"}
+#     db.add(db_album)
+#     db.commit()
+#     db.refresh(db_album)
+#     return {"message":"data added"}
 
 
 def get_albums(db: Session):
