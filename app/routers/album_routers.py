@@ -12,9 +12,9 @@ router = APIRouter(tags=["album"],prefix="/albums")
 
 http_bearer = JWTBearer()
 
-@router.post("/new")
-async def enter_album_details(album:AlbumnewSchema,keyword: str = Query(default=Required, min_length=3, max_length=3),db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
-    temp = album_new_detail(db,album,keyword)
+@router.post("/")
+async def enter_album_details(album:AlbumnewSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
+    temp = album_new_detail(db,album)
     return temp
 
 # @router.post("/")
@@ -60,8 +60,8 @@ async def get_image(album_id: int,db: Session = Depends(get_db),token: str = Dep
 
 
 @router.put("/{id}")
-async def update_album_details(album_id: int,album: AlbumSchema,keyword: Union[str, None] = Query(default=None, fixed_length=3),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    temp = album_update(db,album_id,album,keyword)
+async def update_album_details(album_id: int,album: AlbumSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    temp = album_update(db,album_id,album)
     return temp
 
 
@@ -76,4 +76,4 @@ async def delete_image(song_id: int,db: Session = Depends(get_db),token: str = D
     user = delete_album_image(db,song_id)
     return user
 
-    
+

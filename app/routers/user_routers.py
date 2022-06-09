@@ -1,8 +1,8 @@
 from fastapi import APIRouter,Depends,Body,HTTPException,Response, status,UploadFile,File
 from typing import List
 
-from app.schema.user_schema import FollowerSchema, UserSchema,UserLoginSchema,Refresh_token,UserOptional,UserresponseSchema,AlluserSchema
-from app.controller.user_controller import delete_profile, email_otp, follower_details, get_profile, get_user,token_refresh,get_db,get_users,register_user,login_user, upload_base64_profile, upload_new_profile, user_delete, user_update, verify_otp
+from app.schema.user_schema import FollowerSchema, OtpSend, OtpVerify, UserSchema,UserLoginSchema,Refresh_token,UserOptional,UserresponseSchema,AlluserSchema
+from app.controller.user_controller import delete_profile, email_otp, follower_details, get_profile, get_user, password_change,token_refresh,get_db,get_users,register_user,login_user, upload_base64_profile, upload_new_profile, user_delete, user_update, verify_otp
 from app.auth.auth_bearer import JWTBearer
 from sqlalchemy.orm import Session
 
@@ -90,13 +90,19 @@ async def remove_profile(user_id: int,db: Session = Depends(get_db)):
 ##------Forgot Password--------##
     
 @router.post("/email")
-async def delete_image(email: str= Body(...),db: Session = Depends(get_db)):
+async def send_otp(email: OtpSend,db: Session = Depends(get_db)):
     user = email_otp(db,email)
     return user
     # pass
 
 @router.post("/email-otp/verify")
-async def otp_verify(otp:str,email: str= Body(...),db: Session = Depends(get_db)):
-    user = verify_otp(db,email,otp)
+async def otp_verify(email: OtpVerify,db: Session = Depends(get_db)):
+    user = verify_otp(db,email)
+    return user
+    # pass
+
+@router.put("/email-otp/")
+async def change_password(email: OtpVerify,db: Session = Depends(get_db)):
+    user = password_change(db,email)
     return user
     # pass

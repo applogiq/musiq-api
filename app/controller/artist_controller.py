@@ -7,16 +7,17 @@ from fastapi import HTTPException
 import os
 from app.model.song_model import songs
 
-def artist_new_detail(db: Session,artists,keyword):
+def artist_new_detail(db: Session,artists):
     artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == 0).first()
     a ="AR00"
     if artistname:
         raise HTTPException(status_code=400, detail="Artist is already register")
-    while db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
-        a = "AR0" + str(int(a[-1])+1)
+    a ="AR001"
+    while db.query(songs).filter(songs.song_id == a).first():
+        a = "AR00" + str(int(a[-1])+1)
     if artists.image:
         s = base64.b64decode(artists.image)
-        filename1 = a+keyword.upper()+".png"
+        filename1 = a+".png"
         file_location = f"public/artists/{filename1}"
         with open(file_location, "wb+") as f:
             f.write(s)  
@@ -25,7 +26,7 @@ def artist_new_detail(db: Session,artists,keyword):
         image = 0
 
     db_user = artist(name = artists.name,
-                    artist_id = a+keyword.upper(),
+                    artist_id = a,
                     is_image = image,
                     is_delete = 0,
                     created_by = 1,
@@ -37,25 +38,25 @@ def artist_new_detail(db: Session,artists,keyword):
     db.refresh(db_user)
     return {"message":"data added"}
 
-def artist_detail(db: Session,artists,keyword):
-    artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == 0).first()
-    a ="AR00"
-    if artistname:
-        raise HTTPException(status_code=400, detail="Artist is already register")
-    while db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
-        a = "AR0" + str(int(a[-1])+1)
-    db_user = artist(name = artists.name,
-                    artist_id = a+keyword.upper(),
-                    is_image = 0,
-                    is_delete = 0,
-                    created_by = 1,
-                    updated_by = 0,
-                    is_active = 1)
+# def artist_detail(db: Session,artists,keyword):
+#     artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == 0).first()
+#     a ="AR00"
+#     if artistname:
+#         raise HTTPException(status_code=400, detail="Artist is already register")
+#     while db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
+#         a = "AR0" + str(int(a[-1])+1)
+#     db_user = artist(name = artists.name,
+#                     artist_id = a+keyword.upper(),
+#                     is_image = 0,
+#                     is_delete = 0,
+#                     created_by = 1,
+#                     updated_by = 0,
+#                     is_active = 1)
 
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return {"message":"data added"}
+#     db.add(db_user)
+#     db.commit()
+#     db.refresh(db_user)
+#     return {"message":"data added"}
 
 def upload_art_image_file(db: Session,art_id: int,uploaded_file):
     user_temp = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0).first()
@@ -109,7 +110,7 @@ def artist_song(db: Session, art_id: int):
     except:
         raise HTTPException(status_code=404, detail="artist detail doesn't exist")
         
-def artist_update(db: Session,art_id: int,artists,keyword):
+def artist_update(db: Session,art_id: int,artists):
     user_temp1 = db.query(artist).filter(artist.id == art_id,artist.is_delete == 0).first()
     if user_temp1:
         a ="AR00"
@@ -119,12 +120,12 @@ def artist_update(db: Session,art_id: int,artists,keyword):
                 raise HTTPException(status_code=400, detail="Artist is already register")
             else:
                 user_temp1.name = artists.name
-        if keyword:
-            if db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
-                a = "AR0" + str(int(a[-1])+1)
-                user_temp1.artist_id = a + keyword.upper()
-            else: 
-                user_temp1.artist_id = a +keyword.upper()
+        # if keyword:
+        #     if db.query(artist).filter(artist.artist_id == a + keyword.upper(),artist.is_delete == 0).first():
+        #         a = "AR0" + str(int(a[-1])+1)
+        #         user_temp1.artist_id = a + keyword.upper()
+        #     else: 
+        #         user_temp1.artist_id = a +keyword.upper()
         if artists.image:
             s = base64.b64decode(artists.image)
             filename1 = user_temp1.artist_id+".png"

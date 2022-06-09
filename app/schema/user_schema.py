@@ -84,5 +84,27 @@ class UserresponseSchema(BaseModel):
     class Config:
         orm_mode = True
 
+class OtpSend(BaseModel):
+    email : str
+    class Config:
+        orm_mode = True
+   
+    # class Config:
+    #     schema_extra = {
+    #         "example":{
+    #             "email": "abcdef45@x.com"
+    #         }
+    #     }
+
+class OtpVerify(OtpSend):
+    otp : str
+    class Config:
+        orm_mode = True
+   
+
+
+    
+
+
 
 

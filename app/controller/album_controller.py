@@ -8,14 +8,15 @@ from fastapi import HTTPException
 from app.model.song_model import songs
 from app.model.album_model import albums
 
-def album_new_detail(db: Session,album,keyword):
+def album_new_detail(db: Session,album):
     albumname =db.query(albums).filter(albums.name == album.name,albums.is_delete == 0).first()
     a ="AL00"
     if albumname:
         raise HTTPException(status_code=400, detail="Album is already register")
 
-    while db.query(albums).filter(albums.album_id == a + keyword.upper(),albums.is_delete == 0).first():
-        a = "AL0" + str(int(a[-1])+1)
+    a ="AL001"
+    while db.query(songs).filter(songs.song_id == a).first():
+        a = "SG00" + str(int(a[-1])+1)
     
     if album.name[0].isalpha():
         alphabet = album.name[0].upper()
@@ -31,7 +32,7 @@ def album_new_detail(db: Session,album,keyword):
     
     if album.image:
         s = base64.b64decode(album.image)
-        filename1 = a+keyword.upper() +".png"
+        filename1 = a +".png"
         if album.name[0].isalpha():
             alphabet = album.name[0].upper()
         else:
@@ -50,7 +51,7 @@ def album_new_detail(db: Session,album,keyword):
        
         
     db_album = albums(name = album.name,
-                    album_id = a+keyword.upper(),
+                    album_id = a,
                     released_year = album.released_year,
                     music_director = album.music_director,
                     no_of_songs = 0,
@@ -156,18 +157,18 @@ def album_update(db: Session,album_id: int,album,keyword):
         else:
             user_temp1.name = album.name
 
-    if keyword:
-        a ="AL00"
-        while db.query(albums).filter(albums.album_id == a + keyword.upper(),albums.is_delete == 0).first():
-            a = "AL0" + str(int(a[-1])+1)
+    # if keyword:
+    #     a ="AL00"
+    #     while db.query(albums).filter(albums.album_id == a + keyword.upper(),albums.is_delete == 0).first():
+    #         a = "AL0" + str(int(a[-1])+1)
       
-        temp2 = db.query(songs).filter(songs.album_id == user_temp1.album_id,songs.is_delete == 0,songs.is_music==1).first()  
-        if temp2:
-            # for i in range(0,len(temp2)):
-            temp2.album_id = a +keyword.upper()
-        else:
-            pass
-        user_temp1.album_id = a +keyword.upper()
+    #     temp2 = db.query(songs).filter(songs.album_id == user_temp1.album_id,songs.is_delete == 0,songs.is_music==1).first()  
+    #     if temp2:
+    #         # for i in range(0,len(temp2)):
+    #         temp2.album_id = a +keyword.upper()
+    #     else:
+    #         pass
+    #     user_temp1.album_id = a +keyword.upper()
     
     if album.released_year:
         user_temp1.released_year = album.released_year
@@ -177,7 +178,7 @@ def album_update(db: Session,album_id: int,album,keyword):
 
     if album.image:
         s = base64.b64decode(album.image)
-        filename1 = a+keyword.upper() +".png"
+        filename1 =  user_temp1.album_id+".png"
         if album.name[0].isalpha():
             alphabet = album.name[0].upper()
         else:

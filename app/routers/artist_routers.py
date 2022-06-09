@@ -6,21 +6,21 @@ from sqlalchemy.orm import Session
 from app.schema.artist_schema import ArtistSchema,ArtistnewSchema
 from app.auth.auth_bearer import JWTBearer
 from app.controller.user_controller import get_db
-from app.controller.artist_controller import artist_delete, artist_detail, artist_new_detail, artist_song, artist_update, delete_image, get_artist, get_artists, get_image,upload_art_image_file, upload_base64_art_file
+from app.controller.artist_controller import artist_delete,artist_new_detail, artist_song, artist_update, delete_image, get_artist, get_artists, get_image,upload_art_image_file, upload_base64_art_file
 
 router = APIRouter(tags=["artist"],prefix="/artist")
 
 http_bearer = JWTBearer()
 
-@router.post("/new")
-async def enter_artist_details(artists:ArtistnewSchema,keyword: str = Query(default=Required, fixed_length = 3),db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
-    artist = artist_new_detail(db,artists,keyword)
+@router.post("/")
+async def enter_artist_details(artists:ArtistnewSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
+    artist = artist_new_detail(db,artists)
     return artist
 
-@router.post("/")
-async def enter_artist_details(artists:ArtistSchema,keyword: str = Query(default=Required, min_length=3, max_length=3),db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
-    artist = artist_detail(db,artists,keyword)
-    return artist
+# @router.post("/")
+# async def enter_artist_details(artists:ArtistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
+#     artist = artist_detail(db,artists)
+#     return artist
 
 @router.post("/image/{art_id}")
 async def upload_img_file(art_id: str,uploaded_file: UploadFile = File(...),db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
@@ -62,8 +62,8 @@ async def get_artist_iamge(art_id: int,db: Session = Depends(get_db),token: str 
     return temp
     
 @router.put("/{art_id}")
-async def update_artist_details(art_id: int,artists:ArtistnewSchema,keyword: Union[str, None] = Query(default=None, fixed_length=3),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    temp = artist_update(db,art_id,artists,keyword)
+async def update_artist_details(art_id: int,artists:ArtistnewSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    temp = artist_update(db,art_id,artists)
     return temp
 
 @router.delete("/{art_id}")

@@ -1,5 +1,5 @@
 from urllib.parse import scheme_chars
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI,Request
 from imp import reload
 import uvicorn
 import sqlalchemy
@@ -7,6 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 from fastapi.openapi.utils import get_openapi
+import socket
 
 
 # # from app.model import *
@@ -53,3 +54,4 @@ app.include_router(playlist_song_routers.router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app",reload=True)
+    # 

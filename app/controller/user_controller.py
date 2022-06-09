@@ -13,6 +13,7 @@ import time
 import smtplib,ssl
 from email.message import EmailMessage
 from mailer import Mailer
+import yagmail
 
 
 from app.schema.user_schema import UserresponseSchema
@@ -339,50 +340,113 @@ def generateOTP() :
     return OTP
 
 def email_otp(db,email):
-    user = db.query(users).filter(users.email == email,users.is_delete==0).first()
+    print(email.email,11111)
+    user = db.query(users).filter(users.email == email.email,users.is_delete==0).first()
     if user:
         s = generateOTP()
         user.otp = s
         user.otp_time = time.time()
-        # mail = Mailer(email='srimathi.k.applogiq@gmail.com', password='Applogiq@123')
-        # mail.send(receiver='shajith.s.applogiq@example.com', subject='TEST', message='From Python!')
-        emailotp = EmailMessage() ## creating obj
-        emailotp["from"] = "srimathi.k.applogiq@123"
-        emailotp["to"] = "shajith.s.applogiq@example.com"
-        emailotp["subject"] = "checking"
-        emailotp.set_content('''Hi,
-            This is body of content''')
-        # context=ssl.create_default_context()
+        user = ('srimathi.k.applogiq@gmail.com')
+        app_password = 'kyhakenqjlkwxmnt' 
+        to = 'shajithali.s.applogiq@gmail.com'
 
-        with smtplib.SMTP(host="smtp.gmail.com",port= 587) as server:
-            # server.ehlo() ##server object
-            # server.starttls(context=context)   ## used to send data b/w server & client
-            # server.ehlo()
-            server.login(emailotp["from"], "Applogiq@123")
-            
-            server.send_message(emailotp)
-        print("email send")
+        subject = 'Resetting Password'
+        content = ['''Password Reset,
+                    This OTP valid for next 30 minutes''',s]
 
+        with yagmail.SMTP({user:"Music"}, app_password) as yag:
+            yag.send(to, subject, content)
+            print('Sent email successfully')
         db.commit()
         return True
+    else:
+        raise HTTPException(status_code=404, detail="Check your email")
 
-def verify_otp(db:Session,email,otp):
-    user = db.query(users).filter(users.email == email,users.is_delete==0).first()
+def verify_otp(db:Session,temp):
+    user = db.query(users).filter(users.email == temp.email,users.is_delete==0).first()
     if user:
-        if user.otp == otp:
+        if user.otp == temp.otp:
             s = time.time() - user.otp_time
             print(s)
-            if s <= 100:
+            if s <= 1800:
                 return("Verified Successfully")
             else:
-                return("OTP expired")
+                raise HTTPException(status_code=400, detail="OTP expired")
         else:
-            return("Check your OTP")
+            raise HTTPException(status_code=400, detail="Check your OTP")
     else:
-        return ("Check your email")
+        raise HTTPException(status_code=404, detail="Check your email")
+
+def password_change(db:Session,temp):
+    user = db.query(users).filter(users.email == temp.email,users.is_delete==0).first()
+    if user:
+        user.password = temp.password
+        # if user.otp == temp.otp:
+            # s = time.time() - user.otp_time
+        #     print(s)
+        #     if s <= 1800:
+        #         return("Verified Successfully")
+        #     else:
+        #         raise HTTPException(status_code=400, detail="OTP expired")
+        # else:
+        #     raise HTTPException(status_code=400, detail="Check your OTP")
+        db.commit()
+        return("Password changed")
+    else:
+        raise HTTPException(status_code=404, detail="Check your email")
+            
             
 
-    # print(s)
-    # totp = pyotp.TOTP('base32secret3232',interval=100)
-    # t = totp.verify(s)
-    return t
+    
+
+
+#######################-----------------------------------------Email Sending using Sendgrid---------------------------------------------###########################
+
+# import os
+# from sendgrid.helpers.mail import Mail
+# from sendgrid import SendGridAPIClient
+
+# # from address we pass to our Mail object, edit with your name
+# FROM_EMAIL = 'Your_Name@SendGridTest.com'
+
+# # update to your dynamic template id from the UI
+# TEMPLATE_ID = 'd-d027f2806c894df38c59a9dec5460594'
+
+# # list of emails and preheader names, update with yours
+# TO_EMAILS = [('your_email@domain.com', 'James Holden'),
+#              # update email and name
+#              ('your_email+1@domain.com', 'Joe Miller')]
+
+
+# def SendDynamic():
+#     """ Send a dynamic email to a list of email addresses
+
+#     :returns API response code
+#     :raises Exception e: raises an exception """
+#     # create Mail object and populate
+#     message = Mail(
+#         from_email=FROM_EMAIL,
+#         to_emails=TO_EMAILS)
+#     # pass custom values for our HTML placeholders
+#     message.dynamic_template_data = {
+#         'subject': 'SendGrid Development',
+#         'place': 'New York City',
+#         'event': 'Twilio Signal'
+#     }
+#     message.template_id = TEMPLATE_ID
+#     # create our sendgrid client object, pass it our key, then send and return our response objects
+#     try:
+#         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+#         response = sg.send(message)
+#         code, body, headers = response.status_code, response.body, response.headers
+#         print(f"Response code: {code}")
+#         print(f"Response headers: {headers}")
+#         print(f"Response body: {body}")
+#         print("Dynamic Messages Sent!")
+#     except Exception as e:
+#         print("Error: {0}".format(e))
+#     return str(response.status_code)
+
+
+# if __name__ == "__main__":
+#     SendDynamic()
