@@ -45,7 +45,7 @@ async def upload_profile(user_id: str,uploaded_file: UploadFile = File(...),db: 
     return song
 
 @router.get("/",response_model=AlluserSchema)
-async def view_all_users(db: Session = Depends(get_db),skip: int = 0, limit: int = 100):
+async def view_all_users(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
     try:
         users = get_users(db, skip=skip, limit=limit)
         if len(users):
