@@ -1,13 +1,12 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Optional,List
 
-
 class UserSchema(BaseModel):
     username : str = Field(...)
     fullname : str = Field(...)
     email: str = Field(...)
     password: str = Field(...)
-    # preference: Dict[str, list] = None
+
     class Config:
         schema_extra = {
             "example":{
@@ -18,12 +17,6 @@ class UserSchema(BaseModel):
                 
             }
         }
-    
-def convert_to_optional(schema):
-    return {k: Optional[v] for k, v in schema.__annotations__.items()}
-
-class UserOptional(UserSchema):
-    __annotations__ = convert_to_optional(UserSchema)
 
 class UserLoginSchema(BaseModel):
     email: str = Field(...)
@@ -36,9 +29,6 @@ class UserLoginSchema(BaseModel):
                 "password": "givenpassword"
             }
         }
-
-class PostDB(UserSchema):
-     id: int
 
 class Refresh_token(BaseModel):
     token: str = Field(...)
@@ -62,49 +52,33 @@ class FollowerSchema(BaseModel):
             }
         }
 
-class UserResponse(UserSchema):
-    id: int = Field(...)
-    register_id: int = Field(...)
-    preference: dict = Field(...)
+class UserOptional(BaseModel):
+    username : Optional[str] = Field(...)
+    fullname : Optional[str] = Field(...)
+    image: Optional[str] = Field(...)
 
     class Config:
-        orm_mode = True
-
-class AlluserSchema(BaseModel):
-    records: List[UserResponse] = []
-    totalrecords: int
-    success: bool
-    class Config:
-        orm_mode = True
-
-class UserresponseSchema(BaseModel):
-    records: UserResponse
-    totalrecords: int
-    success: bool
-    class Config:
-        orm_mode = True
+        schema_extra = {
+            "example":{
+                "username": "username",
+                "fullname" : "first lastname",
+                "image" : "dkfnsndfisdfhdfn"
+            }
+        }
 
 class OtpSend(BaseModel):
     email : str
     class Config:
         orm_mode = True
    
-    # class Config:
-    #     schema_extra = {
-    #         "example":{
-    #             "email": "abcdef45@x.com"
-    #         }
-    #     }
+
 
 class OtpVerify(OtpSend):
     otp : str
     class Config:
         orm_mode = True
-   
 
-
-    
-
-
-
-
+class PasswordSchema(OtpSend):
+    password : str
+    class Config:
+        orm_mode = True
