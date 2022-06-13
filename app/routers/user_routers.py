@@ -1,12 +1,12 @@
 from fastapi import APIRouter,Depends,Body,HTTPException,Response, status,UploadFile,File
 from typing import List
 from sqlalchemy.orm import Session
-
+from fastapi.responses import JSONResponse
 
 from controllers.user_controller import *
 from schemas.user_schema import *
 from utils.auth_bearer import JWTBearer
-from config.database import get_db
+from config.database import *
 
 router = APIRouter(tags=["users"],prefix='/users')
 
@@ -27,20 +27,11 @@ def refresh_token(user: Refresh_token,db: Session = Depends(get_db)):
     user = token_refresh(user,db)
     return user
 
-# @router.post('/follow')
-# def artist_following(user: FollowerSchema,db: Session = Depends(get_db)):
-#     user = follower_details(db,user)
-#     return user
+@router.put('/follow')
+def artist_following(user: FollowerSchema,db: Session = Depends(get_db)):
+    user = follower_details(db,user)
+    return user
 
-# @router.post("/profile-picture/{user_id}")
-# async def upload_profile_picture(user_id: str,img: str = Body(...) ,db: Session = Depends(get_db)):
-#     temp = upload_base64_profile(db,user_id,img)
-#     return temp
-
-# @router.get("/profile-picture/{user_id}")
-# async def get_profile_image(user_id: int,db: Session = Depends(get_db)):
-#     temp = get_profile(db,user_id)
-#     return temp
 
 @router.put("/{user_id}")
 async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
@@ -50,7 +41,12 @@ async def update_user_details(user_id: int,user: UserOptional,db: Session = Depe
 @router.get("/{user_id}")
 async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
     user = get_by_id(user_id,db)
-    return {"status": True,"message":"fetched Successfully","records":user,"total_records":1}
+    if user:
+        return {"status": True,"message":"fetched Successfully","records":user,"total_records":1}
+    else:
+        # return {"status": False,"message":"Couldn't fetch...Check your id"}
+        raise HTTPException(status_code=422, content={"message": "Couldn't fetch...Check your id","success":False})
+
 
 @router.delete("/image/{user_id}")
 async def remove_profile_image(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
@@ -76,3 +72,4 @@ async def otp_verify(email: OtpVerify,db: Session = Depends(get_db),tokens: str 
 async def change_password(email: PasswordSchema,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = password_change(db,email)
     return user
+

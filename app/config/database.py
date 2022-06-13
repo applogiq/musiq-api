@@ -7,6 +7,7 @@ import databases
 from fastapi import FastAPI
 import socket
 from fastapi.staticfiles import StaticFiles
+from decouple import config
 
 host_server = os.environ.get('host_server', 'localhost')
 db_server_port = urllib.parse.quote_plus(str(os.environ.get('db_server_port', '5432')))
@@ -32,6 +33,7 @@ def get_db():
         db.close()
 
 
+app_password = config("APP_PASSWORD")
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
 app = FastAPI(title="Music Streaming API",
@@ -51,3 +53,5 @@ app.mount("/public", StaticFiles(directory="app/public"), name="public")
 # app = FastAPI(title="Music Streaming API",
 #         version="2.5.0",
 #         description="This is a very custom OpenAPI schema")
+
+

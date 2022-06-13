@@ -1,7 +1,6 @@
 from fastapi import HTTPException
 import re
 import base64
-from config.database import IPAddr
 import yagmail,math,random
 # from utils.security import get_password_hash
 # from services.user_service import login_check
@@ -9,6 +8,7 @@ import yagmail,math,random
 from services.user_service import *
 from utils.auth_handler import *
 from utils.security import get_password_hash
+from config.database import *
 
 def password_check(passwd):  
     SpecialSym =['$', '@', '#', '%','!']
@@ -175,14 +175,14 @@ def email_otp(db,email):
         s = generateOTP()
         if otp_change(user,s,db):
             user = ('srimathi.k.applogiq@gmail.com')
-            app_password = 'kyhakenqjlkwxmnt' 
+            password = app_password
             to = 'shajithali.s.applogiq@gmail.com'
 
             subject = 'Resetting Password'
             content = ['''Password Reset,
                         This OTP valid for next 30 minutes''',s]
 
-            with yagmail.SMTP({user:"MusiQ"}, app_password) as yag:
+            with yagmail.SMTP({user:"MusiQ"}, password) as yag:
                 yag.send(to, subject, content)
                 print('Sent email successfully')
         return {"success":True,"message":"Sent email successfully"}

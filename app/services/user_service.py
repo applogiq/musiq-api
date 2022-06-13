@@ -5,11 +5,12 @@ from datetime import datetime
 import os,time
 
 from sqlalchemy import null
-
+# from utils.auth_handler import create_access_token
 from model.user_model import *
 from utils.security import verify_password
-from config.database import IPAddr
-from utils.auth_handler import create_token,create_refresh_token
+from config.database import *
+from utils.auth_handler import create_access_token,create_refresh_token
+from model.artist_model import *
 
 def get_by_id(id,db):
     return db.query(users).filter(users.id == id,users.is_delete==0).first()
@@ -21,6 +22,11 @@ def get_email(email,db):
 def username_check(username,db: Session):
     user = db.query(users).filter(users.username == username,users.is_delete==0).first()
     return user
+
+# def access_token_check(token):
+#     user = query(token).filter(token.access_token == token).first()
+#     return True
+
 
 def new_register(data,access_token,refresh_token,db:Session):
     a = 202201
@@ -48,15 +54,25 @@ def new_register(data,access_token,refresh_token,db:Session):
 
 def login_check(user,db):
     temp = get_email(user.email,db)
+    print(temp)
     tok = db.query(token).filter(token.email == user.email).first()
     if verify_password(user.password,temp.password):
-        temp.access_token = tok.access_token
-        temp.refresh_token = tok.refresh_token
-        return(temp)
+        access_token = create_access_token(user.email)
+        access_token_str = access_token.decode('UTF-8')
+        # temp.access_token = access_token_str
+        refresh_token = create_refresh_token(user.email)
+        refresh_token_str = refresh_token.decode('UTF-8')
+        # temp.refresh_token = refresh_token_str
+        tok.access_token = access_token_str
+        tok.refresh_token = refresh_token_str
+        db.commit()
+        temp1 = get_email(user.email,db)
+        temp1.access_token = access_token_str
+        temp1.refresh_token = refresh_token_str
+        return temp1
     else:
         return False
    
-
 
 def get_token_mail(tok,db):
     return db.query(token).filter(token.refresh_token == tok).first()
@@ -142,6 +158,44 @@ def update_password(email,password,db):
         return True
     else:
         return False
+
+def follower_details(db:Session,user):
+    temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==0).first()
+    if temp:
+        art = db.query(artist).filter(artist.artist_id == user.artist_id,artist.is_delete==0).first()
+        if art:
+            num = art.followers
+            if num:
+                pass
+            else:
+                num = 0
+            if user.follow == 0:
+                if user.artist_id in temp.preference["artist"]:
+                    for i in range(0,len(temp.preference["artist"])):
+                        if i < len(temp.preference["artist"]):
+                            if temp.preference["artist"][i] == user.artist_id:
+                                temp.preference["artist"].pop(i)
+                                art.followers = num-1
+                            else:
+                                pass
+                else:
+                    raise HTTPException(status_code=400, detail={"success": False,"message":"this user does not folowing this artist"})
+                    
+            elif user.follow == 1:
+                if user.artist_id not in temp.preference["artist"]:
+                    temp.preference["artist"].append(user.artist_id)
+                    print("sucess")
+                    art.followers = num + 1
+                else:
+                    raise HTTPException(status_code=400, detail={"success": False,"message":"this user already folowing this artist"})
+        else:
+            raise HTTPException(status_code=400, detail={"success": False,"message":"Check your artsit id"})
+            
+    else:
+        raise HTTPException(status_code=400, detail={"success": False,"message":"Check your user id"})  
+    db.commit()
+    return {"status": True,"message":"Updated Successfully"}
+
 
 
 
