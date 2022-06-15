@@ -49,6 +49,7 @@ def decodeJWT(token: str) -> dict:
     # print(1111111)
     decode_token = jwt.decode(token,ACCESS_SECRET_KEY, algorithms=[API_ALGORITHM])
     expires = decode_token.get("exp")
+    print(decode_token)
     return decode_token if expires >= time.time() else None
     # except:
     #     return {}

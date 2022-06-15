@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from schemas.artist_schema import *
 from utils.auth_bearer import JWTBearer
+from utils.auth_handler import *
 from config.database import *
 from services.artist_service import *
 from controllers.artist_controller import *
@@ -16,11 +17,13 @@ http_bearer = JWTBearer()
 
 @router.post("/")
 async def enter_artist_details(artists:ArtistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
-    artist = artist_detail(db,artists)
+    s = decodeJWT(token) 
+    print(s["sub"])
+    artist = artist_detail(db,artists,s["sub"])
     return artist
 
 
-@router.get("/")
+@router.get("/",dependencies=[Depends(http_bearer)])
 async def view_all_artist_details(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
     try:
         users = artist_get_all(db,skip,limit)

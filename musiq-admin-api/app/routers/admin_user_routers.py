@@ -52,7 +52,9 @@ async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: st
 
 @router.put("/{user_id}")
 async def update_user_details(user_id: int,user: AdminOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
-    user = admin_user_update(user_id,user,db)
+    s = decodeJWT(tokens) 
+    print(s["sub"],9091049104390)
+    user = admin_user_update(user_id,user,db,s["sub"])
     return user
 
 @router.delete("/{user_id}")

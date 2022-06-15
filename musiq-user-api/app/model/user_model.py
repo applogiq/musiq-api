@@ -24,8 +24,8 @@ class users(Base):
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
-    created_by = Column(Integer)
-    updated_by = Column(Integer)
+    created_by = Column(String)
+    updated_by = Column(String)
     is_delete = Column(Integer)
     is_active = Column(Integer)
     

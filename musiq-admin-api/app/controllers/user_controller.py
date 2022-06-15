@@ -9,6 +9,7 @@ import yagmail,math,random
 from services.user_service import *
 from utils.auth_handler import *
 from utils.security import get_password_hash
+from services.admin_user_service import *
 
 def password_check(passwd):  
     SpecialSym =['$', '@', '#', '%','!']
@@ -41,7 +42,7 @@ def email_validate(email):
     else:
         return False
 
-def register_user(user,db):
+def register_user(user,db,email):
     if (email_validate(user.email)) != True:
         raise HTTPException(status_code=422, detail="Invalid Email!!")
     if (password_check(user.password)) != True:
@@ -57,14 +58,16 @@ def register_user(user,db):
     user.password =  get_password_hash(user.password)
     print(user.password)
     dict1 = dict(user)
+    temp = admin_get_email(email,db)
+    
 
-    s = {"preference" : {"artist":[]},"is_active" : 1,"is_delete" : 0,"created_by" : 1,"updated_by" : 0}
-    s1 = {"updated" : 0}
+    s = {"preference" : {"artist":[]},"is_active" : True,"is_delete" : False,"created_by": temp.id}
     data = {**dict1,**s}
     data["access_token"] = access_token_str
     data["refresh_token"]= refresh_token_str
     try:
-        return {"status": True,"message":"Register Successfully","records": new_register(data,access_token_str,refresh_token_str,db)}
+        # data = new_register(data,access_token_str,refresh_token_str,db)
+        return {"status": True,"message":"Register Successfully","records":new_register(data,access_token_str,refresh_token_str,db)}
     except:
         raise HTTPException(status_code=422, detail={"message": "couldn't register,check your details","success":False})
 

@@ -11,23 +11,24 @@ from model.artist_model import *
 from utils.security import verify_password
 from config.database import *
 from utils.auth_handler import create_access_token,create_refresh_token
+from services.admin_user_service import *
 
 def user_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(users).filter(users.is_delete == 0).offset(skip).limit(limit).all()
+    user = db.query(users).filter(users.is_delete == False).offset(skip).limit(limit).all()
     if user:
         return user
     else:
         return False
 
 def get_by_id(id,db):
-    return db.query(users).filter(users.id == id,users.is_delete==0).first()
+    return db.query(users).filter(users.id == id,users.is_delete==False).first()
 
 def get_email(email,db):
-    user = db.query(users).filter(users.email == email,users.is_delete==0).first()
+    user = db.query(users).filter(users.email == email,users.is_delete==False).first()
     return user
 
 def username_check(username,db: Session):
-    user = db.query(users).filter(users.username == username,users.is_delete==0).first()
+    user = db.query(users).filter(users.username == username,users.is_delete==False).first()
     return user
 
 # def access_token_check(token):
@@ -48,20 +49,24 @@ def new_register(data,access_token,refresh_token,db:Session):
                         password = data["password"], 
                         preference = data["preference"],
                         is_active = data["is_active"], 
-                        is_delete =data["is_delete"], 
-                        created_by =data["created_by"], 
-                        updated_by =data["updated_by"])
+                        is_delete =data["is_delete"],
+                        created_by =data["created_by"])
     db_token = token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
     
-   
+    user = db_user
+    user.access_token = access_token
+    user.refresh_token = refresh_token
     db.add(db_user)
     db.add(db_token)
     db.commit()
-    db.flush()
-    id = db_user.id
-    print(db_user.id,2222222)
-    print(db_user,3333)
-    return db_user
+    # db.flush()
+    # temp = db.query(users).filter(users.email == data["email"]).first()
+    # db_user.created_by = db_user.id
+    # db.commit()
+    # id = db_user.id
+    # print(db_user.id,2222222)
+    # print(db_user,3333)
+    return user
 
 def login_check(user,db):
     temp = get_email(user.email,db)
@@ -98,12 +103,12 @@ def update_tokens(email,access_token, refresh_token,db:Session):
 def image_upload(id,db:Session):
     temp = get_by_id(id,db)
     if temp:
-        temp.is_image = 1
+        temp.is_image = True
         db.commit()
     return True
 
 def image_check(id,db:Session):
-    return db.query(users).filter(users.id == id,users.is_delete == 0,users.is_image == 1).first()
+    return db.query(users).filter(users.id == id,users.is_delete == False,users.is_image == True).first()
 
 # def commit(user,db):
 #     temp = db.query(users).filter(users.email == user.name,users.is_delete == 0,users.is_image == 1).first()
@@ -132,7 +137,7 @@ def user_update(user_id,user,db):
                 user_temp.is_image = 1
                 # user_temp.img_link = f"http://{IPAddr}:3000/public/users/{filename}"
         user_temp.updated_at = datetime.now()
-        user_temp.updated_by = 1 
+        user_temp.updated_by = "admin"
         db.commit()
         # if commit(user_temp,db):
         temp = get_by_id(user_id,db)
@@ -143,7 +148,7 @@ def user_update(user_id,user,db):
 def remove_image(user_id,db):
     user_temp =  image_check(user_id,db)
     if user_temp:
-        user_temp.is_image = 0
+        user_temp.is_image = False
         # user_temp.img_link = None
         file = str(user_temp.register_id)+".png"
         path = f"app/public/users/{file}"
@@ -171,18 +176,18 @@ def update_password(email,password,db):
         return False
     
 def user_delete(db:Session,user_id):
-    user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0).first()
+    user_temp = db.query(users).filter(users.id == user_id,users.is_delete == False).first()
     if user_temp:
-        user_temp.is_delete = 1
+        user_temp.is_delete = True
         db.commit()
         return {"success": True,"message":"Deleted"}
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
 
 def follower_details(db:Session,user):
-    temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==0).first()
+    temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==False).first()
     if temp:
-        art = db.query(artist).filter(artist.artist_id == user.artist_id,artist.is_delete==0).first()
+        art = db.query(artist).filter(artist.artist_id == user.artist_id,artist.is_delete==False).first()
         if art:
             num = art.followers
             if num:

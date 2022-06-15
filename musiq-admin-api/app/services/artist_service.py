@@ -4,12 +4,11 @@ from datetime import datetime
 import os,time
 import base64
 
-from sqlalchemy import null
 # from utils.auth_handler import create_access_token
 from model.user_model import *
 from config.database import *
 from model.artist_model import *
-
+from model.admin_user_model import admin_users
 def artist_get_all(db: Session, skip: int = 0, limit: int = 100):
     user = db.query(artist).filter(artist.is_delete == 0).offset(skip).limit(limit).all()
     if user:
@@ -23,8 +22,8 @@ def artist_image_check(db,id):
 def artist_get_by_id(db,id):
     return db.query(artist).filter(artist.id == id,artist.is_delete==0).first()
 
-def artist_detail(db: Session,artists):
-    artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == 0).first()
+def artist_detail(db: Session,artists,email):
+    artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == False).first()
     a ="AR00"
     if artistname:
         raise HTTPException(status_code=400, detail="Artist is already register")
@@ -37,18 +36,19 @@ def artist_detail(db: Session,artists):
         file_location = f"{DIRECTORY}/artists/{filename}"
         with open(file_location, "wb+") as f:
             f.write(s)  
-        image = 1
+        image = True
         # link = f"http://{IPAddr}:2000/public/artists/{filename}"
     else:
-        image = 0
+        image = False
         # link = null
-
+    temp = db.query(admin_users).filter(admin_users.email == email,admin_users.is_delete == False).first()
+    print(email,222222)
+    print(temp.id)
     db_user = artist(name = artists.name,
                     artist_id = a,
                     is_image = image,
-                    is_delete = 0,
-                    created_by = 1,
-                    updated_by = 0,
+                    is_delete = False,
+                    created_by = temp.id,
                     is_active = 1)
 
     db.add(db_user)
@@ -71,7 +71,7 @@ def artist_update(db,user_id,user):
             # user_temp.img_link = f"http://{IPAddr}:2000/public/artists/{filename}"
        
         user_temp.updated_at = datetime.now()
-        user_temp.updated_by = 1 
+        user_temp.updated_by = "admin"
         db.commit()
         # if commit(user_temp,db):
         temp = artist_get_by_id(db,user_id)

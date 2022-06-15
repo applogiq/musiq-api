@@ -49,10 +49,12 @@ def new_register(data,access_token,refresh_token,db:Session):
                         preference = data["preference"],
                         is_active = data["is_active"], 
                         is_delete =data["is_delete"], 
-                        created_by =data["created_by"], 
-                        updated_by =data["updated_by"])
+                        created_by =data["created_by"])
     db_token = token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
     
+    user = db_user
+    user.access_token = access_token
+    user.refresh_token = refresh_token
    
     db.add(db_user)
     db.add(db_token)
@@ -61,7 +63,7 @@ def new_register(data,access_token,refresh_token,db:Session):
     id = db_user.id
     print(db_user.id,2222222)
     print(db_user,3333)
-    return db_user
+    return user
 
 def login_check(user,db):
     temp = get_email(user.email,db)
@@ -132,7 +134,7 @@ def user_update(user_id,user,db):
                 user_temp.is_image = 1
                 # user_temp.img_link = f"http://{IPAddr}:3000/public/users/{filename}"
         user_temp.updated_at = datetime.now()
-        user_temp.updated_by = 1 
+        user_temp.updated_by = "user" 
         db.commit()
         # if commit(user_temp,db):
         temp = get_by_id(user_id,db)

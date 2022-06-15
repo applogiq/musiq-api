@@ -12,36 +12,35 @@ from utils.auth_handler import create_access_token,create_refresh_token
 from model.admin_user_model import *
 
 def admin_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(admin_users).filter(admin_users.is_delete == 0).offset(skip).limit(limit).all()
+    user = db.query(admin_users).filter(admin_users.is_delete == False).offset(skip).limit(limit).all()
     if user:
         return user
     else:
         return False
 
 def admin_get_by_id(id,db):
-    return db.query(admin_users).filter(admin_users.id == id,admin_users.is_delete==0).first()
+    return db.query(admin_users).filter(admin_users.id == id,admin_users.is_delete==False).first()
 
 def admin_get_email(email,db):
-    user = db.query(admin_users).filter(admin_users.email == email,admin_users.is_delete==0).first()
+    user = db.query(admin_users).filter(admin_users.email == email,admin_users.is_delete==False).first()
     return user
 
-# def username_check(username,db: Session):
-#     user = db.query(users).filter(users.username == username,users.is_delete==0).first()
-#     return user
+
 
 def new_admin_register(data,access_token,refresh_token,db:Session):
     db_user = admin_users(name = data["name"],
                     email = data["email"], 
                     password = data["password"], 
                     is_active = data["is_active"], 
-                    is_delete =data["is_delete"], 
-                    created_by =data["created_by"], 
-                    updated_by =data["updated_by"])
+                    is_delete =data["is_delete"])
     db_token = admin_token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
     
    
     db.add(db_user)
     db.add(db_token)
+    db.commit()
+    db.flush()
+    db_user.created_by = db_user.id
     db.commit()
     return True
 
@@ -63,8 +62,8 @@ def admin_login_check(user,db):
         temp1.access_token = access_token_str
         temp1.refresh_token = refresh_token_str
         return temp1
-    # else:
-    #     return False
+    else:
+        return False
    
 
 def admin_get_token_mail(tok,db):
@@ -78,7 +77,7 @@ def admin_update_tokens(email,access_token, refresh_token,db:Session):
     db.commit()
     return True
 
-def admin_user_update(user_id,user,db):
+def admin_user_update(user_id,user,db,email):
     user_temp = admin_get_by_id(user_id,db)
     if user_temp:
         if user.name:
@@ -88,7 +87,8 @@ def admin_user_update(user_id,user,db):
         if user.password:
             user_temp.password = user.password
         user_temp.updated_at = datetime.now()
-        user_temp.updated_by = 1 
+        temp = admin_get_email(email,db)
+        user_temp.updated_by = temp.id
         db.commit()
         # if commit(user_temp,db):
         temp = admin_get_by_id(user_id,db)
@@ -97,9 +97,9 @@ def admin_user_update(user_id,user,db):
         raise HTTPException(status_code=404, detail="user doesn't exist")
 
 def admin_delete(db:Session,user_id):
-    user_temp = db.query(admin_users).filter(admin_users.id == user_id,admin_users.is_delete == 0).first()
+    user_temp = admin_get_by_id(user_id,db)
     if user_temp:
-        user_temp.is_delete = 1
+        user_temp.is_delete = True
         db.commit()
         return {"success": True,"message":"Deleted"}
     else:

@@ -1,8 +1,6 @@
 from fastapi import HTTPException
 import re
 
-
-
 from services.artist_service import *
 
 def artist_delete_image(db,user_id):

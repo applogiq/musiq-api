@@ -72,8 +72,7 @@ def album_create(db,album):
                         no_of_songs = 0,
                         is_image = image,
                         is_delete = 0,
-                        created_by = 1,
-                        updated_by = 0,
+                        created_by = "admin",
                         is_active = 1)
 
         
@@ -140,13 +139,8 @@ def album_update(db: Session,album_id: int,album):
                 f.write(s)
             user_temp1.is_image = 1 
 
-
-
-        user_temp1.is_active = 1 
-        user_temp1.is_delete = 0
-        user_temp1.created_by = 1
         user_temp1.updated_at = datetime.now()
-        user_temp1.updated_by = 1
+        user_temp1.updated_by = "admin"
 
         db.commit()
         return {"status": True,"message":"Updated Successfully"}

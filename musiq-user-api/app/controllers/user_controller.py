@@ -58,7 +58,7 @@ def register_user(user,db):
     print(user.password)
     dict1 = dict(user)
 
-    s = {"preference" : {"artist":[]},"is_active" : 1,"is_delete" : 0,"created_by" : 1,"updated_by" : 0}
+    s = {"preference" : {"artist":[]},"is_active" : 1,"is_delete" : 0,"created_by" : "user"}
     s1 = {"updated" : 0}
     data = {**dict1,**s}
     data["access_token"] = access_token_str

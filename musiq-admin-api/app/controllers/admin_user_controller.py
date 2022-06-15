@@ -24,8 +24,7 @@ def register_admin(user,db):
     print(user.password)
     dict1 = dict(user)
 
-    s = {"is_active" : 1,"is_delete" : 0,"created_by" : 1,"updated_by" : 0}
-    s1 = {"updated" : 0}
+    s = {"is_active" : True,"is_delete" : False}
     data = {**dict1,**s}
     data["access_token"] = access_token_str
     data["refresh_token"]= refresh_token_str

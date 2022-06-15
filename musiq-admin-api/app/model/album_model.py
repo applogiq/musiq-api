@@ -1,6 +1,6 @@
 from config.database import *
 # from app.config.database import Base
-from sqlalchemy import Column, Integer, String, TIMESTAMP,text
+from sqlalchemy import Column, Integer, String, TIMESTAMP,text,Boolean
 import sqlalchemy
 from sqlalchemy.orm import relationship
 # from app.model.song_model import songs
@@ -14,17 +14,16 @@ class albums(Base):
     released_year = Column(Integer)
     no_of_songs = Column(Integer) 
     music_director = Column(String(255))
-    is_image = Column(Integer)
-    # img_link = Column(String)
+    is_image = Column(Boolean,default=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
-    created_by = Column(Integer)
-    updated_by = Column(Integer)
-    is_delete = Column(Integer)
-    is_active = Column(Integer)
+    created_by = Column(String,nullable=True)
+    updated_by = Column(String,nullable=True)
+    is_delete = Column(Boolean,default=False)
+    is_active = Column(Boolean,default=True)
 
-    # song = relationship("songs", backref="albums")
+    song = relationship("songs", backref="albums")
 
 
 metadata = sqlalchemy.MetaData()

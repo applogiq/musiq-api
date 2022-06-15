@@ -7,14 +7,16 @@ from controllers.user_controller import *
 from schemas.user_schema import *
 from utils.auth_bearer import JWTBearer
 from config.database import *
+from services.user_service import *
 
 router = APIRouter(tags=["users"],prefix='/users')
 
 http_bearer = JWTBearer()
 
 @router.post("/register",status_code=201)
-async def user_register(user: UserSchema,response: Response, db: Session = Depends(get_db)):
-    user = register_user(user,db)
+async def create_user(user: UserSchema,response: Response, db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
+    s = decodeJWT(tokens)
+    user = register_user(user,db,s["sub"])
     return user
 
 @router.post("/login")
@@ -40,27 +42,17 @@ async def view_all_users(db: Session = Depends(get_db),skip: int = 0, limit: int
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
 @router.get("/{user_id}")
-async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
+async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = get_by_id(user_id,db)
     return {"status": True,"message":"fetched Successfully","records":user,"total_records":1}
 
 @router.put('/follow')
-def artist_following(user: FollowerSchema,db: Session = Depends(get_db)):
+def artist_following(user: FollowerSchema,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = follower_details(db,user)
     return user
 
-# @router.post("/profile-picture/{user_id}")
-# async def upload_profile_picture(user_id: str,img: str = Body(...) ,db: Session = Depends(get_db)):
-#     temp = upload_base64_profile(db,user_id,img)
-#     return temp
-
-# @router.get("/profile-picture/{user_id}")
-# async def get_profile_image(user_id: int,db: Session = Depends(get_db)):
-#     temp = get_profile(db,user_id)
-#     return temp
-
 @router.put("/{user_id}")
-async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
+async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = user_update(user_id,user,db)
     return user
 
