@@ -24,10 +24,10 @@ class users(Base):
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
-    created_by = Column(String,nullable=True)
-    created_user_by = Column(String,nullable=True)
-    updated_by = Column(String,nullable=True)
-    created_user_by = Column(String,nullable=True)
+    created_by = Column(Integer,nullable=True)
+    created_user_by = Column(Integer,nullable=True)
+    updated_by = Column(Integer,nullable=True)
+    created_user_by = Column(Integer,nullable=True)
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
     

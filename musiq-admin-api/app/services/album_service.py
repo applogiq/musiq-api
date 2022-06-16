@@ -8,12 +8,13 @@ import base64
 from model.album_model import *
 from config.database import *
 from model.artist_model import *
+from  services.admin_user_service import *
 
 def album_get_by_id(id,db):
-    return db.query(albums).filter(albums.id == id,albums.is_delete==0).first()
+    return db.query(albums).filter(albums.id == id,albums.is_delete==False).first()
 
 def album_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(albums).filter(albums.is_delete == 0).offset(skip).limit(limit).all()
+    user = db.query(albums).filter(albums.is_delete == False).offset(skip).limit(limit).all()
     if user:
         return user
     else:
@@ -21,14 +22,14 @@ def album_get_all(db: Session, skip: int = 0, limit: int = 100):
 
 
 def albumname_check(albumname,db: Session):
-    user = db.query(albums).filter(albums.name == albumname,albums.is_delete==0).first()
+    user = db.query(albums).filter(albums.name == albumname,albums.is_delete==False).first()
     return user
 
 def album_image_check(album_id,db: Session):
-    user= db.query(albums).filter(albums.id == album_id,albums.is_delete == 0,albums.is_image == 1).first()
+    user= db.query(albums).filter(albums.id == album_id,albums.is_delete == False,albums.is_image == True).first()
     return user
     
-def album_create(db,album):
+def album_create(db,album,email):
         a ="AL001"
         while db.query(albums).filter(albums.album_id == a).first():
             a = "AL00" + str(int(a[-1])+1)
@@ -61,18 +62,19 @@ def album_create(db,album):
             file_location2 = f"{file_location}/{filename1}"
             with open(file_location2, 'wb') as f:
                 f.write(s)
-            image = 1
+            image = True
         else:
-            image = 0
-            
+            image = False
+
+        temp = admin_get_email(email,db)   
         db_album = albums(name = album.name,
                         album_id = a,
                         released_year = album.released_year,
                         music_director = album.music_director,
                         no_of_songs = 0,
                         is_image = image,
-                        is_delete = 0,
-                        created_by = "admin",
+                        is_delete = False,
+                        created_by = temp.id,
                         is_active = 1)
 
         
@@ -81,7 +83,7 @@ def album_create(db,album):
         db.refresh(db_album)
         return db_album
 
-def album_update(db: Session,album_id: int,album):
+def album_update(db: Session,album_id: int,album,email):
     user_temp1 = album_get_by_id(album_id,db)
     if user_temp1:
         if album.name:
@@ -105,7 +107,8 @@ def album_update(db: Session,album_id: int,album):
                 else:
                     os.makedirs(dest)
                 user_temp1.name = album.name
-    
+        else:
+            pass
 
         if album.released_year:
             user_temp1.released_year = album.released_year
@@ -119,15 +122,15 @@ def album_update(db: Session,album_id: int,album):
             if album.name:
                 if album.name[0].isalpha():
                     alphabet = album.name[0].upper()
-                    name = album.name
                 else:
                     alphabet = "Mis"
+                name = album.name
             else:
                 if user_temp1.name[0].isalpha():
                     alphabet = user_temp1.name[0].upper()
-                    name = user_temp1.name
                 else:
                     alphabet = "Mis"
+                name = user_temp1.name
 
             file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{name}/image"
             if os.path.exists(file_location):
@@ -137,13 +140,17 @@ def album_update(db: Session,album_id: int,album):
             file_location2 = f"{file_location}/{filename1}"
             with open(file_location2, 'wb') as f:
                 f.write(s)
-            user_temp1.is_image = 1 
+            user_temp1.is_image = True
 
+        temp = admin_get_email(email,db)
         user_temp1.updated_at = datetime.now()
-        user_temp1.updated_by = "admin"
+        user_temp1.updated_by = temp.id
 
+        
         db.commit()
-        return {"status": True,"message":"Updated Successfully"}
+        temp1 = album_get_by_id(album_id,db)
+        print(temp1)
+        return {"status": True,"message":"Updated Successfully","records":temp1}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..album doesn't exist"})
 
@@ -155,7 +162,7 @@ def delete_album_image(db: Session,album_id: int):
                 alphabet = user_temp.name[0].upper()
             else:
                 alphabet = "Mis" 
-        user_temp.is_image = 0
+        user_temp.is_image = False
 
         path =f"{DIRECTORY}/music/tamil/{alphabet}/{user_temp.name}/image/{user_temp.album_id}.png"
         os.remove(path)

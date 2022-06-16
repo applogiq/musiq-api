@@ -41,8 +41,9 @@ def artist_following(user: FollowerSchema,db: Session = Depends(get_db)):
 
 
 @router.put("/{user_id}")
-async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
-    user = user_update(user_id,user,db)
+async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
+    s = decodeJWT(tokens)
+    user = user_update(user_id,user,db,s["sub"])
     return user
 
 

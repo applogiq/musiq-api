@@ -3,6 +3,7 @@ from sqlalchemy_json import NestedMutableJson
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
+from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 import sqlalchemy
 
 from config.database import *
@@ -18,7 +19,7 @@ class songs(Base):
     id = Column(Integer, primary_key=True, index=True)
     song_id = Column(String(255),unique = True)
     name = Column(String(255), nullable=True) 
-    artist_id = Column(JSON, default=dict)
+    artist_id = Column(ARRAY(Integer))
     album_id = Column(Integer, ForeignKey("albums.id"))
     genre_id = Column(JSON)
     duration = Column(TIME,nullable=True)
@@ -31,8 +32,8 @@ class songs(Base):
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
-    created_by = Column(String,nullable=True)
-    updated_by = Column(String,nullable=True)
+    created_by = Column(Integer,nullable=True)
+    updated_by = Column(Integer,nullable=True)
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 

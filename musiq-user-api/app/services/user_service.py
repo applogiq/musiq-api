@@ -13,21 +13,21 @@ from config.database import *
 from utils.auth_handler import create_access_token,create_refresh_token
 
 def user_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(users).filter(users.is_delete == 0).offset(skip).limit(limit).all()
+    user = db.query(users).filter(users.is_delete == False).offset(skip).limit(limit).all()
     if user:
         return user
     else:
         return False
 
 def get_by_id(id,db):
-    return db.query(users).filter(users.id == id,users.is_delete==0).first()
+    return db.query(users).filter(users.id == id,users.is_delete==False).first()
 
 def get_email(email,db):
-    user = db.query(users).filter(users.email == email,users.is_delete==0).first()
+    user = db.query(users).filter(users.email == email,users.is_delete==False).first()
     return user
 
 def username_check(username,db: Session):
-    user = db.query(users).filter(users.username == username,users.is_delete==0).first()
+    user = db.query(users).filter(users.username == username,users.is_delete==False).first()
     return user
 
 # def access_token_check(token):
@@ -48,19 +48,21 @@ def new_register(data,access_token,refresh_token,db:Session):
                         password = data["password"], 
                         preference = data["preference"],
                         is_active = data["is_active"], 
-                        is_delete =data["is_delete"], 
-                        created_by =data["created_by"])
+                        is_delete =data["is_delete"])
     db_token = token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
     
-    user = db_user
-    user.access_token = access_token
-    user.refresh_token = refresh_token
+    
    
     db.add(db_user)
     db.add(db_token)
     db.commit()
     db.flush()
-    id = db_user.id
+    db_user.created_user_by = db_user.id
+    db.commit()
+    user = db_user
+    user.access_token = access_token
+    user.refresh_token = refresh_token
+    
     print(db_user.id,2222222)
     print(db_user,3333)
     return user
@@ -113,7 +115,7 @@ def image_check(id,db:Session):
 #     db.commit()
 #     return True
 
-def user_update(user_id,user,db):
+def user_update(user_id,user,db,email):
     user_temp = get_by_id(user_id,db)
     if user_temp:
         if user.username:
@@ -133,8 +135,9 @@ def user_update(user_id,user,db):
                 # return {"info": f"file '{filename}' saved at '{file_location}'"}
                 user_temp.is_image = 1
                 # user_temp.img_link = f"http://{IPAddr}:3000/public/users/{filename}"
+        temp1 = get_email(email,db)
         user_temp.updated_at = datetime.now()
-        user_temp.updated_by = "user" 
+        user_temp.updated_user_by = temp1.id
         db.commit()
         # if commit(user_temp,db):
         temp = get_by_id(user_id,db)

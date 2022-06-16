@@ -9,18 +9,21 @@ from model.user_model import *
 from config.database import *
 from model.artist_model import *
 from model.admin_user_model import admin_users
+from services.admin_user_service import *
+
+
 def artist_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(artist).filter(artist.is_delete == 0).offset(skip).limit(limit).all()
+    user = db.query(artist).filter(artist.is_delete == False).offset(skip).limit(limit).all()
     if user:
         return user
     else:
         return False
 
 def artist_image_check(db,id):
-    return db.query(artist).filter(artist.id == id,artist.is_delete == 0,artist.is_image == 1).first()
+    return db.query(artist).filter(artist.id == id,artist.is_delete == False,artist.is_image == True).first()
 
 def artist_get_by_id(db,id):
-    return db.query(artist).filter(artist.id == id,artist.is_delete==0).first()
+    return db.query(artist).filter(artist.id == id,artist.is_delete==False).first()
 
 def artist_detail(db: Session,artists,email):
     artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == False).first()
@@ -41,7 +44,7 @@ def artist_detail(db: Session,artists,email):
     else:
         image = False
         # link = null
-    temp = db.query(admin_users).filter(admin_users.email == email,admin_users.is_delete == False).first()
+    temp = admin_get_email(email,db)
     print(email,222222)
     print(temp.id)
     db_user = artist(name = artists.name,
@@ -56,7 +59,7 @@ def artist_detail(db: Session,artists,email):
     db.refresh(db_user)
     return {"success": True,"message":"data added","records":{db_user}}
 
-def artist_update(db,user_id,user):
+def artist_update(db,user_id,user,email):
     user_temp = artist_get_by_id(db,user_id)
     if user_temp:
         if user.name:
@@ -67,11 +70,12 @@ def artist_update(db,user_id,user):
             file_location = f"{DIRECTORY}/artists/{filename}"
             with open(file_location, "wb+") as f:
                 f.write(s)  
-            user_temp.is_image = 1
+            user_temp.is_image = True
             # user_temp.img_link = f"http://{IPAddr}:2000/public/artists/{filename}"
-       
+
+        temp1 = admin_get_email(email,db)
         user_temp.updated_at = datetime.now()
-        user_temp.updated_by = "admin"
+        user_temp.updated_by = temp1.id
         db.commit()
         # if commit(user_temp,db):
         temp = artist_get_by_id(db,user_id)
@@ -82,7 +86,7 @@ def artist_update(db,user_id,user):
 def artist_remove_image(db,user_id):
     user_temp =  artist_image_check(db,user_id)
     if user_temp:
-        user_temp.is_image = 0
+        user_temp.is_image = False
         # user_temp.img_link = None
         file = str(user_temp.artist_id)+".png"
         path = f"{DIRECTORY}/artists/{file}"

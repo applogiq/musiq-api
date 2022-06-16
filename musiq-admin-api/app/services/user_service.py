@@ -38,7 +38,7 @@ def username_check(username,db: Session):
 
 def new_register(data,access_token,refresh_token,db:Session):
     a = 202201
-    print(data)
+    # print(data)
     while db.query(users).filter(users.register_id == a).first():
         a = a+1
     data["register_id"] = a
@@ -54,19 +54,24 @@ def new_register(data,access_token,refresh_token,db:Session):
     db_token = token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
     
     user = db_user
+
     user.access_token = access_token
     user.refresh_token = refresh_token
     db.add(db_user)
     db.add(db_token)
     db.commit()
-    # db.flush()
-    # temp = db.query(users).filter(users.email == data["email"]).first()
-    # db_user.created_by = db_user.id
-    # db.commit()
-    # id = db_user.id
-    # print(db_user.id,2222222)
-    # print(db_user,3333)
-    return user
+    db.flush()
+    
+
+    print(db_user)
+        # temp = db.query(users).filter(users.email == data["email"]).first()
+        # db_user.created_by = db_user.id
+        # db.commit()
+        # id = db_user.id
+        # print(db_user.id,2222222)
+        # print(db_user,3333)
+        
+    return db_user
 
 def login_check(user,db):
     temp = get_email(user.email,db)
@@ -116,7 +121,7 @@ def image_check(id,db:Session):
 #     db.commit()
 #     return True
 
-def user_update(user_id,user,db):
+def user_update(user_id,user,db,email):
     user_temp = get_by_id(user_id,db)
     if user_temp:
         if user.username:
@@ -136,8 +141,9 @@ def user_update(user_id,user,db):
                 # return {"info": f"file '{filename}' saved at '{file_location}'"}
                 user_temp.is_image = 1
                 # user_temp.img_link = f"http://{IPAddr}:3000/public/users/{filename}"
+        temp1 = admin_get_email(email,db)
         user_temp.updated_at = datetime.now()
-        user_temp.updated_by = "admin"
+        user_temp.updated_by = temp1.id
         db.commit()
         # if commit(user_temp,db):
         temp = get_by_id(user_id,db)

@@ -4,6 +4,7 @@ from typing import Union,List
 from sqlalchemy.orm import Session
 
 
+from utils.auth_handler import *
 from schemas.album_schema import AlbumSchema,AlbumResponse,AllalbumResponse
 from utils.auth_bearer import JWTBearer
 from config.database import *
@@ -15,7 +16,8 @@ http_bearer = JWTBearer()
 
 @router.post("/")
 async def enter_album_details(album:AlbumSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
-    temp = album_detail(db,album)
+    s = decodeJWT(token)
+    temp = album_detail(db,album,s["sub"])
     return temp
 
 
@@ -45,7 +47,8 @@ async def view_album_details(album_id: int,db: Session = Depends(get_db),token: 
 
 @router.put("/{id}")
 async def update_album_details(album_id: int,album: AlbumSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    temp = album_update(db,album_id,album)
+    s = decodeJWT(token)
+    temp = album_update(db,album_id,album,s["sub"])
     return temp
 
 

@@ -20,7 +20,7 @@ async def create_user(user: UserSchema,response: Response, db: Session = Depends
     return user
 
 @router.post("/login")
-async def user_login(user: UserLoginSchema,db: Session = Depends(get_db)):
+async def user_login(user: UserLoginSchema,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = login_user(user,db)
     return user
 
@@ -53,7 +53,8 @@ def artist_following(user: FollowerSchema,db: Session = Depends(get_db),tokens: 
 
 @router.put("/{user_id}")
 async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
-    user = user_update(user_id,user,db)
+    s = decodeJWT(tokens)
+    user = user_update(user_id,user,db,s["sub"])
     return user
 
 

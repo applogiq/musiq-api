@@ -27,7 +27,7 @@ async def enter_artist_details(artists:ArtistSchema,db: Session = Depends(get_db
 async def view_all_artist_details(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
     try:
         users = artist_get_all(db,skip,limit)
-        return {"records": users,"total_records" : len(users),"success":True}
+        return {"success":True,"message":"Details fetched successfully","records": users,"total_records" : len(users)}
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
@@ -37,7 +37,7 @@ async def view_artist_details(artist_id: int,db: Session = Depends(get_db),token
     # pass
     artists = artist_get_by_id(db, artist_id)
     if artists:
-        return {"records": artists,"total_records" : 1,"sucess":True}
+        return {"success":True,"message":"Details fetched successfully","records": artists,"total_records" : 1}
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
@@ -52,7 +52,8 @@ async def view_artist_songs(artist_id: str,db: Session = Depends(get_db),token: 
 
 @router.put("/{artist_id}")
 async def update_artist_details(artist_id: int,artists:ArtistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    temp = artist_update(db,artist_id,artists)
+    s = decodeJWT(token) 
+    temp = artist_update(db,artist_id,artists,s["sub"])
     return temp
 
 

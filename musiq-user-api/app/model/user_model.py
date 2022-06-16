@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy import Column, Float, Integer, String,Boolean
 from sqlalchemy_json import NestedMutableJson
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
@@ -19,15 +19,17 @@ class users(Base):
     preference = Column(NestedMutableJson)
     otp = Column(String)
     otp_time = Column(Float)
-    is_image = Column(Integer)
+    is_image = Column(Boolean)
     # img_link = Column(String)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
-    created_by = Column(String)
-    updated_by = Column(String)
-    is_delete = Column(Integer)
-    is_active = Column(Integer)
+    created_by = Column(Integer)
+    created_user_by = Column(Integer)
+    updated_by = Column(Integer)
+    updated_user_by = Column(Integer)
+    is_delete = Column(Boolean)
+    is_active = Column(Boolean)
     
 
     # recent = relationship("recents", backref="users")

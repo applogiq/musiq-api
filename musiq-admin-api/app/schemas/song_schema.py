@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Dict,List,Optional
+from typing import Dict,List,Optional,Union
 # from datetime import time,date
 
 from schemas.album_schema import Responsealbum
@@ -7,8 +7,8 @@ from schemas.album_schema import Responsealbum
 
 class SongSchema(BaseModel):
     name : str = Field(...)
-    artist_id : Dict[str, list] = None
-    album_id : str = Field(...)
+    artist_id : list = None
+    album_id : Union[str,None] = None
     genre_id : Dict[str, list] = None
     duration: str = Field(...)
     lyrics: str = Field(...)
@@ -21,7 +21,7 @@ class SongSchema(BaseModel):
         schema_extra = {
             "example":{
                 "name" : "Melody",
-                "artist_id" :{"artist": ["data"]},
+                "artist_id" :["data"],
                 "album_id" : "g001",
                 "genre_id" : {"genres": ["data"]},
                 "duration": "00:05:45",
@@ -43,15 +43,17 @@ class SongResponse(SongSchema):
 
 
 class AllresponseSchema(BaseModel):
+    success: bool
+    message: str
     records: List[SongResponse] = []
     totalrecords: int
-    success: bool
     class Config:
         orm_mode = True
 
 class SongresponseSchema(BaseModel):
+    success: bool
+    message: str
     records: SongResponse
     totalrecords: int
-    success: bool
     class Config:
         orm_mode = True

@@ -58,8 +58,7 @@ def register_user(user,db):
     print(user.password)
     dict1 = dict(user)
 
-    s = {"preference" : {"artist":[]},"is_active" : 1,"is_delete" : 0,"created_by" : "user"}
-    s1 = {"updated" : 0}
+    s = {"preference" : {"artist":[]},"is_active" : 1,"is_delete" : False}
     data = {**dict1,**s}
     data["access_token"] = access_token_str
     data["refresh_token"]= refresh_token_str
@@ -209,10 +208,10 @@ def password_change(db:Session,temp):
     user = get_email(temp.email,db)
     if user:
         if (password_check(user.password)) != True:
-            return("Invalid Password !!"),(password_check(user.password))
+            return ("Invalid Password !!"),(password_check(user.password))
         user.password =  get_password_hash(user.password)
         if update_password(temp.email,user.password,db):
-            return("Password changed")
+            return {"success":True,"message":"Password Changed successfully"}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
