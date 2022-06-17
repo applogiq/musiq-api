@@ -48,7 +48,7 @@ class FollowerSchema(BaseModel):
             "example":{
                 "user_id": 202201,
                 "artist_id": "AR00ANI",
-                "follow": 0
+                "follow": False
             }
         }
 

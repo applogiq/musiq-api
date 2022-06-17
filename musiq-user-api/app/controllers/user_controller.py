@@ -176,7 +176,7 @@ def email_otp(db,email):
         if otp_change(user,s,db):
             user = ('srimathi.k.applogiq@gmail.com')
             password = app_password
-            to = 'gowtham.r.applogiq@gmail.com'
+            to = 'shajith.s.applogiq@gmail.com'
 
             subject = 'Resetting Password'
             content = ['''Password Reset,
@@ -187,7 +187,7 @@ def email_otp(db,email):
                 print('Sent email successfully')
         return {"success":True,"message":"Sent email successfully"}
     else:
-        raise HTTPException(status_code=404, detail="Check your email")
+        raise HTTPException(status_code=404, detail={"success":False,"message":"Check your email id"})
 
 def verify_otp(db:Session,temp):
     user = get_email(temp.email,db)

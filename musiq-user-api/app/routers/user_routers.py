@@ -56,19 +56,19 @@ async def remove_profile_image(user_id: int,db: Session = Depends(get_db),tokens
 ##------Forgot Password--------##
     
 @router.post("/email")
-async def send_otp(email: OtpSend,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
+async def send_otp(email: OtpSend,db: Session = Depends(get_db)):
     user = email_otp(db,email)
     return user
     # pass
 
 @router.post("/email-otp/verify")
-async def otp_verify(email: OtpVerify,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
+async def otp_verify(email: OtpVerify,db: Session = Depends(get_db)):
     user = verify_otp(db,email)
     return user
     # pass
 
 @router.put("/email-otp/")
-async def change_password(email: PasswordSchema,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
+async def change_password(email: PasswordSchema,db: Session = Depends(get_db)):
     user = password_change(db,email)
     return user
 

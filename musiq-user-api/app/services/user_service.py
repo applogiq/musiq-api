@@ -107,7 +107,7 @@ def image_upload(id,db:Session):
     return True
 
 def image_check(id,db:Session):
-    return db.query(users).filter(users.id == id,users.is_delete == 0,users.is_image == 1).first()
+    return db.query(users).filter(users.id == id,users.is_delete == False,users.is_image == True).first()
 
 # def commit(user,db):
 #     temp = db.query(users).filter(users.email == user.name,users.is_delete == 0,users.is_image == 1).first()
@@ -148,7 +148,7 @@ def user_update(user_id,user,db,email):
 def remove_image(user_id,db):
     user_temp =  image_check(user_id,db)
     if user_temp:
-        user_temp.is_image = 0
+        user_temp.is_image = False
         # user_temp.img_link = None
         file = str(user_temp.register_id)+".png"
         path = f"app/public/users/{file}"
@@ -176,7 +176,7 @@ def update_password(email,password,db):
         return False
     
 def user_delete(db:Session,user_id):
-    user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0).first()
+    user_temp = db.query(users).filter(users.id == user_id,users.is_delete == False).first()
     if user_temp:
         user_temp.is_delete = 1
         db.commit()
@@ -185,16 +185,16 @@ def user_delete(db:Session,user_id):
         raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
 
 def follower_details(db:Session,user):
-    temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==0).first()
+    temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==False).first()
     if temp:
-        art = db.query(artist).filter(artist.artist_id == user.artist_id,artist.is_delete==0).first()
+        art = db.query(artist).filter(artist.artist_id == user.artist_id,artist.is_delete==False).first()
         if art:
             num = art.followers
             if num:
                 pass
             else:
                 num = 0
-            if user.follow == 0:
+            if user.follow == False:
                 if user.artist_id in temp.preference["artist"]:
                     for i in range(0,len(temp.preference["artist"])):
                         if i < len(temp.preference["artist"]):
@@ -206,7 +206,7 @@ def follower_details(db:Session,user):
                 else:
                     raise HTTPException(status_code=400, detail={"success": False,"message":"this user does not folowing this artist"})
                     
-            elif user.follow == 1:
+            elif user.follow == True:
                 if user.artist_id not in temp.preference["artist"]:
                     temp.preference["artist"].append(user.artist_id)
                     print("sucess")
