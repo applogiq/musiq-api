@@ -41,14 +41,6 @@ async def view_artist_details(artist_id: int,db: Session = Depends(get_db),token
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
-@router.get("/songs/{artist_id}")
-async def view_artist_songs(artist_id: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    pass
-    # artists = artist_song(db, art_id)
-    # if artists:
-    #     return {"records": artists,"total_records" : len(artists),"sucess":True}
-    # else:
-    #     raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
 @router.put("/{artist_id}")
 async def update_artist_details(artist_id: int,artists:ArtistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):

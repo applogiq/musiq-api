@@ -16,15 +16,15 @@ from services.album_service import *
 def song_name_check(db,name):
     return db.query(songs).filter(songs.name == name,songs.is_delete == False).first()
 
-def song_album_check(db,album_id):
-    return db.query(songs).filter(songs.album_id == album_id,songs.is_delete == False).all()
+def song_album_check(db,album_id,skip,limit):
+    return db.query(songs).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
 
-def song_artist_check(db,artist_id):
-    return db.query(songs).filter(songs.artist_id.contains([artist_id])).all()
-  
+def song_artist_check(db,artist_id,skip,limit):
+    return db.query(songs).filter(songs.artist_id.contains([artist_id])).offset(skip).limit(limit).all()
+
+def song_music_check(db,song_id):
+    return  db.query(songs).filter(songs.id == song_id,songs.is_delete == False,songs.is_music == True).first()
      
-
-
 def song_detail(db:Session,song,email):
     # try:
     name =song_name_check(db,song.name)
@@ -87,7 +87,7 @@ def song_detail(db:Session,song,email):
     db.refresh(db_user)
     return db_user
 
-def get_songs(db: Session, skip,limit):
+def song_get_all(db: Session, skip,limit):
     user =  db.query(songs).filter(songs.is_delete == False).offset(skip).limit(limit).all()
     for i in range(0,len(user)):
         user[i].duration = str(user[i].duration)
@@ -97,11 +97,11 @@ def get_songs(db: Session, skip,limit):
         print(user[i].album_id)
     return user
 
-def get_song(db: Session, song_id: int):
-    user = db.query(songs).filter(songs.id == song_id,songs.is_delete == False).first()
-    album_details = db.query(albums).filter(albums.id == user.album_id,albums.is_delete == False).first()
-    print(album_details,1111111)
+def song_get_by_id(db: Session, song_id: int):
+    user = db.query(songs).filter(songs.id == song_id,songs.is_delete == False).first() 
+    # print(album_details,1111111)
     if user:
+        album_details = db.query(albums).filter(albums.id == user.album_id,albums.is_delete == False).first()
         user.duration = str(user.duration)
         user.released_date = str(user.released_date)
         user.album_details = album_details
@@ -119,7 +119,7 @@ def song_update(db: Session,song_id: int,song,email):
                     raise HTTPException(status_code=400, detail="This song alreay exist")
                 else:
                     pass
-        user_temp1.name = song.name  
+            user_temp1.name = song.name  
                     
 
         if song.artist_id:
@@ -147,7 +147,7 @@ def song_update(db: Session,song_id: int,song,email):
                 alphabet = temp.name[0].upper()
             else:
                 alphabet = "Mis"
-            file_location = f"public/music/tamil/{alphabet}/{temp.name}/songs"
+            file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.name}/songs"
             if os.path.exists(file_location):
                 pass    
             else:
@@ -165,7 +165,19 @@ def song_update(db: Session,song_id: int,song,email):
         
 
         db.commit()
+        result = song_get_by_id(db,song_id)
 
-        return {'message': "data updated"}
+        return {"status": True,"message":"Updated Successfully","records":result}
     else:
         raise HTTPException(status_code=404, detail="song detail doesn't exist")
+
+    
+def delete_song_details(db: Session,song_id):
+    user_temp = song_get_by_id(db,song_id)
+    if user_temp:
+        user_temp.is_delete = True
+        db.commit()
+        return {"success": True,"message":"song deleted"}
+    else:
+        raise HTTPException(status_code=404, detail="song details doesn't exist")
+    

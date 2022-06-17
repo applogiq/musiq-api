@@ -99,8 +99,8 @@ def album_update(db: Session,album_id: int,album,email):
                 else:
                     alphabet1 = "Mis"
         
-                source = f"public/music/tamil/{alphabet}/{user_temp1.name}"
-                dest = f"public/music/tamil/{alphabet1}/{album.name}"
+                source = f"{DIRECTORY}/music/tamil/{alphabet}/{user_temp1.name}"
+                dest = f"{DIRECTORY}/music/tamil/{alphabet1}/{album.name}"
 
                 if os.path.exists(source):
                     os.rename(source, dest)    

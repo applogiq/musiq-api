@@ -117,33 +117,36 @@ def image_check(id,db:Session):
 
 def user_update(user_id,user,db,email):
     user_temp = get_by_id(user_id,db)
-    if user_temp:
-        if user.username:
-            if username_check(user.username,db):
-                raise HTTPException(status_code=400, detail="Username already exist")
-            else:
-                user_temp.username = user.username
-        if user.fullname:
-            user_temp.fullname = user.fullname
-        if user.image:
-            s = base64.b64decode(user.image)
-            filename = str(user_temp.register_id)+".png"
-            file_location = f"{DIRECTORY}/users/{filename}"
-            with open(file_location, "wb+") as f:
-                f.write(s)  
-            if image_upload(user_id,db):
-                # return {"info": f"file '{filename}' saved at '{file_location}'"}
-                user_temp.is_image = 1
-                # user_temp.img_link = f"http://{IPAddr}:3000/public/users/{filename}"
-        temp1 = get_email(email,db)
-        user_temp.updated_at = datetime.now()
-        user_temp.updated_user_by = temp1.id
-        db.commit()
-        # if commit(user_temp,db):
-        temp = get_by_id(user_id,db)
-        return {"status": True,"message":"Updated Successfully","records":temp}
+    temp1 = get_email(email,db)
+    if temp1.id == user_id:
+        if user_temp:
+            if user.username:
+                if username_check(user.username,db):
+                    raise HTTPException(status_code=400, detail="Username already exist")
+                else:
+                    user_temp.username = user.username
+            if user.fullname:
+                user_temp.fullname = user.fullname
+            if user.image:
+                s = base64.b64decode(user.image)
+                filename = str(user_temp.register_id)+".png"
+                file_location = f"{DIRECTORY}/users/{filename}"
+                with open(file_location, "wb+") as f:
+                    f.write(s)  
+                if image_upload(user_id,db):
+                    # return {"info": f"file '{filename}' saved at '{file_location}'"}
+                    user_temp.is_image = 1
+                    # user_temp.img_link = f"http://{IPAddr}:3000/public/users/{filename}"
+            user_temp.updated_at = datetime.now()
+            user_temp.updated_user_by = temp1.id
+            db.commit()
+            # if commit(user_temp,db):
+            temp = get_by_id(user_id,db)
+            return {"status": True,"message":"Updated Successfully","records":temp}
+        else:
+            raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..user doesn't exist"})
     else:
-        raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..user doesn't exist"})
+        raise HTTPException(status_code=403, detail={"success":False,"message":"not authenticated"})
 
 def remove_image(user_id,db):
     user_temp =  image_check(user_id,db)

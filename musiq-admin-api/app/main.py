@@ -9,7 +9,7 @@ import uvicorn
 from config.database import *
 from model.song_model import *
 from routers import admin_user_routers
-from routers import user_routers,artist_routers,album_routers,song_routers
+from routers import user_routers,artist_routers,album_routers,song_routers,genre_routers
 
 # app = database.app
 
@@ -18,6 +18,8 @@ app.include_router(user_routers.router)
 app.include_router(artist_routers.router)
 app.include_router(album_routers.router)
 app.include_router(song_routers.router)
+app.include_router(genre_routers.router)
+
 
 app.mount("/api/v1",app)
 

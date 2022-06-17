@@ -47,7 +47,7 @@ class FollowerSchema(BaseModel):
         schema_extra = {
             "example":{
                 "user_id": 202201,
-                "artist_id": "AR00ANI",
+                "artist_id": "AR001",
                 "follow": False
             }
         }

@@ -10,10 +10,10 @@ from config.database import *
 from model.artist_model import *
 
 def album_get_by_id(id,db):
-    return db.query(albums).filter(albums.id == id,albums.is_delete==0).first()
+    return db.query(albums).filter(albums.id == id,albums.is_delete==False).first()
 
 def album_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(albums).filter(albums.is_delete == 0).offset(skip).limit(limit).all()
+    user = db.query(albums).filter(albums.is_delete == False).offset(skip).limit(limit).all()
     if user:
         return user
     else:
@@ -21,11 +21,11 @@ def album_get_all(db: Session, skip: int = 0, limit: int = 100):
 
 
 def albumname_check(albumname,db: Session):
-    user = db.query(albums).filter(albums.name == albumname,albums.is_delete==0).first()
+    user = db.query(albums).filter(albums.name == albumname,albums.is_delete==False).first()
     return user
 
 def album_image_check(album_id,db: Session):
-    user= db.query(albums).filter(albums.id == album_id,albums.is_delete == 0,albums.is_image == 1).first()
+    user= db.query(albums).filter(albums.id == album_id,albums.is_delete == False,albums.is_image == True).first()
     return user
     
 def album_create(db,album):
@@ -61,9 +61,9 @@ def album_create(db,album):
             file_location2 = f"{file_location}/{filename1}"
             with open(file_location2, 'wb') as f:
                 f.write(s)
-            image = 1
+            image = True
         else:
-            image = 0
+            image = False
             
         db_album = albums(name = album.name,
                         album_id = a,

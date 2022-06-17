@@ -44,12 +44,13 @@ def email_validate(email):
 def register_user(user,db):
     if (email_validate(user.email)) != True:
         raise HTTPException(status_code=422, detail="Invalid Email!!")
-    if (password_check(user.password)) != True:
-        return("Invalid Password !!"),(password_check(user.password))
-    if username_check(user.username,db):
-        raise HTTPException(status_code=400, detail={"message": "username already exists","success":False})
     if get_email(user.email,db):
         raise HTTPException(status_code=400, detail={"message": "email already exists","success":False})
+    if username_check(user.username,db):
+        raise HTTPException(status_code=400, detail={"message": "username already exists","success":False})
+    if (password_check(user.password)) != True:
+        return("Invalid Password !!"),(password_check(user.password))
+ 
     access_token = create_access_token(user.email)
     access_token_str =  access_token.decode('UTF-8')
     refresh_token = create_refresh_token(user.email)
@@ -176,7 +177,7 @@ def email_otp(db,email):
         if otp_change(user,s,db):
             user = ('srimathi.k.applogiq@gmail.com')
             password = app_password
-            to = 'shajith.s.applogiq@gmail.com'
+            to = 'shajithali.s.applogiq@gmail.com'
 
             subject = 'Resetting Password'
             content = ['''Password Reset,
@@ -207,10 +208,11 @@ def verify_otp(db:Session,temp):
 def password_change(db:Session,temp):
     user = get_email(temp.email,db)
     if user:
-        if (password_check(user.password)) != True:
-            return ("Invalid Password !!"),(password_check(user.password))
-        user.password =  get_password_hash(user.password)
-        if update_password(temp.email,user.password,db):
+        print(temp.password)
+        if (password_check(temp.password)) != True:
+            return ("Invalid Password !!"),(password_check(temp.password))
+        temp.password =  get_password_hash(temp.password)
+        if update_password(temp.email,temp.password,db):
             return {"success":True,"message":"Password Changed successfully"}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})

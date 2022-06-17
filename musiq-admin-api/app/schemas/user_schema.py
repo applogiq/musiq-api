@@ -13,7 +13,7 @@ class UserSchema(BaseModel):
                 "username": "username",
                 "fullname" : "first lastname",
                 "email": "abcdef@x.com",
-                "password": "anypassword"
+                "password": "Password@45"
                 
             }
         }
@@ -25,8 +25,8 @@ class UserLoginSchema(BaseModel):
     class Config:
         schema_extra = {
             "example":{
-                "email": "abcdef@x.com",
-                "password": "givenpassword"
+                "email": "abcdef67@x.com",
+                "password": "Password@67"
             }
         }
 
@@ -47,8 +47,8 @@ class FollowerSchema(BaseModel):
         schema_extra = {
             "example":{
                 "user_id": 202201,
-                "artist_id": "AR00ANI",
-                "follow": 0
+                "artist_id": "AR001",
+                "follow": True
             }
         }
 

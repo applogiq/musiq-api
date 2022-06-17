@@ -35,7 +35,7 @@ async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: st
     return {"status": True,"message":"fetched Successfully","records":user,"total_records":1}
 
 @router.put('/follow')
-def artist_following(user: FollowerSchema,db: Session = Depends(get_db)):
+def artist_following(user: FollowerSchema,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = follower_details(db,user)
     return user
 

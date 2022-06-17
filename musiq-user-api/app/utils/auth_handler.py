@@ -9,8 +9,8 @@ from services.user_service import *
 ACCESS_SECRET_KEY = config("ACCESS_SECRET")
 REFRESH_SECRET_KEY = config("REFRESH_SECRET")
 API_ALGORITHM = config("ALGORITHM")
-API_ACCESS_TOKEN_EXPIRE_MINUTES =  60
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 30
+API_ACCESS_TOKEN_EXPIRE_MINUTES =  60 * 24 * 5
+REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 10
 
 def refresh_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()

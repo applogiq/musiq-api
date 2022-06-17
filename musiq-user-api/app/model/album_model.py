@@ -24,7 +24,7 @@ class albums(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=False)
 
-    # song = relationship("songs", backref="albums")
+    song = relationship("songs", backref="albums")
 
 
 metadata = sqlalchemy.MetaData()

@@ -38,7 +38,7 @@ async def view_all_users(db: Session = Depends(get_db),skip: int = 0, limit: int
             s = len(users)
         else:
             s = 1
-        return {"records": users,"totalrecords":s,"success": True}
+        return {"success": True,"message":"fetched Successfully","records": users,"totalrecords":s}
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
@@ -46,7 +46,7 @@ async def view_all_users(db: Session = Depends(get_db),skip: int = 0, limit: int
 async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
     user = admin_get_by_id(user_id,db)
     if user:
-        return {"status": True,"message":"fetched Successfully","records":user,"total_records":1}
+        return {"success": True,"message":"fetched Successfully","records":user,"total_records":1}
     else:
         raise HTTPException(status_code=422, detail={"message": "Couldn't fetch...Check your id","success":False})
 

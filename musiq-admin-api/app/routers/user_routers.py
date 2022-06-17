@@ -25,7 +25,7 @@ async def user_login(user: UserLoginSchema,db: Session = Depends(get_db),tokens:
     return user
 
 @router.post("/token-refresh")
-def refresh_token(user: Refresh_token,db: Session = Depends(get_db)):
+def refresh_token(user: Refresh_token,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = token_refresh(user,db)
     return user
 
@@ -72,13 +72,13 @@ async def send_otp(email: OtpSend,db: Session = Depends(get_db),tokens: str = De
     return user
     # pass
 
-@router.post("/email-otp/verify")
+@router.post("/email/otp-verify")
 async def otp_verify(email: OtpVerify,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = verify_otp(db,email)
     return user
     # pass
 
-@router.put("/email-otp/")
+@router.put("/email/forget-password")
 async def change_password(email: PasswordSchema,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     user = password_change(db,email)
     return user

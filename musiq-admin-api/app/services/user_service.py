@@ -157,7 +157,7 @@ def remove_image(user_id,db):
         user_temp.is_image = False
         # user_temp.img_link = None
         file = str(user_temp.register_id)+".png"
-        path = f"app/public/users/{file}"
+        path = f"{DIRECTORY}/users/{file}"
         os.remove(path)
         db.commit()
         return True
@@ -186,7 +186,7 @@ def user_delete(db:Session,user_id):
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"success": True,"message":"Deleted"}
+        return {"success": True,"message":"User Deleted"}
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
 
@@ -200,7 +200,7 @@ def follower_details(db:Session,user):
                 pass
             else:
                 num = 0
-            if user.follow == 0:
+            if user.follow == False:
                 if user.artist_id in temp.preference["artist"]:
                     for i in range(0,len(temp.preference["artist"])):
                         if i < len(temp.preference["artist"]):
@@ -212,10 +212,9 @@ def follower_details(db:Session,user):
                 else:
                     raise HTTPException(status_code=400, detail={"success": False,"message":"this user does not folowing this artist"})
                     
-            elif user.follow == 1:
+            elif user.follow == True:
                 if user.artist_id not in temp.preference["artist"]:
                     temp.preference["artist"].append(user.artist_id)
-                    print("sucess")
                     art.followers = num + 1
                 else:
                     raise HTTPException(status_code=400, detail={"success": False,"message":"this user already folowing this artist"})

@@ -52,7 +52,7 @@ async def update_album_details(album_id: int,album: AlbumSchema,db: Session = De
     return temp
 
 
-@router.delete("/image/{song_id}")
-async def delete_image(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    user = delete_album_image(db,song_id)
+@router.delete("/image/{album_id}")
+async def delete_image(album_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    user = delete_album_image(db,album_id)
     return user
