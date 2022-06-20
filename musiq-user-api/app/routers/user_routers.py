@@ -61,13 +61,13 @@ async def send_otp(email: OtpSend,db: Session = Depends(get_db)):
     return user
     # pass
 
-@router.post("/email-otp/verify")
+@router.post("/email/otp-verify")
 async def otp_verify(email: OtpVerify,db: Session = Depends(get_db)):
     user = verify_otp(db,email)
     return user
     # pass
 
-@router.put("/email-otp/")
+@router.put("/email/forget-password")
 async def change_password(email: PasswordSchema,db: Session = Depends(get_db)):
     user = password_change(db,email)
     return user

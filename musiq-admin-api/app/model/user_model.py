@@ -27,13 +27,13 @@ class users(Base):
     created_by = Column(Integer,nullable=True)
     created_user_by = Column(Integer,nullable=True)
     updated_by = Column(Integer,nullable=True)
-    created_user_by = Column(Integer,nullable=True)
+    updated_user_by = Column(Integer,nullable=True)
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
     
 
     # recent = relationship("recents", backref="users")
-    # last = relationship("last_songs", backref="users")
+    last = relationship("last_songs", backref="users")
     # fav = relationship("favourites", backref="users")
     # playlist_song = relationship("playlist", backref="users")
 

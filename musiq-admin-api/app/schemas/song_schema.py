@@ -21,7 +21,7 @@ class SongSchema(BaseModel):
         schema_extra = {
             "example":{
                 "name" : "Melody",
-                "artist_id" :["data"],
+                "artist_id" :[1,2],
                 "album_id" : "g001",
                 "genre_id" : {"genres": ["data"]},
                 "duration": "00:05:45",

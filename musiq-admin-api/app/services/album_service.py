@@ -67,10 +67,18 @@ def album_create(db,album,email):
             image = False
 
         temp = admin_get_email(email,db)   
+        name =db.query(artist).filter(artist.id.in_(album.music_director)).all()
+        # print(temp4[0].name)
+        artist_name = []
+        for i in name:
+            artist_name.append(i.name)
+            print(artist_name)
+
         db_album = albums(name = album.name,
                         album_id = a,
                         released_year = album.released_year,
                         music_director = album.music_director,
+                        music_director_name = artist_name,
                         no_of_songs = 0,
                         is_image = image,
                         is_delete = False,
@@ -114,7 +122,14 @@ def album_update(db: Session,album_id: int,album,email):
             user_temp1.released_year = album.released_year
         
         if album.music_director:
+            name =db.query(artist).filter(artist.id.in_(album.music_director)).all()
+  
+            artist_name = []
+            for i in name:
+                artist_name.append(i.name)
+                print(artist_name)
             user_temp1.music_director = album.music_director
+            user_temp1.music_director_name = artist_name
 
         if album.image:
             s = base64.b64decode(album.image)

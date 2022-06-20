@@ -33,7 +33,6 @@ def access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-
 def create_refresh_token(email):
     expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
     return refresh_token(data={'sub': email}, expires_delta=expires)

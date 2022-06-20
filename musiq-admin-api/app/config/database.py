@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 import socket
 from fastapi.staticfiles import StaticFiles
 from decouple import config
+from fastapi.middleware.cors import CORSMiddleware
 
 host_server = os.environ.get('host_server', 'localhost')
 db_server_port = urllib.parse.quote_plus(str(os.environ.get('db_server_port', '5432')))
@@ -61,11 +62,13 @@ DIRECTORY = "D:\Srimathi\Project\MusiQ\public"
 
 app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
         
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=["*"], 
+    allow_methods=["*"], 
+    allow_headers=["*"]
+)
 # app = FastAPI(title="Music Streaming API",
 #         version="2.5.0",
 #         description="This is a very custom OpenAPI schema")
 
-@app.exception_handler(Exception) # exception handling api
-def validation_exception_handler(request, err):
-    base_error_message = f"Failed to execute: {request.method}: {request.url}"
-    return JSONResponse(status_code=400, content={"message": f"{base_error_message}. Detail: {err}"}) 
