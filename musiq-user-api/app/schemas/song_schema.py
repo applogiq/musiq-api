@@ -6,7 +6,7 @@ from schemas.album_schema import Responsealbum
 
 
 class SongResponse(BaseModel):
-    name : str = Field(...)
+    song_name : str = Field(...)
     artist_id : list = None
     album_id : Union[str,None] = None
     genre_id : Dict[str, list] = None

@@ -11,7 +11,7 @@ from config.database import *
 from model.artist_model import *
 
 def artist_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(artist).filter(artist.is_delete == False).offset(skip).limit(limit).all()
+    user = db.query(artist).filter(artist.is_delete == False).order_by(artist.artist_name).offset(skip).limit(limit).all()
     if user:
         return user
     else:

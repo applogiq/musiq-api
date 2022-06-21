@@ -3,7 +3,7 @@ from typing import Optional
 import time
 import jwt
 from decouple import config
-from services.user_service import *
+# from services.user_service import *
 
 
 ACCESS_SECRET_KEY = config("ACCESS_SECRET")

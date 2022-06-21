@@ -10,7 +10,7 @@ from model.album_model import albums
 from services.album_service import *
 
 def album_detail(db: Session,album,email):
-    if albumname_check(album.name,db):
+    if albumname_check(album.album_name,db):
         raise HTTPException(status_code=400, detail="Album is already register")
     # if album_create(db,album):
         # return {"message":"data added"}

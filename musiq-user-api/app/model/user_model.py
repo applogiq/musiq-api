@@ -32,9 +32,9 @@ class users(Base):
     is_active = Column(Boolean)
     
 
-    # recent = relationship("recents", backref="users")
-    # last = relationship("last_songs", backref="users")
-    # fav = relationship("favourites", backref="users")
+    recent = relationship("recents", backref="users")
+    last = relationship("last_songs", backref="users")
+    fav = relationship("favourites", backref="users")
     # playlist_song = relationship("playlist", backref="users")
 
 

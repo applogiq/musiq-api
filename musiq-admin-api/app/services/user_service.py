@@ -127,18 +127,14 @@ def image_upload(id,db:Session):
 def image_check(id,db:Session):
     return db.query(users).filter(users.id == id,users.is_delete == False,users.is_image == True).first()
 
-# def commit(user,db):
-#     temp = db.query(users).filter(users.email == user.name,users.is_delete == 0,users.is_image == 1).first()
-#     temp.items = user.items
-#     db.commit()
-#     return True
+
 
 def user_update(user_id,user,db,email):
     user_temp = get_by_id(user_id,db)
     if user_temp:
         if user.username:
             if username_check(user.username,db):
-                raise HTTPException(status_code=400, detail="Username already exist")
+                raise HTTPException(status_code=400, detail="username already exist")
             else:
                 user_temp.username = user.username
         if user.fullname:
@@ -198,7 +194,7 @@ def user_delete(db:Session,user_id):
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"success": True,"message":"User Deleted"}
+        return {"success": True,"message":"user deleted"}
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
 
@@ -231,12 +227,12 @@ def follower_details(db:Session,user):
                 else:
                     raise HTTPException(status_code=400, detail={"success": False,"message":"this user already folowing this artist"})
         else:
-            raise HTTPException(status_code=400, detail={"success": False,"message":"Check your artsit id"})
+            raise HTTPException(status_code=400, detail={"success": False,"message":"check your artsit id"})
             
     else:
-        raise HTTPException(status_code=400, detail={"success": False,"message":"Check your user id"})  
+        raise HTTPException(status_code=400, detail={"success": False,"message":"check your user id"})  
     db.commit()
-    return {"status": True,"message":"Updated Successfully"}
+    return {"status": True,"message":"updated successfully"}
 
 
 

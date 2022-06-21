@@ -13,7 +13,7 @@ class UserSchema(BaseModel):
                 "username": "username",
                 "fullname" : "first lastname",
                 "email": "abcdef@x.com",
-                "password": "anypassword"
+                "password": "Password@45"
                 
             }
         }
@@ -26,7 +26,7 @@ class UserLoginSchema(BaseModel):
         schema_extra = {
             "example":{
                 "email": "abcdef@x.com",
-                "password": "givenpassword"
+                "password": "Password@45"
             }
         }
 

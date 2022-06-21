@@ -13,7 +13,7 @@ from services.admin_user_service import *
 
 
 def artist_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(artist).filter(artist.is_delete == False).offset(skip).limit(limit).all()
+    user = db.query(artist).filter(artist.is_delete == False).order_by(artist.artist_name).offset(skip).limit(limit).all()
     if user:
         return user
     else:
@@ -26,10 +26,10 @@ def artist_get_by_id(db,id):
     return db.query(artist).filter(artist.id == id,artist.is_delete==False).first()
 
 def artist_detail(db: Session,artists,email):
-    artistname =db.query(artist).filter(artist.name == artists.name,artist.is_delete == False).first()
+    artistname =db.query(artist).filter(artist.artist_name == artists.artist_name,artist.is_delete == False).first()
     a ="AR00"
     if artistname:
-        raise HTTPException(status_code=400, detail="Artist is already register")
+        raise HTTPException(status_code=400, detail="artist is already register")
     a ="AR001"
     while db.query(artist).filter(artist.artist_id == a).first():
         a = "AR00" + str(int(a[-1])+1)
@@ -47,7 +47,7 @@ def artist_detail(db: Session,artists,email):
     temp = admin_get_email(email,db)
     print(email,222222)
     print(temp.id)
-    db_user = artist(name = artists.name,
+    db_user = artist(artist_name = artists.artist_name,
                     artist_id = a,
                     is_image = image,
                     is_delete = False,
@@ -62,8 +62,8 @@ def artist_detail(db: Session,artists,email):
 def artist_update(db,user_id,user,email):
     user_temp = artist_get_by_id(db,user_id)
     if user_temp:
-        if user.name:
-            user_temp.name = user.name
+        if user.artist_name:
+            user_temp.artist_name = user.artist_name
         if user.image:
             s = base64.b64decode(user.image)
             filename = user_temp.artist_id+".png"

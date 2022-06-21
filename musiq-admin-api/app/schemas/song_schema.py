@@ -6,9 +6,9 @@ from schemas.album_schema import Responsealbum
 
 
 class SongSchema(BaseModel):
-    name : str = Field(...)
+    song_name : str = Field(...)
     artist_id : list = None
-    album_id : Union[str,None] = None
+    album_id : Optional[int] = None
     genre_id : Dict[str, list] = None
     duration: str = Field(...)
     lyrics: str = Field(...)
@@ -20,10 +20,10 @@ class SongSchema(BaseModel):
         orm_mode = True
         schema_extra = {
             "example":{
-                "name" : "Melody",
+                "song_name" : "Melody",
                 "artist_id" :[1,2],
-                "album_id" : "g001",
-                "genre_id" : {"genres": ["data"]},
+                "album_id" : 2,
+                "genre_id" : {"genres": ["GN001"]},
                 "duration": "00:05:45",
                 "lyrics": "mnfmsnfgj,fkjk,flsdkl",
                 "released_date": "2020-05-01",

@@ -12,7 +12,7 @@ class artist(Base):
      
     id = Column(Integer, primary_key=True, index=True)
     artist_id = Column(String(255),unique=True,nullable=False)
-    name = Column(String(255), nullable=False)
+    artist_name = Column(String(255), nullable=False)
     followers = Column(Integer) 
     is_image = Column(Boolean,default=False)
     # img_link = Column(String)

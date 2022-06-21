@@ -11,6 +11,7 @@ from model.artist_model import *
 from utils.security import verify_password
 from config.database import *
 from utils.auth_handler import create_access_token,create_refresh_token
+from utils.auth_bearer import *
 
 def user_get_all(db: Session, skip: int = 0, limit: int = 100):
     user = db.query(users).filter(users.is_delete == False).offset(skip).limit(limit).all()
@@ -183,7 +184,7 @@ def user_delete(db:Session,user_id):
     if user_temp:
         user_temp.is_delete = 1
         db.commit()
-        return {"success": True,"message":"Deleted"}
+        return {"success": True,"message":"user deleted"}
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
 
@@ -212,17 +213,16 @@ def follower_details(db:Session,user):
             elif user.follow == True:
                 if user.artist_id not in temp.preference["artist"]:
                     temp.preference["artist"].append(user.artist_id)
-                    print("sucess")
                     art.followers = num + 1
                 else:
                     raise HTTPException(status_code=400, detail={"success": False,"message":"this user already folowing this artist"})
         else:
-            raise HTTPException(status_code=400, detail={"success": False,"message":"Check your artsit id"})
+            raise HTTPException(status_code=400, detail={"success": False,"message":"check your artsit id"})
             
     else:
-        raise HTTPException(status_code=400, detail={"success": False,"message":"Check your user id"})  
+        raise HTTPException(status_code=400, detail={"success": False,"message":"check your user id"})  
     db.commit()
-    return {"status": True,"message":"Updated Successfully"}
+    return {"status": True,"message":"updated successfully"}
 
 
 

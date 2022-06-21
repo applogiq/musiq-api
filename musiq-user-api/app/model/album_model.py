@@ -11,7 +11,7 @@ class albums(Base):
      
     id = Column(Integer, primary_key=True, index=True)
     album_id = Column(String(255),unique=True,nullable=False)
-    name = Column(String(255), nullable=False)
+    album_name = Column(String(255), nullable=False)
     released_year = Column(Integer)
     no_of_songs = Column(Integer) 
     music_director = Column(ARRAY(Integer))

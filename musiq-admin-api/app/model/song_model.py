@@ -18,7 +18,7 @@ class songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
     song_id = Column(String(255),unique = True)
-    name = Column(String(255), nullable=True) 
+    song_name = Column(String(255), nullable=True) 
     artist_id = Column(ARRAY(Integer))
     album_id = Column(Integer, ForeignKey("albums.id"))
     genre_id = Column(JSON)
@@ -39,8 +39,8 @@ class songs(Base):
 
     # song = relationship("albums", backref="songs")
 
-    # last_song = relationship("last_songs",backref="songs")
-    # fav = relationship("favourites",backref="songs")
+    last_song = relationship("last_songs",backref="songs")
+    fav = relationship("favourites",backref="songs")
     # aura = relationship("aura_songs",backref="songs")
 
     # songs = relationship("artist")

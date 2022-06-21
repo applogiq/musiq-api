@@ -17,9 +17,10 @@ def recent_get_all(db):
 
 def recent_song_check(db,user_id):
     user = recent_get_by_userid(db,user_id)
-    s = list(user.song_id["songs"])
-    temp = db.query(songs,albums.name,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.id.in_(s)).all()
-    return temp
+    if user:
+        s = list(user.song_id["songs"])
+        temp = db.query(songs.id,songs.song_name,albums.album_name,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.id.in_(s)).all()
+        return temp
 
 
 def recent_update(db,user_id,data,email):

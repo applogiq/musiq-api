@@ -14,7 +14,7 @@ from services.admin_user_service import *
 from services.album_service import *
 
 def song_name_check(db,name):
-    return db.query(songs).filter(songs.name == name,songs.is_delete == False).first()
+    return db.query(songs).filter(songs.song_name == name,songs.is_delete == False).first()
 
 def song_album_check(db,album_id,skip,limit):
     return db.query(songs).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
@@ -27,10 +27,10 @@ def song_music_check(db,song_id):
      
 def song_detail(db:Session,song,email):
     # try:
-    name =song_name_check(db,song.name)
+    name =song_name_check(db,song.song_name)
     if name:
-        if (name.artist_id["artist"]) == (song.artist_id["artist"]):
-            raise HTTPException(status_code=400, detail="This song alreay exist")
+        if (name.artist_id) == (song.artist_id):
+            raise HTTPException(status_code=400, detail="This song already exist")
         else:
             pass
     if song.album_id:
@@ -50,11 +50,11 @@ def song_detail(db:Session,song,email):
         filename1 = a +"."+"wav"
         temp = album_get_by_id(song.album_id,db)
         num = temp.no_of_songs
-        if temp.name[0].isalpha():
-            alphabet = temp.name[0].upper()
+        if temp.album_name[0].isalpha():
+            alphabet = temp.album_name[0].upper()
         else:
             alphabet = "Mis"
-        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.name}/songs"
+        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs"
         if os.path.exists(file_location):
             pass    
         else:
@@ -68,7 +68,7 @@ def song_detail(db:Session,song,email):
     else:
         music = False
     temp = admin_get_email(email,db)
-    db_user = songs(name =  song.name,
+    db_user = songs(song_name =  song.song_name,
                     song_id = a,
                     artist_id = song.artist_id,
                     album_id = song.album_id,
@@ -112,14 +112,14 @@ def song_get_by_id(db: Session, song_id: int):
 def song_update(db: Session,song_id: int,song,email):
     user_temp1 = db.query(songs).filter(songs.id == song_id,songs.is_delete == False).first()
     if user_temp1:
-        if song.name:
-            songname =db.query(songs).filter(songs.name == song.name,songs.is_delete == False).first()
+        if song.song_name:
+            songname =song_name_check(db,song.song_name)
             if songname:
                 if (songname.artist_id) == (song.artist_id):
                     raise HTTPException(status_code=400, detail="This song alreay exist")
                 else:
                     pass
-            user_temp1.name = song.name  
+            user_temp1.song_name = song.song_name  
                     
 
         if song.artist_id:
@@ -143,11 +143,11 @@ def song_update(db: Session,song_id: int,song,email):
             filename1 = user_temp1.song_id +"."+"wav"
             temp = db.query(albums).filter(albums.id == user_temp1.album_id,albums.is_delete == False).first()
             num = temp.no_of_songs
-            if temp.name[0].isalpha():
-                alphabet = temp.name[0].upper()
+            if temp.album_name[0].isalpha():
+                alphabet = temp.album_name[0].upper()
             else:
                 alphabet = "Mis"
-            file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.name}/songs"
+            file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs"
             if os.path.exists(file_location):
                 pass    
             else:

@@ -3,14 +3,14 @@ from typing import Dict,Union,List,Optional
 
 
 class AlbumSchema(BaseModel):
-    name : Optional[str]
+    album_name : Optional[str]
     released_year : Optional[str]
     music_director :list = None
     image : Optional[str]
     class Config:
         schema_extra = {
             "example":{
-                "name" : "Movie name",
+                "album_name" : "Movie name",
                 "released_year" : "2009",
                 "music_director" : [1,2],
                 "image" : "hbdhebrjherhwejrdsdsmfsmdf"
@@ -18,11 +18,13 @@ class AlbumSchema(BaseModel):
         }
 
 class Responsealbum(BaseModel):
+    id: int
     album_id : str
     no_of_songs: int
-    name : str
+    album_name : str
     released_year : int
     music_director : list = None
+    music_director_name: list = None
     is_image : int
 
     class Config:

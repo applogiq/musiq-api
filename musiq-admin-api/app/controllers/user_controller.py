@@ -16,10 +16,10 @@ def password_check(passwd):
     val = True  
     if len(passwd) < 6:
         val == False
-        raise HTTPException(status_code=422, detail='length should be at least 6')    
+        raise HTTPException(status_code=422, detail='Password length should be at least 6')    
     if len(passwd) > 20:
         val = False
-        raise HTTPException(status_code=422, detail='length should be not be greater than 8')      
+        raise HTTPException(status_code=422, detail='Password length should be not be greater than 8')      
     if not any(char.isdigit() for char in passwd):
         val = False
         raise HTTPException(status_code=422, detail='Password should have at least one numeral')      
@@ -66,7 +66,6 @@ def register_user(user,db,email):
     data["access_token"] = access_token_str
     data["refresh_token"]= refresh_token_str
     try:
-        # data = new_register(data,access_token_str,refresh_token_str,db)
         return {"status": True,"message":"Register Successfully","records":new_register(data,access_token_str,refresh_token_str,db)}
     except:
         raise HTTPException(status_code=422, detail={"message": "couldn't register,check your details","success":False})

@@ -4,10 +4,10 @@ from utils.auth_bearer import JWTBearer
 
 from sqlalchemy.orm import Session
 from config.database import *
-from schemas.recent_schema import RecentSchema,AllrecentSchema,RecentresponseSchema
-from controllers.recent_controller import user_recent_song
 from utils.auth_handler import decodeJWT
 from services.recent_service import *
+from schemas.recent_schema import RecentSchema,AllrecentSchema,RecentresponseSchema
+from controllers.recent_controller import user_recent_song
 
 router = APIRouter(tags=["recents"],prefix='/recent-list')
 

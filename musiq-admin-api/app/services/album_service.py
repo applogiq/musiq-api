@@ -22,7 +22,7 @@ def album_get_all(db: Session, skip: int = 0, limit: int = 100):
 
 
 def albumname_check(albumname,db: Session):
-    user = db.query(albums).filter(albums.name == albumname,albums.is_delete==False).first()
+    user = db.query(albums).filter(albums.album_name == albumname,albums.is_delete==False).first()
     return user
 
 def album_image_check(album_id,db: Session):
@@ -34,12 +34,12 @@ def album_create(db,album,email):
         while db.query(albums).filter(albums.album_id == a).first():
             a = "AL00" + str(int(a[-1])+1)
         
-        if album.name[0].isalpha():
-            alphabet = album.name[0].upper()
+        if album.album_name[0].isalpha():
+            alphabet = album.album_name[0].upper()
         else:
             alphabet = "Mis"
 
-        path1 = f"{DIRECTORY}/music/tamil/{alphabet}/{album.name}"
+        path1 = f"{DIRECTORY}/music/tamil/{alphabet}/{album.album_name}"
 
         if os.path.exists(path1):
             pass
@@ -49,11 +49,11 @@ def album_create(db,album,email):
         if album.image:
             s = base64.b64decode(album.image)
             filename1 = a +".png"
-            if album.name[0].isalpha():
-                alphabet = album.name[0].upper()
+            if album.album_name[0].isalpha():
+                alphabet = album.album_name[0].upper()
             else:
                 alphabet = "Mis"
-            file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{album.name}/image"
+            file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{album.album_name}/image"
             if os.path.exists(file_location):
                 pass    
             else:
@@ -71,10 +71,10 @@ def album_create(db,album,email):
         # print(temp4[0].name)
         artist_name = []
         for i in name:
-            artist_name.append(i.name)
+            artist_name.append(i.artist_name)
             print(artist_name)
 
-        db_album = albums(name = album.name,
+        db_album = albums(album_name = album.album_name,
                         album_id = a,
                         released_year = album.released_year,
                         music_director = album.music_director,
@@ -94,27 +94,27 @@ def album_create(db,album,email):
 def album_update(db: Session,album_id: int,album,email):
     user_temp1 = album_get_by_id(album_id,db)
     if user_temp1:
-        if album.name:
-            if albumname_check(album.name,db):
+        if album.album_name:
+            if albumname_check(album.album_name,db):
                 raise HTTPException(status_code=400, detail="album is already register")
             else:
-                if user_temp1.name[0].isalpha():
-                    alphabet = user_temp1.name[0].upper()
+                if user_temp1.album_name[0].isalpha():
+                    alphabet = user_temp1.album_name[0].upper()
                 else:
                     alphabet = "Mis"
-                if album.name[0].isalpha():
-                    alphabet1 = album.name[0].upper()
+                if album.album_name[0].isalpha():
+                    alphabet1 = album.album_name[0].upper()
                 else:
                     alphabet1 = "Mis"
         
-                source = f"{DIRECTORY}/music/tamil/{alphabet}/{user_temp1.name}"
-                dest = f"{DIRECTORY}/music/tamil/{alphabet1}/{album.name}"
+                source = f"{DIRECTORY}/music/tamil/{alphabet}/{user_temp1.album_name}"
+                dest = f"{DIRECTORY}/music/tamil/{alphabet1}/{album.album_name}"
 
                 if os.path.exists(source):
                     os.rename(source, dest)    
                 else:
                     os.makedirs(dest)
-                user_temp1.name = album.name
+                user_temp1.album_name = album.album_name
         else:
             pass
 
@@ -126,7 +126,7 @@ def album_update(db: Session,album_id: int,album,email):
   
             artist_name = []
             for i in name:
-                artist_name.append(i.name)
+                artist_name.append(i.artist_name)
                 print(artist_name)
             user_temp1.music_director = album.music_director
             user_temp1.music_director_name = artist_name
@@ -134,18 +134,18 @@ def album_update(db: Session,album_id: int,album,email):
         if album.image:
             s = base64.b64decode(album.image)
             filename1 =  user_temp1.album_id+".png"
-            if album.name:
-                if album.name[0].isalpha():
-                    alphabet = album.name[0].upper()
+            if album.album_name:
+                if album.album_name[0].isalpha():
+                    alphabet = album.album_name[0].upper()
                 else:
                     alphabet = "Mis"
-                name = album.name
+                name = album.album_name
             else:
-                if user_temp1.name[0].isalpha():
-                    alphabet = user_temp1.name[0].upper()
+                if user_temp1.album_name[0].isalpha():
+                    alphabet = user_temp1.album_name[0].upper()
                 else:
                     alphabet = "Mis"
-                name = user_temp1.name
+                name = user_temp1.album_name
 
             file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{name}/image"
             if os.path.exists(file_location):
@@ -173,13 +173,13 @@ def delete_album_image(db: Session,album_id: int):
     user_temp = album_image_check(album_id,db)
     if user_temp:
         if user_temp:
-            if user_temp.name[0].isalpha():
-                alphabet = user_temp.name[0].upper()
+            if user_temp.album_name[0].isalpha():
+                alphabet = user_temp.album_name[0].upper()
             else:
                 alphabet = "Mis" 
         user_temp.is_image = False
 
-        path =f"{DIRECTORY}/music/tamil/{alphabet}/{user_temp.name}/image/{user_temp.album_id}.png"
+        path =f"{DIRECTORY}/music/tamil/{alphabet}/{user_temp.album_name}/image/{user_temp.album_id}.png"
         os.remove(path)
         db.commit()
         return {"status": True,"message":"album image removed"}
