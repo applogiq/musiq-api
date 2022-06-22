@@ -3,8 +3,6 @@ import re
 import base64
 from config.database import *
 import yagmail,math,random
-# from utils.security import get_password_hash
-# from services.user_service import login_check
 
 from services.user_service import *
 from utils.auth_handler import *
@@ -72,7 +70,6 @@ def register_user(user,db,email):
 
 
 def login_user(user,db):
-    # if login_check(user,db):
     if login_check(user,db):
         return {"status": True,"message":"login Successfully","records":login_check(user,db)}
     else:
@@ -91,73 +88,11 @@ def token_refresh(user,db):
         raise HTTPException(status_code=404, detail={"message": "Check your token!!!","success":False})
 
 
-# def follower_details(db,user):
-#     temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==0).first()
-#     if temp:
-#         art = db.query(artist).filter(artist.artist_id == user.artist_id,artist.is_delete==0).first()
-#         if art:
-#             num = art.followers
-#             if num:
-#                 pass
-#             else:
-#                 num = 0
-#             if user.follow == 0:
-#                 if user.artist_id in temp.preference["artist"]:
-#                     for i in range(0,len(temp.preference["artist"])):
-#                         if i < len(temp.preference["artist"]):
-#                             if temp.preference["artist"][i] == user.artist_id:
-#                                 temp.preference["artist"].pop(i)
-#                                 art.followers = num-1
-#                             else:
-#                                 pass
-#                 else:
-#                     raise HTTPException(status_code=400, detail="this user does not folowing this artist")
-#             elif user.follow == 1:
-#                 if user.artist_id not in temp.preference["artist"]:
-#                     temp.preference["artist"].append(user.artist_id)
-#                     print("sucess")
-#                     art.followers = num + 1
-#                 else:
-#                     raise HTTPException(status_code=400, detail="this user already folowing this artist")
-#         else:
-#             raise HTTPException(status_code=400, detail="Check your artsit id")
-#     else:
-#         raise HTTPException(status_code=400, detail="Check your user id")
-#     db.commit()
-#     return {'message': "Success"}
-
-# def upload_base64_profile(db: Session,user_id: int,img):
-#     user_temp = get_by_id(user_id,db)
-#     if user_temp:
-#         s = base64.b64decode(img)
-#         filename1 = str(user_temp.register_id)+".png"
-#         file_location = f"app/public/users/{filename1}"
-#         with open(file_location, "wb+") as f:
-#             f.write(s)  
-#         if image_upload(user_id,db):
-#             return {"info": f"file '{filename1}' saved at '{file_location}'"}
-#     else:
-#         raise HTTPException(status_code=404, detail="user details doesn't exist")
-
-# def get_profile(db: Session,user_id):
-#     temp = get_by_id(user_id,db)
-#     if temp:
-#         user_temp = image_check(user_id,db)
-#         # user_temp = db.query(users).filter(users.id == user_id,users.is_delete == 0,users.is_image == 1).first()
-#         if user_temp:
-#             filename = str(user_temp.register_id)
-#             link = f"http://{IPAddr}:3000/public/users/{filename}.png"
-#             return link
-#         else:
-#             raise HTTPException(status_code=404, detail="Image doesn't exist for this id")
-#     else:
-#         raise HTTPException(status_code=404, detail="check your id")
 
 def delete_profile(user_id,db):
     if remove_image(user_id,db):
         return {"success":True,'message': "profile image removed"}
     else:
-        # return {"success":False,'message': "Check your id"}
         raise HTTPException(status_code=404, detail={"success":False,'message': "Check your id"})
 
 
@@ -190,7 +125,7 @@ def email_otp(db,email):
                 print('Sent email successfully')
         return {"success":True,"message":"Sent email successfully"}
     else:
-        raise HTTPException(status_code=404, detail="Check your email")
+        raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
 def verify_otp(db:Session,temp):
     user = get_email(temp.email,db)
@@ -218,7 +153,6 @@ def password_change(db:Session,temp):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
-# def follow_detail(db,user):
-#     if follower_details(db,user):
+
 
             

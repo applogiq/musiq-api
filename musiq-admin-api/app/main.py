@@ -12,7 +12,7 @@ from sqlalchemy import exc as sa_exc
 from config.database import *
 from model.song_model import *
 from routers import admin_user_routers
-from routers import user_routers,artist_routers,album_routers,song_routers,genre_routers,last_song_routers,recent_routers,favourite_routers,playlist_routers,playlist_song_routers
+from routers import aura_song_routers,user_routers,aura_routers,artist_routers,album_routers,song_routers,genre_routers,last_song_routers,recent_routers,favourite_routers,playlist_routers,playlist_song_routers
 
 # app = database.app
 
@@ -27,6 +27,8 @@ app.include_router(recent_routers.router)
 app.include_router(favourite_routers.router)
 app.include_router(playlist_routers.router)
 app.include_router(playlist_song_routers.router)
+app.include_router(aura_routers.router)
+app.include_router(aura_song_routers.router)
 
 app.mount("/api/v1",app)
 

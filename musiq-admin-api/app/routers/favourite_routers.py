@@ -19,12 +19,12 @@ async def enter_fav_details(fav:FavouriteSchema,db: Session = Depends(get_db),to
     return temp
 
 @router.delete("/")
-async def remove_favourites(fav:FavouriteSchema,db: Session = Depends(get_db)):
+async def remove_favourites(fav:FavouriteSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     user = fav_delete(db,fav)
     return user
 
 @router.get("/")
-async def view_all_fav_details(db: Session = Depends(get_db)):
+async def view_all_fav_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     try:
         users = fav_get_all(db)
         return {"records": users,"total_records" : len(users),"success":True}
@@ -41,7 +41,7 @@ async def view_all_fav_details(db: Session = Depends(get_db)):
     #     raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
 @router.get("/{user_id}")
-async def view_fav_songs(user_id: int,db: Session = Depends(get_db)):
+async def view_fav_songs(user_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     users = fav_get_by_userid(db, user_id)
     if users:
         return {"success":True,"message":"successfully fetched","records": users,"total_records" : len(users)}

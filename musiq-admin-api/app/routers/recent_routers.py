@@ -15,7 +15,7 @@ http_bearer = JWTBearer()
 
 
 @router.get("/",response_model=AllrecentSchema)
-async def view_all_song_details(db: Session = Depends(get_db)):
+async def view_all_song_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     # pass
     try:
         users = recent_get_all(db)
@@ -28,14 +28,10 @@ async def view_all_song_details(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
 @router.get("/{user_id}")#,response_model=RecentresponseSchema
-async def view_song_details(user_id: str,db: Session = Depends(get_db)):
-    # pass
+async def view_song_details(user_id: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     db_user = recent_song_check(db,user_id)
     if db_user:
         return db_user
-    #     return {"records": db_user,"totalrecords" : 1,"success":True}
-    # else:
-    #     raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
 @router.put("/")
 async def last_song_details(song: RecentSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):#

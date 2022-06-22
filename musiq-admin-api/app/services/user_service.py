@@ -5,7 +5,6 @@ from datetime import datetime
 import os,time
 
 from sqlalchemy import null
-# from utils.auth_handler import create_access_token
 from model.user_model import *
 from model.artist_model import *
 from utils.security import verify_password

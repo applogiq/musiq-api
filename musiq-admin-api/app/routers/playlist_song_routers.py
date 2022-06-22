@@ -14,14 +14,12 @@ http_bearer = JWTBearer()
 
 @router.post("/")
 async def enter_aura_details(playlists:PlaylistsongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
-    # pass
     s = decodeJWT(token)
     playlist_song = playlist_song_detail(db,playlists,s["sub"])
     return playlist_song
 
 @router.get("/")
-async def view_all_playlist_details(db: Session = Depends(get_db)):#,token: str = Depends(http_bearer)
-    # pass
+async def view_all_playlist_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     try:
         users = playlistsong_get_all(db)
         return {"records": users,"total_records" : len(users),"success":True}
@@ -29,7 +27,7 @@ async def view_all_playlist_details(db: Session = Depends(get_db)):#,token: str 
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
 @router.get("/{id}")
-async def view_playlist_details(id: int,db: Session = Depends(get_db)):
+async def view_playlist_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     playlists = playlistsong_get_by_id(db,id)
     if playlists:
         return {"records": playlists,"total_records" : 1,"sucess":True}
@@ -38,7 +36,7 @@ async def view_playlist_details(id: int,db: Session = Depends(get_db)):
     
 
 @router.get("/{playlist_id}")
-async def view_playlist_details(playlist_id: int,db: Session = Depends(get_db)):
+async def view_playlist_details(playlist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     playlists = playlistsong_get_by_playlistid(db, playlist_id)
     if playlists:
         return {"records": playlists,"total_records" :len(playlists),"sucess":True}
@@ -48,6 +46,5 @@ async def view_playlist_details(playlist_id: int,db: Session = Depends(get_db)):
 
 @router.delete("/{id}")
 async def delete_playlist_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # pass
     temp = playlistsong_delete(db,id)
     return temp

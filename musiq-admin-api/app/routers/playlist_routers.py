@@ -21,7 +21,7 @@ async def enter_playlist_details(playlists:PlaylistSchema,db: Session = Depends(
     return playlist
 
 @router.get("/")
-async def view_all_playlist_details(db: Session = Depends(get_db)):#,token: str = Depends(http_bearer)
+async def view_all_playlist_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     try:
         users = playlist_get_all(db)
         return {"records": users,"total_records" : len(users),"success":True}
@@ -30,7 +30,7 @@ async def view_all_playlist_details(db: Session = Depends(get_db)):#,token: str 
     
 
 @router.get("/{playlist_id}")
-async def view_playlist_details(playlist_id: int,db: Session = Depends(get_db)):
+async def view_playlist_details(playlist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     playlists = playlist_get_by_id(db, playlist_id)
     if playlists:
         return {"records": playlists,"total_records" : 1,"sucess":True}
@@ -38,7 +38,7 @@ async def view_playlist_details(playlist_id: int,db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
 @router.get("/user/{user_id}")
-async def view_user_playlist_details(user_id: int,db: Session = Depends(get_db)):
+async def view_user_playlist_details(user_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     playlists = playlist_get_by_userid(db, user_id)
     if playlists:
         return {"records": playlists,"total_records" : len(playlists),"sucess":True}
