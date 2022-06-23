@@ -16,50 +16,33 @@ http_bearer = JWTBearer()
 
 @router.post("/register",status_code=201)
 async def user_register(user: AdminSchema,response: Response, db: Session = Depends(get_db)):
-    user = register_admin(user,db)
-    return user
+    return register_admin(user,db)
+    
 
 @router.post("/login")
 async def user_login(user: UserLoginSchema,db: Session = Depends(get_db)):
-    user = login_admin(user,db)
-    return user
-
-
+    return login_admin(user,db)
+    
 @router.post("/token-refresh")
 def refresh_token(user: Refresh_token,db: Session = Depends(get_db)):
-    user = admin_token_refresh(user,db)
-    return user
+    return admin_token_refresh(user,db)
 
 @router.get("/")
 async def view_all_users(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,tokens: str = Depends(http_bearer)):
-    try:
-        users = admin_get_all(db, skip=skip, limit=limit)
-        if len(users):
-            s = len(users)
-        else:
-            s = 1
-        return {"success": True,"message":"fetched Successfully","records": users,"totalrecords":s}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+    return get_all_admin_details(db, skip, limit)
 
-@router.get("/{user_id}")
-async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
-    user = admin_get_by_id(user_id,db)
-    if user:
-        return {"success": True,"message":"fetched Successfully","records":user,"total_records":1}
-    else:
-        raise HTTPException(status_code=422, detail={"message": "Couldn't fetch...Check your id","success":False})
+@router.get("/{admin_id}")
+async def get_admin_details(admin_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
+    return get_admin_by_id(admin_id,db)
 
-@router.put("/{user_id}")
-async def update_user_details(user_id: int,user: AdminOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
+@router.put("/{admin_id}")
+async def update_admin_details(admin_id: int,admin: AdminOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
     s = decodeJWT(tokens) 
-    print(s["sub"],9091049104390)
-    user = admin_user_update(user_id,user,db,s["sub"])
-    return user
+    return update_admin_details(admin_id,admin,db,s["sub"])
+    
 
-@router.delete("/{user_id}")
-async def delete_user(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
-    user = admin_delete(db,user_id)
-    return user
+@router.delete("/{admin_id}")
+async def delete_admin(admin_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
+    return delete_admin_details(db,admin_id)
     
 

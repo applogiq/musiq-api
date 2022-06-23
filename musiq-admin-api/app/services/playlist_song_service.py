@@ -29,8 +29,8 @@ def playlist_song_detail(db: Session,playlists,email):
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-        return {"message":"data added"}
-    return ("Not found")
+        return True
+    return False
 
 def playlistsong_get_all(db: Session):
     return db.query(playlist_songs).filter(playlist_songs.is_delete == False).all()
@@ -54,6 +54,5 @@ def playlistsong_delete(db: Session,playlist_id):
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"message":"Deleted"}
-    else:
-        raise HTTPException(status_code=404, detail="playlist details doesn't exist")
+        return True
+    return False

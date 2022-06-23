@@ -77,7 +77,7 @@ def admin_update_tokens(email,access_token, refresh_token,db:Session):
     db.commit()
     return True
 
-def admin_user_update(user_id,user,db,email):
+def admin_update(user_id,user,db,email):
     user_temp = admin_get_by_id(user_id,db)
     if user_temp:
         if user.name:
@@ -92,15 +92,14 @@ def admin_user_update(user_id,user,db,email):
         db.commit()
         # if commit(user_temp,db):
         temp = admin_get_by_id(user_id,db)
-        return {"status": True,"message":"Register Successfully","records":temp}
-    else:
-        raise HTTPException(status_code=404, detail="user doesn't exist")
+        return temp
+    return False
+        
 
 def admin_delete(db:Session,user_id):
     user_temp = admin_get_by_id(user_id,db)
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"success": True,"message":"user deleted"}
-    else:
-        raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
+        return True
+    return False

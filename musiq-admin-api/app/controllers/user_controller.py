@@ -87,15 +87,11 @@ def token_refresh(user,db):
     else:
         raise HTTPException(status_code=404, detail={"message": "Check your token!!!","success":False})
 
-
-
 def delete_profile(user_id,db):
     if remove_image(user_id,db):
         return {"success":True,'message': "profile image removed"}
     else:
         raise HTTPException(status_code=404, detail={"success":False,'message': "Check your id"})
-
-
 
 def generateOTP() :
     print(11111)
@@ -103,7 +99,6 @@ def generateOTP() :
     OTP = ""
     for i in range(6) :
         OTP += digits[math.floor(random.random() * 10)]
-
     return OTP
 
 def email_otp(db,email):
@@ -155,4 +150,20 @@ def password_change(db:Session,temp):
 
 
 
-            
+def get_all_user(db, skip, limit):
+    try:
+        users = user_get_all(db, skip, limit)
+        if len(users):
+            s = len(users)
+        else:
+            s = 1
+        return {"records": users,"totalrecords":s,"success": True}
+    except:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+
+def get_user_by_id(user_id,db):
+    db_user = get_by_id(user_id,db)
+    if db_user:
+        return {"success":True,"message":"user details fetched successfully","records": db_user,"totalrecords" : 1}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})

@@ -29,25 +29,18 @@ def aura_song_detail(db: Session,auras,email):
     db.add(db_aura)
     db.commit()
     db.refresh(db_aura)
-    return {"message":"data added"}
+    return True
 
 def aura_song_get_all(db: Session):
-    auras = db.query(aura_songs).filter(aura_songs.is_delete == False).all()
-    if auras:
-        return auras
-    else:
-        return False
-
+    return db.query(aura_songs).filter(aura_songs.is_delete == False).all()
+    
 def aura_song_get_by_id(db: Session, aura_id: int):
-    auras = db.query(aura_songs).filter(aura_songs.id == aura_id,aura_songs.is_delete == False).first()
-    if auras:
-        return auras
-    else:
-        return False
+    return db.query(aura_songs).filter(aura_songs.id == aura_id,aura_songs.is_delete == False).first()
+    
 
 def aura_song_get_by_auraid(db: Session, aura_id: str):
-    auras = db.query(aura_songs).filter(aura_songs.aura_id.in_([aura_id]),aura_songs.is_delete == False).all()
-    return auras
+    return db.query(aura_songs).filter(aura_songs.aura_id.in_([aura_id]),aura_songs.is_delete == False).all()
+    
 
 def aura_song_delete(db: Session,aura_id):
     user_temp = db.query(aura_songs).filter(aura_songs.id == aura_id,aura_songs.is_delete == False).first()

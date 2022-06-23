@@ -41,19 +41,15 @@ def aura_detail(db: Session,auras,email):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return {"message":"data added"}
+    return True
 
 
 def aura_get_all(db: Session):
     return db.query(aura).filter(aura.is_delete == False).all()
 
 def aura_get_by_id(db: Session, aura_id: int):
-    auras = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()
-    if auras:
-        return auras
-    else:
-        return False
-
+    return db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()
+    
 def aura_update(db: Session,aura_id: int,auras,email):
     user_temp1 = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()
     if user_temp1:
@@ -75,21 +71,20 @@ def aura_update(db: Session,aura_id: int,auras,email):
         user_temp1.updated_by = temp.id
 
         db.commit()
+        return True
 
-        return {'message': "data updated"}
-    else:
-        raise HTTPException(status_code=404, detail="aura detail doesn't exist")
+    return False
+       
 
 def aura_delete(db: Session,aura_id):
     user_temp = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"message":"Deleted"}
-    else:
-        raise HTTPException(status_code=404, detail="aura details doesn't exist")
+        return True
+    return False
     
-def delete_aura_image(db: Session,aura_id: int):
+def aura_image_delete(db: Session,aura_id: int):
     user_temp = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False,aura.is_image == True).first()
     if user_temp:
         user_temp.is_image = False
@@ -98,6 +93,5 @@ def delete_aura_image(db: Session,aura_id: int):
         path = f"{DIRECTORY}/aura/{file}"
         os.remove(path)
         db.commit()
-        return {'message': "aura image removed"}
-    else:
-        return {'message': "Check your id"}
+        return True
+    return False

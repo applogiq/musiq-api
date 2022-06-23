@@ -25,7 +25,7 @@ def fav_song_detail(db: Session,fav,email):
     db.add(db_fav)
     db.commit()
     db.refresh(db_fav)
-    return {"status": True,"message":"Updated Successfully","records":db_fav}
+    return db_fav
 
 def fav_delete(db: Session,fav):
     favname =db.query(favourites).filter(favourites.user_id == fav.user_id,favourites.song_id == fav.song_id).first()
@@ -34,8 +34,8 @@ def fav_delete(db: Session,fav):
     # else:
     db.delete(favname)
     db.commit()
-    return {"status": True,"message":"successfully deleted that song"}
-
+    return True
+    
 def fav_get_all(db: Session):
     return db.query(favourites).filter(favourites.is_active == True).all()
 

@@ -18,39 +18,28 @@ http_bearer = JWTBearer()
 @router.post("/")
 async def enter_artist_details(artists:ArtistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     s = decodeJWT(token) 
-    print(s["sub"])
-    artist = artist_detail(db,artists,s["sub"])
-    return artist
-
+    return create_artist_detail(db,artists,s["sub"])
+    
 
 @router.get("/",dependencies=[Depends(http_bearer)])
 async def view_all_artist_details(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
-    try:
-        users = artist_get_all(db,skip,limit)
-        return {"success":True,"message":"Details fetched successfully","records": users,"total_records" : len(users)}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+    return get_all_artist_detail(db)
 
 
 @router.get("/{artist_id}")
 async def view_artist_details(artist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # pass
-    artists = artist_get_by_id(db, artist_id)
-    if artists:
-        return {"success":True,"message":"Details fetched successfully","records": artists,"total_records" : 1}
-    else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+    return get_artist_detail_by_id(db,artist_id)
 
 
 @router.put("/{artist_id}")
 async def update_artist_details(artist_id: int,artists:ArtistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token) 
-    temp = artist_update(db,artist_id,artists,s["sub"])
-    return temp
+    return  update_artist_details(db,artist_id,artists,s["sub"])
+   
 
 
 @router.delete("/image/{artist_id}")
 async def remove_image(art_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    user = artist_delete_image(db,art_id)
-    return user
-    # pass
+    return artist_delete_image(db,art_id)
+    
+    

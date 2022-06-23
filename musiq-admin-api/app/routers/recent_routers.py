@@ -7,7 +7,7 @@ from config.database import *
 from utils.auth_handler import decodeJWT
 from services.recent_service import *
 from schemas.recent_schema import RecentSchema,AllrecentSchema,RecentresponseSchema
-from controllers.recent_controller import user_recent_song
+from controllers.recent_controller import *
 
 router = APIRouter(tags=["recents"],prefix='/recent-list')
 
@@ -16,27 +16,13 @@ http_bearer = JWTBearer()
 
 @router.get("/",response_model=AllrecentSchema)
 async def view_all_song_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # pass
-    try:
-        users = recent_get_all(db)
-        if len(users):
-            s = len(users)
-        else:
-            s = 1
-        return {"records": users,"totalrecords" : s,"success":True}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+    return get_all_recent(db)
 
 @router.get("/{user_id}")#,response_model=RecentresponseSchema
 async def view_song_details(user_id: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    db_user = recent_song_check(db,user_id)
-    if db_user:
-        return db_user
+    return get_recent_song_list(db,user_id)
 
 @router.put("/")
 async def last_song_details(song: RecentSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):#
-    # pass
     s = decodeJWT(token)
-    user = user_recent_song(db,song,s["sub"])
-    if user:
-        return user
+    return user_recent_song(db,song,s["sub"])

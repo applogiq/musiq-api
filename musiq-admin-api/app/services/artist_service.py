@@ -57,7 +57,7 @@ def artist_detail(db: Session,artists,email):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return {"success": True,"message":"data added","records":{db_user}}
+    return db_user
 
 def artist_update(db,user_id,user,email):
     user_temp = artist_get_by_id(db,user_id)
@@ -79,9 +79,8 @@ def artist_update(db,user_id,user,email):
         db.commit()
         # if commit(user_temp,db):
         temp = artist_get_by_id(db,user_id)
-        return {"status": True,"message":"updated successfully","records":temp}
-    else:
-        raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..user doesn't exist"})
+        return temp
+    return False
 
 def artist_remove_image(db,user_id):
     user_temp =  artist_image_check(db,user_id)
@@ -93,5 +92,4 @@ def artist_remove_image(db,user_id):
         os.remove(path)
         db.commit()
         return True
-    else:
-        return False
+    return False

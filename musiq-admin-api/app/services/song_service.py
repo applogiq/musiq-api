@@ -36,7 +36,7 @@ def song_detail(db:Session,song,email):
     name =song_name_check(db,song.song_name)
     if name:
         if (name.artist_id) == (song.artist_id):
-            raise HTTPException(status_code=400, detail="This song already exist")
+            raise HTTPException(status_code=400, detail={"success": False,'message': "This song already exist"})
         else:
             pass
     if song.album_id:
@@ -44,7 +44,7 @@ def song_detail(db:Session,song,email):
         if album:
             pass
         else:
-            raise HTTPException(status_code=400, detail="Check your album id")
+            raise HTTPException(status_code=400, detail={"success": False,'message': "Check your album id"})
     else:
         raise HTTPException(status_code=400, detail="Enter Your album id")
 
@@ -119,18 +119,19 @@ def song_get_by_id(db: Session, song_id: int):
     else:
         return False
 
-# def song_get_by_id_limit(db: Session, song_id: int):
-#     # user = db.query(songs.song_name,songs.label,songs.duration,songs.is_music,songs.artist_id,artist.artist_name,artist.id,albums.album_name,albums.is_image,albums.released_year).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).all() 
-#     user1 = db.query(songs).filter(artist.id.contains(songs[0].artist_id),songs.is_delete == False).all() 
-#     print(user1)
-#     # if user:
-#     #     album_details = db.query(albums).filter(albums.id == user.album_id,albums.is_delete == False).first()
-#     #     user.duration = str(user.duration)
-#     #     user.released_date = str(user.released_date)
-#     #     user.album_details = album_details
-#     return True
-#     # else:
-#     #     return False
+def song_get_by_id_limit(db: Session, song_id: int):
+    user = db.query().join(albums,albums.id == songs.album_id).filter(songs.id == song_id,songs.is_delete == False).all() 
+    print(len(user))
+    # user1 = db.query(songs).filter(artist.id.contains(songs[0].artist_id),songs.is_delete == False).all() 
+    # print(user1)
+    # if user:
+    #     album_details = db.query(albums).filter(albums.id == user.album_id,albums.is_delete == False).first()
+    #     user.duration = str(user.duration)
+    #     user.released_date = str(user.released_date)
+    #     user.album_details = album_details
+    return user
+    # else:
+    #     return False
 
 
 def song_update(db: Session,song_id: int,song,email):
@@ -140,7 +141,7 @@ def song_update(db: Session,song_id: int,song,email):
             songname =song_name_check(db,song.song_name)
             if songname:
                 if (songname.artist_id) == (song.artist_id):
-                    raise HTTPException(status_code=400, detail="This song alreay exist")
+                    raise HTTPException(status_code=400, detail={"success": False,'message': "This song already exist"})
                 else:
                     pass
             user_temp1.song_name = song.song_name.title()          

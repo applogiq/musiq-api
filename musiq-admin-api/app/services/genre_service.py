@@ -14,8 +14,6 @@ def genre_get_all(db: Session):
 def genre_get_by_id(db: Session, gen_id: int):
     return db.query(genres).filter(genres.id == gen_id,genres.is_delete == False).first()
   
-
-
 def genre_detail(db: Session,genre,email):
     genrename = genre_name_check(genre.genre_name,db)
     a ="GN001"
@@ -36,7 +34,6 @@ def genre_detail(db: Session,genre,email):
     db.refresh(db_genre)
     return db_genre
 
-
 def genre_update(db: Session,gen_id,genre,email):
     user_temp1 = genre_get_by_id(db,gen_id)
     if user_temp1:
@@ -53,18 +50,17 @@ def genre_update(db: Session,gen_id,genre,email):
 
         db.commit()
         temp = genre_get_by_id(db,gen_id)
-        return {"status": True,"message":"Updated Successfully","records":temp}
+        return temp
     else:
-        raise HTTPException(status_code=404, detail="genre detail doesn't exist")
+        raise False
 
 def genre_delete(db: Session,gen_id):
     temp = genre_get_by_id(db,gen_id)
     if temp:
         temp.is_delete = True
         db.commit()
-        return {"success": True,"message":"Genre details deleted"}
-    else:
-        raise HTTPException(status_code=404, detail="genre detail doesn't exist")
+        return True
+    return False
 
 
 

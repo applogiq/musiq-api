@@ -6,6 +6,7 @@ from utils.auth_bearer import JWTBearer
 from utils.auth_handler import *
 from config.database import *
 from services.aura_service import *
+from controllers.aura_controller import *
 
 
 router = APIRouter(tags=["aura"],prefix="/aura")
@@ -15,43 +16,28 @@ http_bearer = JWTBearer()
 @router.post("/")
 async def enter_aura_details(auras:AuraSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     s = decodeJWT(token)
-    aura = aura_detail(db,auras,s["sub"])
-    return aura
-    # pass
+    return create_aura_details(db,auras,s["sub"])
 
 @router.get("/")
 async def view_all_aura_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # pass
-    try:
-        users = aura_get_all(db)
-        return {"records": users,"total_records" : len(users),"success":True}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+    return get_all_aura_details(db)
     
 @router.get("/{aura_id}")
 async def view_aura_details(aura_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # pass
-    auras = aura_get_by_id(db, aura_id)
-    if auras:
-        return {"records": auras,"total_records" : 1,"success":True}
-    else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+    return get_aura_details_by_id(db, aura_id)
     
 @router.put("/{aura_id}")
 async def update_aura_details(aura_id: int,auras: AuraSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    temp = aura_update(db,aura_id,auras,s["sub"])
-    return temp
-    # pass
+    return update_aura_details(db,aura_id,auras,s["sub"])
+    
    
 @router.delete("/{aura_id}")
 async def delete_aura_details(aura_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    temp = aura_delete(db,aura_id)
-    return temp
-    # pass
+    return delete_aura_details(db,aura_id)
+    
 
 @router.delete("/image/{aura_id}")
 async def remove_aura_image(aura_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    temp = delete_aura_image(db,aura_id)
-    return temp
-    # pass
+    return delete_aura_image(db,aura_id)
+    

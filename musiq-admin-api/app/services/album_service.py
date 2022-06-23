@@ -14,82 +14,77 @@ def album_get_by_id(id,db):
     return db.query(albums).filter(albums.id == id,albums.is_delete==False).first()
 
 def album_get_all(db: Session, skip: int = 0, limit: int = 100):
-    user = db.query(albums).filter(albums.is_delete == False).offset(skip).limit(limit).all()
-    if user:
-        return user
-    else:
-        return False
-
+    return db.query(albums).filter(albums.is_delete == False).offset(skip).limit(limit).all()
 
 def albumname_check(albumname,db: Session):
-    user = db.query(albums).filter(albums.album_name == albumname,albums.is_delete==False).first()
-    return user
+    return db.query(albums).filter(albums.album_name == albumname,albums.is_delete==False).first()
+    
 
 def album_image_check(album_id,db: Session):
-    user= db.query(albums).filter(albums.id == album_id,albums.is_delete == False,albums.is_image == True).first()
-    return user
+    return db.query(albums).filter(albums.id == album_id,albums.is_delete == False,albums.is_image == True).first()
+    
     
 def album_create(db,album,email):
-        a ="AL001"
-        while db.query(albums).filter(albums.album_id == a).first():
-            a = "AL00" + str(int(a[-1])+1)
-        
+    a ="AL001"
+    while db.query(albums).filter(albums.album_id == a).first():
+        a = "AL00" + str(int(a[-1])+1)
+    
+    if album.album_name[0].isalpha():
+        alphabet = album.album_name[0].upper()
+    else:
+        alphabet = "Mis"
+
+    path1 = f"{DIRECTORY}/music/tamil/{alphabet}/{album.album_name}"
+
+    if os.path.exists(path1):
+        pass
+    else:
+        os.makedirs(path1)
+    
+    if album.image:
+        s = base64.b64decode(album.image)
+        filename1 = a +".png"
         if album.album_name[0].isalpha():
             alphabet = album.album_name[0].upper()
         else:
             alphabet = "Mis"
-
-        path1 = f"{DIRECTORY}/music/tamil/{alphabet}/{album.album_name}"
-
-        if os.path.exists(path1):
-            pass
+        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{album.album_name}/image"
+        if os.path.exists(file_location):
+            pass    
         else:
-            os.makedirs(path1)
-        
-        if album.image:
-            s = base64.b64decode(album.image)
-            filename1 = a +".png"
-            if album.album_name[0].isalpha():
-                alphabet = album.album_name[0].upper()
-            else:
-                alphabet = "Mis"
-            file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{album.album_name}/image"
-            if os.path.exists(file_location):
-                pass    
-            else:
-                os.makedirs(file_location)
-                # print(111111111111111)
-            file_location2 = f"{file_location}/{filename1}"
-            with open(file_location2, 'wb') as f:
-                f.write(s)
-            image = True
-        else:
-            image = False
+            os.makedirs(file_location)
+            # print(111111111111111)
+        file_location2 = f"{file_location}/{filename1}"
+        with open(file_location2, 'wb') as f:
+            f.write(s)
+        image = True
+    else:
+        image = False
 
-        temp = admin_get_email(email,db)   
-        name =db.query(artist).filter(artist.id.in_(album.music_director)).all()
-        # print(temp4[0].name)
-        artist_name = []
-        for i in name:
-            artist_name.append(i.artist_name)
-            print(artist_name)
+    temp = admin_get_email(email,db)   
+    name =db.query(artist).filter(artist.id.in_(album.music_director)).all()
+    # print(temp4[0].name)
+    artist_name = []
+    for i in name:
+        artist_name.append(i.artist_name)
+        print(artist_name)
 
-        db_album = albums(album_name = album.album_name,
-                        album_id = a,
-                        released_year = album.released_year,
-                        music_director = album.music_director,
-                        music_director_name = artist_name,
-                        no_of_songs = 0,
-                        is_image = image,
-                        is_delete = False,
-                        created_by = temp.id,
-                        is_active = 1)
+    db_album = albums(album_name = album.album_name,
+                    album_id = a,
+                    released_year = album.released_year,
+                    music_director = album.music_director,
+                    music_director_name = artist_name,
+                    no_of_songs = 0,
+                    is_image = image,
+                    is_delete = False,
+                    created_by = temp.id,
+                    is_active = 1)
 
-        
-        db.add(db_album)
-        db.commit()
-        db.refresh(db_album)
-        return db_album
+    
+    db.add(db_album)
+    db.commit()
+    db.refresh(db_album)
+    return db_album
 
 def album_update(db: Session,album_id: int,album,email):
     user_temp1 = album_get_by_id(album_id,db)
@@ -164,12 +159,10 @@ def album_update(db: Session,album_id: int,album,email):
         
         db.commit()
         temp1 = album_get_by_id(album_id,db)
-        print(temp1)
-        return {"status": True,"message":"Updated Successfully","records":temp1}
-    else:
-        raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..album doesn't exist"})
+        return temp1
+    return False
 
-def delete_album_image(db: Session,album_id: int):
+def album_image_delete(db: Session,album_id: int):
     user_temp = album_image_check(album_id,db)
     if user_temp:
         if user_temp:
@@ -182,9 +175,9 @@ def delete_album_image(db: Session,album_id: int):
         path =f"{DIRECTORY}/music/tamil/{alphabet}/{user_temp.album_name}/image/{user_temp.album_id}.png"
         os.remove(path)
         db.commit()
-        return {"status": True,"message":"album image removed"}
-    else:
-        raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..Image doesn't exist"})
+        return True
+    return False
+
     
     
 

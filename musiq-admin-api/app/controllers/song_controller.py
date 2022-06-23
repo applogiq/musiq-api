@@ -38,14 +38,14 @@ def artist_song_check(db,artist_id,skip,limit):
 def get_all_song(db, skip,limit):
     db_song = song_get_all_limit(db, skip,limit)
     if db_song:
-        return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+        return {"success":True,"message":"song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
 def update_song_details(db,song_id,song,email):
     db_song = song_update(db,song_id,song,email)
     if db_song:
-        return {"status": True,"message":"Updated Successfully","records":db_song}
+        return {"status": True,"message":"updated Successfully","records":db_song}
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "song details doesn't exist"})
 
@@ -55,9 +55,6 @@ def song_delete(db: Session,song_id):
         return {"success": True,"message":"song deleted"}
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "song details doesn't exist"})
-
-
-
 
 
 def song_response(db,id,request):

@@ -23,7 +23,7 @@ def playlist_detail(db: Session,playlists,email):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return {"status": True,"message":"playlist is added successfully","records":db_user}
+    return True
 
 def playlist_update(db,playlist_id,name,email):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
@@ -34,9 +34,8 @@ def playlist_update(db,playlist_id,name,email):
         user_temp.updated_by = temp.id
         user_temp.updated_at = datetime.now()
         db.commit()
-        return {'message': "data updated"}
-    else:
-        raise HTTPException(status_code=404, detail="playlist details doesn't exist")
+        return True
+    return False
 
 def playlist_get_all(db: Session):
     return db.query(playlist).filter(playlist.is_delete == False).all()
@@ -61,6 +60,6 @@ def playlist_delete(db: Session,playlist_id):
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"message":"playlist details deleted"}
+        return True
     else:
-        raise HTTPException(status_code=404, detail="playlist details doesn't exist")
+        return False

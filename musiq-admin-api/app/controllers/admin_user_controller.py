@@ -34,7 +34,6 @@ def register_admin(user,db):
         raise HTTPException(status_code=422, detail={"message": "couldn't register,check your details","success":False})
 
 def login_admin(user,db):
-    # if login_check(user,db):
     if admin_login_check(user,db):
         return {"status": True,"message":"login Successfully","records":admin_login_check(user,db)}
     else:
@@ -51,3 +50,32 @@ def admin_token_refresh(user,db):
             return {"success":True ,"message": "token verified","token":{"access_token": new_access_token, "refresh_token": new_refresh_token}}
     else:
         raise HTTPException(status_code=404, detail={"message": "Check your token!!!","success":False})
+
+
+def get_all_admin_details(db, skip, limit):
+    try:
+        users = admin_get_all(db, skip, limit)
+        return {"success": True,"message":"fetched Successfully","records": users,"totalrecords":len(users)}
+    except:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+
+def get_admin_by_id(admin_id,db):
+    admin = admin_get_by_id(admin_id,db)
+    if admin:
+        return {"success": True,"message":"fetched Successfully","records":admin,"total_records":1}
+    else:
+        raise HTTPException(status_code=422, detail={"message": "Couldn't fetch...Check your id","success":False})
+
+def update_admin_details(admin_id,admin,db,email):
+    admin = admin_update(admin_id,admin,db,email)
+    if admin:
+        return {"success": True,"message":"admin details updated Successfully","records":admin}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "admin details doesn't exist"})
+
+def delete_admin_details(db,admin_id):
+    db_admin = admin_delete(db,admin_id)
+    if db_admin:
+        return {"success": True,"message":"admin details deleted"}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "admin details doesn't exist"})
