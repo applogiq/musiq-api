@@ -167,3 +167,10 @@ def get_user_by_id(user_id,db):
         return {"success":True,"message":"user details fetched successfully","records": db_user,"totalrecords" : 1}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
+
+def update_user_details(user_id,user,db,email):
+    db_user = user_update(user_id,user,db,email)
+    if db_user:
+        return {"status": True,"message":"updated successfully","records":db_user}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "user details doesn't exist"})

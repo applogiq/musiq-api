@@ -17,23 +17,23 @@ http_bearer = JWTBearer()
 @router.post("/")
 async def enter_genre_details(genre:GenreSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     s = decodeJWT(token)
-    return genre_detail(db,genre,s["sub"])
+    return create_genre_details(db,genre,s["sub"])
     
 @router.get("/")
 async def view_all_genre_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_all_genre_details(db)
 
-@router.get("/{id}")
+@router.get("/{genre_id}")
 async def view_genre_details(genre_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_genre_by_id(db,genre_id)
 
-@router.put("/{id}")
+@router.put("/{genre_id}")
 async def update_genre_details(genre_id: int,genre: GenreSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    return update_genre_details(db,genre_id,genre,s["sub"])
+    return update_genre(db,genre_id,genre,s["sub"])
 
 
-@router.delete("/{id}")
+@router.delete("/{genre_id}")
 async def delete_genre(genre_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return delete_genre_details(db,genre_id)
     

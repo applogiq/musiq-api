@@ -35,7 +35,7 @@ async def view_album_details(album_id: int,db: Session = Depends(get_db),token: 
 @router.put("/{id}")
 async def update_album_details(album_id: int,album: AlbumSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    return update_album_details(db,album_id,album,s["sub"])
+    return update_album(db,album_id,album,s["sub"])
     
 
 

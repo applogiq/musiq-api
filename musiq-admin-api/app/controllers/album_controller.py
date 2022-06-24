@@ -36,7 +36,7 @@ def get_album_by_id(album_id,db):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
-def update_album_details(db,album_id,album,email):
+def update_album(db,album_id,album,email):
     db_album = album_update(db,album_id,album,email)
     if db_album:
         return {"success": True,"message":"album details updated Successfully","records":db_album}

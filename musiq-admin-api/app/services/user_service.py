@@ -154,9 +154,8 @@ def user_update(user_id,user,db,email):
         db.commit()
         # if commit(user_temp,db):
         temp = get_by_id(user_id,db)
-        return {"status": True,"message":"Updated Successfully","records":temp}
-    else:
-        raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..user doesn't exist"})
+        return temp
+    return False
 
 def remove_image(user_id,db):
     user_temp =  image_check(user_id,db)

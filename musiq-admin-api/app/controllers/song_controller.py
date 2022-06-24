@@ -42,7 +42,7 @@ def get_all_song(db, skip,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
-def update_song_details(db,song_id,song,email):
+def update_song(db,song_id,song,email):
     db_song = song_update(db,song_id,song,email)
     if db_song:
         return {"status": True,"message":"updated Successfully","records":db_song}

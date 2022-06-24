@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from services.genre_service import *
 
 
-def enter_genre_details(db,genre,email):
+def create_genre_details(db,genre,email):
     temp = genre_detail(db,genre,email)
     if temp:
         return {"success":True,'message': "song details added","records": temp}
@@ -26,7 +26,7 @@ def get_genre_by_id(db, genre_id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
-def update_genre_details(db,gen_id,genre,email):
+def update_genre(db,gen_id,genre,email):
     db_genre = genre_update(db,gen_id,genre,email)
     if db_genre:
         return {"status": True,"message":"genre details updated Successfully","records":db_genre}

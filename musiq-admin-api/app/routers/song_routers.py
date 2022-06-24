@@ -42,7 +42,7 @@ async def view_song_details(song_id: int,db: Session = Depends(get_db),token: st
 @router.put("/songs/{song_id}")
 async def update_song_details(song_id: int,song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    return update_song_details(db,song_id,song,s["sub"])
+    return update_song(db,song_id,song,s["sub"])
     
 
 @router.delete("/songs/{song_id}")

@@ -66,12 +66,12 @@ def get_admin_by_id(admin_id,db):
     else:
         raise HTTPException(status_code=422, detail={"message": "Couldn't fetch...Check your id","success":False})
 
-def update_admin_details(admin_id,admin,db,email):
-    admin = admin_update(admin_id,admin,db,email)
-    if admin:
-        return {"success": True,"message":"admin details updated Successfully","records":admin}
+def update_admin(admin_id,admin,db,email):
+    db_admin =  admin_update(admin_id,admin,db,email)
+    if db_admin:
+        return  {"status": True,"message":"updated successfully","records":db_admin}
     else:
-        raise HTTPException(status_code=404, detail={"success": False,'message': "admin details doesn't exist"})
+        raise HTTPException(status_code=404, detail={"success":False,'message':"admin details doesn't exist"})
 
 def delete_admin_details(db,admin_id):
     db_admin = admin_delete(db,admin_id)

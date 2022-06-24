@@ -38,7 +38,7 @@ async def get_admin_details(admin_id: int,db: Session = Depends(get_db),tokens: 
 @router.put("/{admin_id}")
 async def update_admin_details(admin_id: int,admin: AdminOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):#,tokens: str = Depends(http_bearer)
     s = decodeJWT(tokens) 
-    return update_admin_details(admin_id,admin,db,s["sub"])
+    return  update_admin(admin_id,admin,db,s["sub"])
     
 
 @router.delete("/{admin_id}")

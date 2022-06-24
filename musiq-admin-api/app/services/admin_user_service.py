@@ -4,6 +4,7 @@ from datetime import datetime
 import os,time
 
 from sqlalchemy import null
+from utils.security import get_password_hash
 # from utils.auth_handler import create_access_token
 from model.user_model import *
 from utils.security import verify_password
@@ -85,12 +86,12 @@ def admin_update(user_id,user,db,email):
         if user.email:
             user_temp.email = user.email
         if user.password:
+            user.password =  get_password_hash(user.password)
             user_temp.password = user.password
         user_temp.updated_at = datetime.now()
         temp = admin_get_email(email,db)
         user_temp.updated_by = temp.id
         db.commit()
-        # if commit(user_temp,db):
         temp = admin_get_by_id(user_id,db)
         return temp
     return False
