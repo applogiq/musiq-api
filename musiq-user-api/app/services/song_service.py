@@ -21,6 +21,10 @@ def song_album_check(db,album_id,skip,limit):
         print(user[i].album_id)
     return user
 
+def song_album_check_limit(db,album_id,skip,limit):
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
+
+
 def song_artist_check(db,artist_id,skip,limit):
     user = db.query(songs).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
     for i in range(0,len(user)):
@@ -31,6 +35,8 @@ def song_artist_check(db,artist_id,skip,limit):
         print(user[i].album_id)
     return user
 
+def song_artist_check_limit(db,artist_id,skip,limit):
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
 
 def song_music_check(db,song_id):
     return  db.query(songs).filter(songs.id == song_id,songs.is_delete == False,songs.is_music == True).first()
@@ -44,6 +50,10 @@ def song_get_all(db: Session, skip,limit):
         album_details = album_get_by_id(user[i].album_id,db)
         user[i].album_details = album_details
         print(user[i].album_id)
+    return user
+
+def song_get_all_limit(db: Session, skip,limit):
+    user = db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).offset(skip).limit(limit).all()
     return user
 
 def song_get_by_id(db: Session, song_id: int):

@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends,HTTPException
 
-
 from utils.auth_bearer import JWTBearer
 from utils.auth_handler import decodeJWT
 
@@ -8,30 +7,20 @@ from sqlalchemy.orm import Session
 from config.database import *
 from schemas.last_song_schema import LastSchema
 from services.last_song_service import *
-# from app.controller.last_song_controller import get_last_song, get_last_songs, user_last_song
-
-
+from controllers.last_song_controller import *
 
 router = APIRouter(tags=["last song"],prefix='/last-song')
 
 http_bearer = JWTBearer()
 
 
-
 @router.get("/{user_id}")
 async def view_user_last_song_details(user_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    pass
-    db_user = last_song_get_by_userid(db, user_id)
-    if db_user:
-        return {"records": db_user,"total_records" : 1,"sucess":True}
-    else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+    return get_details_by_userid(db, user_id)
 
 @router.put("/")
 async def last_song_details(song: LastSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    user = user_last_song(db,song,s["sub"])
-    if user:
-        return user
+    return enter_last_song(db,song,s["sub"])
 
  

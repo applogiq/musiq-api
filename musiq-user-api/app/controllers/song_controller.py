@@ -7,6 +7,33 @@ from fastapi.responses import StreamingResponse
 from services.song_service import *
 from services.album_service import *
 
+def get_song_by_id(db, song_id):
+    db_song = song_get_by_id(db, song_id)
+    if db_song:
+        return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : 1}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
+    
+def album_song_check(db,album_id,skip,limit):
+    db_song = song_album_check_limit(db,album_id,skip,limit)
+    if db_song:
+        return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
+
+def artist_song_check(db,artist_id,skip,limit):
+    db_song = song_artist_check_limit(db,artist_id,skip,limit)
+    if db_song:
+        return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
+
+def get_all_song(db, skip,limit):
+    db_song = song_get_all_limit(db, skip,limit)
+    if db_song:
+        return {"success":True,"message":"song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
 def song_response(db,id,request):
     user_temp = song_music_check(db,id)

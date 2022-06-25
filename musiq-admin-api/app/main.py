@@ -7,9 +7,6 @@ import warnings
 from sqlalchemy import exc as sa_exc
 
 
-# from app.routers import user_routers
-
-
 from config.database import *
 from model.song_model import *
 from routers import admin_user_routers
@@ -21,6 +18,18 @@ from model.podcast_model import *
 from model.category_model import *
 from model.podcast_recent_model import *
 # app = database.app
+
+app = FastAPI(title="Music Streaming API",
+              description="This is a very custom OpenAPI schema",
+              version="2.5.0",
+              docs_url='/api/v1/docs',
+              redoc_url='/api/v1/redoc',
+              openapi_url='/openapi.json',
+              servers=[
+                        {"url": "https://example.com", "description": "Staging environment"},
+                        # {"url": "https://prod.example.com", "description": "Production environment"},
+                    ],
+                    root_path="/api/v1")
 
 app.include_router(admin_user_routers.router)
 app.include_router(user_routers.router)
@@ -38,6 +47,14 @@ app.include_router(aura_song_routers.router)
 app.include_router(category_routers.router)
 app.include_router(podcast_author_routers.router)
 
+app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
+        
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=["*"], 
+    allow_methods=["*"], 
+    allow_headers=["*"]
+)
 app.mount("/api/v1",app)
 
 @app.exception_handler(Exception) 

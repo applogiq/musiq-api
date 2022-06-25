@@ -148,8 +148,6 @@ def password_change(db:Session,temp):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
-
-
 def get_all_user(db, skip, limit):
     try:
         users = user_get_all(db, skip, limit)
@@ -168,9 +166,16 @@ def get_user_by_id(user_id,db):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
-def update_user_details(user_id,user,db,email):
+def update_user(user_id,user,db,email):
     db_user = user_update(user_id,user,db,email)
     if db_user:
         return {"status": True,"message":"updated successfully","records":db_user}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "user details doesn't exist"})
+
+def delete_user_details(db,user_id):
+    db_user = user_delete(db,user_id)
+    if db_user:
+        return {"success": True,"message":"user details deleted"}
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "user details doesn't exist"})

@@ -9,8 +9,8 @@ from config.database import DIRECTORY
 from model.song_model import songs
 from model.aura_model import aura
 
-def aura_get_all(db: Session):
-    return db.query(aura).filter(aura.is_delete == False).all()
+def aura_get_all(db: Session,limit):
+    return db.query(aura).filter(aura.is_delete == False).limit(limit).all()
 
 def aura_get_by_id(db: Session, aura_id: int):
     auras = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()

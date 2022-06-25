@@ -15,12 +15,14 @@ def recent_get_by_userid(db,user_id):
 def recent_get_all(db):
     return db.query(recents).filter(recents.is_delete == False).all()
 
-def recent_song_check(db,user_id):
+def recent_song_check(db,user_id,limit):
     user = recent_get_by_userid(db,user_id)
     if user:
         s = list(user.song_id["songs"])
-        temp = db.query(songs.id,songs.song_name,albums.album_name,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.id.in_(s)).all()
-        return temp
+        temp = db.query(songs.id,songs.song_name,albums.album_name,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.id.in_(s)).limit(limit).all()
+        temp2 = temp[::-1]
+        return temp2
+    return False
 
 def recent_update(db,user_id,data,email):
     temp = recent_get_by_userid(db,user_id)

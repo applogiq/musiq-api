@@ -37,7 +37,11 @@ async def view_all_song_details(db: Session = Depends(get_db),album_id: Union[in
 async def view_song_details(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_song_by_id(db, song_id)
     
-
+# @router.post("/songs/music/{song_id}")
+# async def upload_song_file(song_id: str,uploaded_file: UploadFile = File(...),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+#     # song = upload_new_song_file(db,song_id,uploaded_file)
+#     # return song
+#     pass
 
 @router.put("/songs/{song_id}")
 async def update_song_details(song_id: int,song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):

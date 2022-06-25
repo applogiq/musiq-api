@@ -11,8 +11,18 @@ from config.database import *
 # from model.admin_user_model import *
 from routers import aura_song_routers,aura_routers,favourite_routers,user_routers,artist_routers,album_routers,song_routers,recent_routers,last_song_routers,playlist_routers
 
-
-# app = database.app
+app = FastAPI(title="Music Streaming API",
+              description="This is a very custom OpenAPI schema",
+              version="2.5.0",
+              docs_url='/api/v1/docs',
+              redoc_url='/api/v1/redoc',
+              openapi_url='/openapi.json',
+              servers=[
+                        {"url": "https://example.com", "description": "Staging environment"},
+                        # {"url": "https://prod.example.com", "description": "Production environment"},
+                    ],
+                    root_path="/api/v1")
+        
 
 
 app.include_router(user_routers.router)
@@ -32,6 +42,8 @@ app.mount("/api/v1",app)
 def validation_exception_handler(request, err):
     base_error_message = f"Failed to execute: {request.method}: {request.url}"
     return JSONResponse(status_code=400, content={"message": f"{base_error_message}. Detail: {err}"}) 
+
+app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
 
 
 if __name__ == "__main__":

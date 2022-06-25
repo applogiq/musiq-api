@@ -179,14 +179,14 @@ def update_password(email,password,db):
     else:
         return False
     
-def user_delete(db:Session,user_id):
-    user_temp = db.query(users).filter(users.id == user_id,users.is_delete == False).first()
-    if user_temp:
-        user_temp.is_delete = 1
-        db.commit()
-        return {"success": True,"message":"user deleted"}
-    else:
-        raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
+# def user_delete(db:Session,user_id):
+#     user_temp = db.query(users).filter(users.id == user_id,users.is_delete == False).first()
+#     if user_temp:
+#         user_temp.is_delete = 1
+#         db.commit()
+#         return {"success": True,"message":"user deleted"}
+#     else:
+#         raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
 
 def follower_details(db:Session,user):
     temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==False).first()

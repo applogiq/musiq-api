@@ -1,13 +1,18 @@
 from fastapi import HTTPException
 import re
 
-
-
 from services.artist_service import *
 
-# def artist_delete_image(db,user_id):
-#     if artist_remove_image(db,user_id):
-#         return {"success":True,'message': "artist image removed"}
-#     else:
-#         # return {"success":False,'message': "Check your id"}
-#         raise HTTPException(status_code=404, detail={"success":False,'message': "Check your id"})
+def get_all_artist_detail(db,skip,limit):
+    db_artist = artist_get_all(db,skip,limit)
+    if db_artist:
+        return {"success":True,"message":"details fetched succesfully","records": db_artist,"total_records" : len(db_artist)}
+    else:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+
+def get_artist_detail_by_id(db,artist_id):
+    db_artist = artist_get_by_id(db,artist_id)
+    if db_artist:
+        return {"success":True,"message":"details fetched succesfully","records": db_artist,"total_records" : len(db_artist)}
+    else:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})

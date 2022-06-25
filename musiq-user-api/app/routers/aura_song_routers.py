@@ -6,6 +6,7 @@ from utils.auth_bearer import JWTBearer
 from utils.auth_handler import *
 from config.database import *
 from services.aura_song_service import *
+from controllers.aura_song_controller import *
 
 router = APIRouter(tags=["aura song"],prefix="/aura-song")
 
@@ -13,21 +14,13 @@ http_bearer = JWTBearer()
 
 
 
-@router.get("/")####limit
-async def view_all_aura_song_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    auras = aura_song_get_all(db)
-    if auras:
-        return {"records": auras,"total_records" : len(auras),"sucess":True}
-    else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+@router.get("/")
+async def view_all_aura_song_details(db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
+    return get_all_aura_song_details(db,limit)
 
 
 
 @router.get("/list/{aura_id}")
-async def aura_song_list(aura_id: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    auras = aura_song_get_by_auraid(db,aura_id)
-    if auras:
-        return auras
-    else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+async def aura_song_list(aura_id: str,db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
+    return get_aura_details_by_auraid(db,aura_id,limit)
 

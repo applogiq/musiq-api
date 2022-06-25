@@ -38,28 +38,12 @@ def get_db():
 app_password = config("APP_PASSWORD")
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
-app = FastAPI(title="Music Streaming API",
-              description="This is a very custom OpenAPI schema",
-              version="2.5.0",
-              docs_url='/api/v1/docs',
-              redoc_url='/api/v1/redoc',
-              openapi_url='/openapi.json',
-              servers=[
-                        {"url": "https://example.com", "description": "Staging environment"},
-                        # {"url": "https://prod.example.com", "description": "Production environment"},
-                    ],
-                    root_path="/api/v1")
-        
+
 
 DIRECTORY = "D:\Srimathi\Project\MusiQ\public"
-# script_dir = os.path.dirname(__file__)
-# os.chdir("MusicQ/public")
-# st_abs_file_path = 
-# script_dir = sys.path.append('\MusiQ\public')
-# print(script_dir)
-# impath = os.path.join(script_dir, '..\MusiQ\public')
 
-app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
+
+
         
 # app = FastAPI(title="Music Streaming API",
 #         version="2.5.0",

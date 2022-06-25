@@ -45,7 +45,7 @@ def artist_following(user: FollowerSchema,db: Session = Depends(get_db),tokens: 
 @router.put("/{user_id}")
 async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     s = decodeJWT(tokens)
-    return user_update(user_id,user,db,s["sub"])
+    return update_user(user_id,user,db,s["sub"])
     
 
 
@@ -78,7 +78,7 @@ async def change_password(email: PasswordSchema,db: Session = Depends(get_db),to
 
 @router.delete("/{user_id}")
 async def delete_user(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
-    return user_delete(db,user_id)
+    return delete_user_details(db,user_id)
     
 
 

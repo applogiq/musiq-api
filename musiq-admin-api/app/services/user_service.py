@@ -192,10 +192,9 @@ def user_delete(db:Session,user_id):
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"success": True,"message":"user deleted"}
-    else:
-        raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
-
+        return True
+    return False
+    
 def follower_details(db:Session,user):
     temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==False).first()
     if temp:

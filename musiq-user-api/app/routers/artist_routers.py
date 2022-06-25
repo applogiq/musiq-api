@@ -16,22 +16,14 @@ http_bearer = JWTBearer()
 
 
 
-@router.get("/")
+@router.get("/",dependencies=[Depends(http_bearer)])
 async def view_all_artist_details(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
-    try:
-        users = artist_get_all(db,skip,limit)
-        return {"success":True,"message":"Details fetched successfully","records": users,"total_records" : len(users)}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+    return get_all_artist_detail(db,skip,limit)
 
 
 @router.get("/{artist_id}")
 async def view_artist_details(artist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    artists = artist_get_by_id(db, artist_id)
-    if artists:
-        return {"success":True,"message":"Details fetched successfully","records": artists,"total_records" : 1}
-    else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+    return get_artist_detail_by_id(db,artist_id)
 
 
 

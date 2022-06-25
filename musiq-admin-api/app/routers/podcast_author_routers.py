@@ -1,7 +1,10 @@
-from fastapi import APIRouter, Depends,Body,UploadFile,File,Request,HTTPException
+# from email.mime import image, multipart
+from fastapi import APIRouter, Depends,Body,UploadFile,File
 import os
-from typing import Optional,Union
+from typing import Optional,Union,List
 from sqlalchemy.orm import Session
+from fastapi.responses import Response
+from pydantic import Field
 
 from schemas.podcast_author_schema import PodcastAuthorSchema
 from utils.auth_bearer import JWTBearer
@@ -12,6 +15,7 @@ from controllers.podcast_author_controller import *
 
 
 router = APIRouter(tags=["author"],prefix='/podcast-author')
+# router = FastAPI()
 
 http_bearer = JWTBearer()
 
@@ -43,6 +47,10 @@ async def update_author_details(id: int,author: PodcastAuthorSchema,db: Session 
     # return update_author(db,id,author,s["sub"])
     pass
 
-# @router.post("/image")
-# async def image_upload(file: UploadFile):
-#     pass
+@router.post("/")
+def new(file: UploadFile = File(...)):
+    return {"filename": file.filename}
+
+@router.get("/vbvbvbj")
+async def create_upload_file(file: str,db: Session = Depends(get_db)):
+    return {"filename": file.filename}

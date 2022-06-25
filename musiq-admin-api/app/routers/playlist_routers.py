@@ -17,7 +17,7 @@ http_bearer = JWTBearer()
 @router.post("/")
 async def enter_playlist_details(playlists:PlaylistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     s = decodeJWT(token)
-    return enter_playlist_details(db,playlists,s["sub"])
+    return create_playlist_details(db,playlists,s["sub"])
 
 @router.get("/")
 async def view_all_playlist_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
@@ -34,9 +34,9 @@ async def view_user_playlist_details(user_id: int,db: Session = Depends(get_db),
 @router.put("/{playlist_id}")
 async def update_playlist_details(playlist_id: int,name: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    return update_playlist_details(db,playlist_id,name,s["sub"])
+    return update_playlist(db,playlist_id,name,s["sub"])
    
 @router.delete("/{playlist_id}")
 async def delete_playlist_details(playlist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    return delete_playlist_details(db,playlist_id)
+    return delete_playlist(db,playlist_id)
      

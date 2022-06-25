@@ -69,8 +69,8 @@ def register_user(user,db):
         raise HTTPException(status_code=422, detail={"message": "couldn't register,check your details","success":False})
 
 
+
 def login_user(user,db):
-    # if login_check(user,db):
     if login_check(user,db):
         return {"status": True,"message":"login Successfully","records":login_check(user,db)}
     else:
@@ -88,14 +88,11 @@ def token_refresh(user,db):
     else:
         raise HTTPException(status_code=404, detail={"message": "Check your token!!!","success":False})
 
-
 def delete_profile(user_id,db):
     if remove_image(user_id,db):
         return {"success":True,'message': "profile image removed"}
     else:
         raise HTTPException(status_code=404, detail={"success":False,'message': "Check your id"})
-
-
 
 def generateOTP() :
     print(11111)
@@ -103,7 +100,6 @@ def generateOTP() :
     OTP = ""
     for i in range(6) :
         OTP += digits[math.floor(random.random() * 10)]
-
     return OTP
 
 def email_otp(db,email):
@@ -125,7 +121,7 @@ def email_otp(db,email):
                 print('Sent email successfully')
         return {"success":True,"message":"Sent email successfully"}
     else:
-        raise HTTPException(status_code=404, detail={"success":False,"message":"Check your email id"})
+        raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
 def verify_otp(db:Session,temp):
     user = get_email(temp.email,db)
@@ -145,16 +141,29 @@ def verify_otp(db:Session,temp):
 def password_change(db:Session,temp):
     user = get_email(temp.email,db)
     if user:
-        print(temp.password)
         if (password_check(temp.password)) != True:
-            return ("Invalid Password !!"),(password_check(temp.password))
+            return("Invalid Password !!"),(password_check(temp.password))
         temp.password =  get_password_hash(temp.password)
         if update_password(temp.email,temp.password,db):
-            return {"success":True,"message":"Password Changed successfully"}
+            return{"success":True,"message":"password changed"}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
-# def follow_detail(db,user):
-#     if follower_details(db,user):
+
+def get_user_by_id(user_id,db):
+    db_user = get_by_id(user_id,db)
+    if db_user:
+        return {"success":True,"message":"user details fetched successfully","records": db_user,"totalrecords" : 1}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
+
+def update_user(user_id,user,db,email):
+    db_user = user_update(user_id,user,db,email)
+    if db_user:
+        return {"status": True,"message":"updated successfully","records":db_user}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "user details doesn't exist"})
+
+
 
             

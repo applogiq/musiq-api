@@ -4,6 +4,16 @@ from fastapi import HTTPException
 
 from services.recent_service import *
 
+def get_recent_song_list(db,user_id,limit):
+    db_user = recent_song_check(db,user_id,limit)
+    if db_user:
+        if len(db_user):
+            s = len(db_user)
+        else:
+            s = 1
+        return {"success":True,"message": "fetched successfully","records": db_user,"totalrecords" : s}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch...check your id"})
 
 
 def user_recent_song(db: Session,song,email):
