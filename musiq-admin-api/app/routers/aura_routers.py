@@ -29,12 +29,12 @@ async def view_aura_details(aura_id: int,db: Session = Depends(get_db),token: st
 @router.put("/{aura_id}")
 async def update_aura_details(aura_id: int,auras: AuraSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    return update_aura_details(db,aura_id,auras,s["sub"])
+    return update_aura(db,aura_id,auras,s["sub"])
     
    
 @router.delete("/{aura_id}")
 async def delete_aura_details(aura_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    return delete_aura_details(db,aura_id)
+    return delete_aura(db,aura_id)
     
 
 @router.delete("/image/{aura_id}")

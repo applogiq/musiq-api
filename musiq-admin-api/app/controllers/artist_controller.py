@@ -10,7 +10,7 @@ def create_artist_detail(db,artists,email):
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "aura details doesn't exist"})
 
-def update_artist_details(db,id,artists,email):
+def update_artist(db,id,artists,email):
     db_artist = artist_update(db,id,artists,email)
     if db_artist:
         return {"success": True,"message":"aura details updated Successfully","records":db_artist}

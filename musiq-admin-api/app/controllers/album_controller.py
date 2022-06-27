@@ -9,7 +9,7 @@ from fastapi import HTTPException
 from model.album_model import albums
 from services.album_service import *
 
-def enter_album_detail(db: Session,album,email):
+def create_album_detail(db: Session,album,email):
     if albumname_check(album.album_name,db):
         raise HTTPException(status_code=400, detail="Album is already register")
     try:

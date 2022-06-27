@@ -34,7 +34,7 @@ async def view_artist_details(artist_id: int,db: Session = Depends(get_db),token
 @router.put("/{artist_id}")
 async def update_artist_details(artist_id: int,artists:ArtistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token) 
-    return  update_artist_details(db,artist_id,artists,s["sub"])
+    return  update_artist(db,artist_id,artists,s["sub"])
    
 
 

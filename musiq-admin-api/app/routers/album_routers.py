@@ -17,7 +17,7 @@ http_bearer = JWTBearer()
 @router.post("/")
 async def enter_album_details(album:AlbumSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     s = decodeJWT(token)
-    return enter_album_detail(db,album,s["sub"])
+    return create_album_detail(db,album,s["sub"])
     
 
 

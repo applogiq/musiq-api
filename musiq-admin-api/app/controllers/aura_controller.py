@@ -25,14 +25,14 @@ def get_aura_details_by_id(db, aura_id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
-def update_aura_details(db: Session,aura_id: int,auras,email):
+def update_aura(db: Session,aura_id: int,auras,email):
     db_aura = aura_update(db,aura_id,auras,email)
     if db_aura:
         return {"success": True,"message":"aura details updated Successfully","records":db_aura}
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "aura details doesn't exist"})
 
-def delete_aura_details(db,aura_id):
+def delete_aura(db,aura_id):
     db_aura = aura_delete(db,aura_id)
     if db_aura:
         return {"success": True,"message":"aura details deleted"}

@@ -12,6 +12,8 @@ from utils.security import verify_password
 from config.database import *
 from utils.auth_handler import create_access_token,create_refresh_token
 from utils.auth_bearer import *
+from model.last_song_model import *
+from model.recent_model import *
 
 def user_get_all(db: Session, skip: int = 0, limit: int = 100):
     user = db.query(users).filter(users.is_delete == False).offset(skip).limit(limit).all()
@@ -51,7 +53,8 @@ def new_register(data,access_token,refresh_token,db:Session):
                         is_active = data["is_active"], 
                         is_delete =data["is_delete"])
     db_token = token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
-    
+    db_last_song = last_songs(user_id=a,is_active =True,is_delete=False,created_by=data["created_by"])
+    db_recent = recents(user_id=a, song_id ={"songs":[]},is_active =True,is_delete=False,created_by=data["created_by"])
     
    
     db.add(db_user)
@@ -60,12 +63,14 @@ def new_register(data,access_token,refresh_token,db:Session):
     db.flush()
     db_user.created_user_by = db_user.id
     db.commit()
+    db.add(db_last_song)
+    db.add(db_recent)
+    db.commit()
     user = db_user
     user.access_token = access_token
     user.refresh_token = refresh_token
     
-    print(db_user.id,2222222)
-    print(db_user,3333)
+    
     return user
 
 def login_check(user,db):

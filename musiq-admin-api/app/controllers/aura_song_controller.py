@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from services.aura_song_service import *
 
-def enter_aura_song_details(db,auras,email):
+def create_aura_song_details(db,auras,email):
     db_aura = aura_song_detail(db,auras,email)
     if db_aura:
         return {"success":True,"message": "song uploaded successfully"}

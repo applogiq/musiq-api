@@ -13,14 +13,14 @@ router = APIRouter(tags=["aura song"],prefix="/aura-song")
 http_bearer = JWTBearer()
 
 @router.post("/")
-async def enter_aura_details(auras:AurasongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+async def enter_aura_aong_details(auras:AurasongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token) 
-    return enter_aura_song_details(db,auras,s["sub"])
+    return create_aura_song_details(db,auras,s["sub"])
     
 
 @router.get("/")
 async def view_all_aura_song_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    return get_all_aura_song_details
+    return get_all_aura_song_details(db)
 
 @router.get("/{aura_song_id}")
 async def view_aura_song_details(aura_song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):

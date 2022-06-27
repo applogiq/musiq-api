@@ -19,38 +19,30 @@ router = APIRouter(tags=["author"],prefix='/podcast-author')
 
 http_bearer = JWTBearer()
 
-# @router.post("/")
-# async def enter_author_details(uploaded_file: UploadFile,db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
-#     # s = decodeJWT(token)
-#     # return create_author_details(db,author,s["sub"])
-#     pass
-
-# @router.post("/image/{art_id}")
-# async def upload_img_file(art_id: str,uploaded_file: UploadFile,db: Session = Depends(get_db)): 
-#     # artist = upload_art_image_file(db,art_id,uploaded_file)
-#     # return artist
-    # pass
+@router.post("/")
+async def enter_author_details(author_name:str ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
+    s = decodeJWT(token)
+    return create_author_details(db,author_name,s["sub"],file)
     
+
 @router.get("/")
-async def view_all_author_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # return get_all_author_details(db)
-    pass
+async def view_all_author_details(db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
+    return get_all_author(db,limit)
+  
 
 @router.get("/{id}")
 async def view_author_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # return get_author_by_id(db,id)
-    pass
+    return get_author_by_id(db,id)
+    
 
 @router.put("/{id}")
-async def update_author_details(id: int,author: PodcastAuthorSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    # s = decodeJWT(token)
-    # return update_author(db,id,author,s["sub"])
-    pass
+async def update_author_details(id: int,author: Optional[str] = None,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    s = decodeJWT(token)
+    return update_author(db,id,author,s["sub"],file)
+    
 
-@router.post("/")
-def new(file: UploadFile = File(...)):
-    return {"filename": file.filename}
+@router.delete("/{id}")
+async def delete_author_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    return delete_author(db,id)
+    
 
-@router.get("/vbvbvbj")
-async def create_upload_file(file: str,db: Session = Depends(get_db)):
-    return {"filename": file.filename}
