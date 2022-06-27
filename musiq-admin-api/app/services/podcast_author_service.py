@@ -61,6 +61,8 @@ def author_update(db,id,author_name,email,files=None):
                 shutil.copyfileobj(files.file, file_object)  
 
             author.is_image = True
+        temp = admin_get_email(email,db)
+        db.updated_by = temp.id
         db.commit()
         author = author_get_by_id(db,author.id)
         return author

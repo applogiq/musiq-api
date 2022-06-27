@@ -16,7 +16,6 @@ class podcast(Base):
     title = Column(String(255), nullable=True) 
     description = Column(String(255), nullable=True) 
     no_of_episode = Column(Integer,nullable=True)
-    duration = Column(TIME,nullable=True) 
     authors_id = Column(ARRAY(Integer))
     authors_name = Column(ARRAY(String))
     category_id = Column(ARRAY(Integer))

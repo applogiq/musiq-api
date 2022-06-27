@@ -1,12 +1,14 @@
 # from email.mime import image, multipart
-from fastapi import APIRouter, Depends,Body,UploadFile,File
+from fastapi import APIRouter, Depends,Body,UploadFile,File,Form
 import os
 from typing import Optional,Union,List
 from sqlalchemy.orm import Session
 from fastapi.responses import Response
 from pydantic import Field
+# from app.schemas.podcast_schema import PodcastSchema
 
 from schemas.podcast_author_schema import PodcastAuthorSchema
+from schemas.song_schema import SongSchema
 from utils.auth_bearer import JWTBearer
 from config.database import *
 # from services.genre_service import *
@@ -20,9 +22,10 @@ router = APIRouter(tags=["author"],prefix='/podcast-author')
 http_bearer = JWTBearer()
 
 @router.post("/")
-async def enter_author_details(author_name:str ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
+async def enter_author_details(author_name : str = Form(...) ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
     s = decodeJWT(token)
     return create_author_details(db,author_name,s["sub"],file)
+    # return author
     
 
 @router.get("/")

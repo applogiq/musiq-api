@@ -52,7 +52,8 @@ def artist_detail(db: Session,artists,email):
                     is_image = image,
                     is_delete = False,
                     created_by = temp.id,
-                    is_active = 1)
+                    is_active = 1,
+                    no_of_followers = 0)
 
     db.add(db_user)
     db.commit()

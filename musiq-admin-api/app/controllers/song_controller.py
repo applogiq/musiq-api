@@ -61,11 +61,11 @@ def song_response(db,id,request):
     user_temp = song_music_check(db,id)
     if user_temp:
         temp = album_get_by_id(user_temp.album_id,db)
-        if temp.name[0].isalpha():
-            alphabet = temp.name[0].upper()
+        if temp.album_name[0].isalpha():
+            alphabet = temp.album_name[0].upper()
         else:
             alphabet = "Mis" 
-        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.name}/songs/{user_temp.song_id}.wav"
+        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs/{user_temp.song_id}.wav"
         return range_requests_response(
             request, file_path=file_location, content_type="audio/wav" 
         )
