@@ -9,7 +9,7 @@ import uvicorn
 
 from config.database import *
 # from model.admin_user_model import *
-from routers import aura_song_routers,aura_routers,favourite_routers,user_routers,artist_routers,album_routers,song_routers,recent_routers,last_song_routers,playlist_routers
+from routers import podcast_routers,aura_song_routers,aura_routers,favourite_routers,user_routers,artist_routers,album_routers,song_routers,recent_routers,last_song_routers,playlist_routers
 
 app = FastAPI(title="Music Streaming API",
               description="This is a very custom OpenAPI schema",
@@ -35,6 +35,7 @@ app.include_router(favourite_routers.router)
 app.include_router(playlist_routers.router)
 app.include_router(aura_routers.router)
 app.include_router(aura_song_routers.router)
+app.include_router(podcast_routers.router)
 
 app.mount("/api/v1",app)
 

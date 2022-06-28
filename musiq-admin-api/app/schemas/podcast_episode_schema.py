@@ -3,10 +3,9 @@ from typing import Dict,List,Optional,Union
 # from datetime import time,date
 
 
-class PodcastSchema(BaseModel):
+class EpisodeSchema(BaseModel):
     podcast_id : int = Field(...)
-    episode_number : str = Field(...)
-    title : str = Field(...)
+    episode_title : str = Field(...)
     description : str = Field(...)
     subtitles: str = Field(...)
     
@@ -15,9 +14,15 @@ class PodcastSchema(BaseModel):
         schema_extra = {
             "example":{
                 "podcast_id" : 1,
-                "episode_number" : 1,
-                "title" : "My podcast name",
+                "episode_title" : "My podcast name",
                 "description" :"This is my podcast",
                 "subtitles" : "ndfndfnm dmnd cmncn ndfmsdnf ndjdcns" 
             }
         }
+
+class EpisodeOptinalSchema(BaseModel):
+    podcast_id : Optional[int] = None
+    episode_number : Optional[str] = None
+    episode_title : Optional[str] = None
+    description : Optional[str] = None
+    subtitles: Optional[str] = None

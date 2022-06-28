@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 from fastapi import HTTPException
+from model.album_model import albums
 
 from model.song_model import songs
 from model.aura_model import aura
@@ -39,7 +40,7 @@ def aura_song_get_by_id(db: Session, aura_id: int):
     
 
 def aura_song_get_by_auraid(db: Session, aura_id: str):
-    return db.query(aura_songs).filter(aura_songs.aura_id.in_([aura_id]),aura_songs.is_delete == False).all()
+    return db.query(aura_songs,songs.song_id,songs.song_name,songs.album_id,albums.album_id,albums.album_name,albums.music_director_name).join(songs,songs.id==aura_songs.song_id).join(albums,albums.id == songs.album_id).filter(aura_songs.aura_id.in_([aura_id]),aura_songs.is_delete == False).all()
     
 
 def aura_song_delete(db: Session,aura_id):

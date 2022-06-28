@@ -18,6 +18,7 @@ class AlbumSchema(BaseModel):
         }
 
 class Responsealbum(BaseModel):
+    id: int
     album_id : str
     no_of_songs: int
     album_name : str

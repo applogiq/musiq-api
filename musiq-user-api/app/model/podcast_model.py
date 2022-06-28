@@ -7,19 +7,20 @@ from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 import sqlalchemy
 
 from config.database import *
-from model.podcast_model import *
+from model.podcast_author_model import *
+from model.category_model import *
 
-
-class podcast_episode(Base):
-    __tablename__ = "podcast_episode"
+class podcast(Base):
+    __tablename__ = "podcast"
     id = Column(Integer, primary_key=True, index=True)
-    podcast_id = Column(Integer, ForeignKey("podcast.id"))
-    episode_number = Column(Integer,nullable=True)
-    episode_title = Column(String(255), nullable=True) 
+    title = Column(String(255), nullable=True) 
     description = Column(String(255), nullable=True) 
-    subtitles = Column(String(255), nullable=True)
-    duration = Column(TIME,nullable=True) 
-    is_audio = Column(Boolean,default=True)
+    no_of_episode = Column(Integer,nullable=True)
+    authors_id = Column(ARRAY(Integer))
+    authors_name = Column(ARRAY(String))
+    category_id = Column(ARRAY(Integer))
+    category_name = Column(ARRAY(String))
+    is_image = Column(Boolean,default=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)

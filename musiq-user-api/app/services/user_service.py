@@ -53,8 +53,7 @@ def new_register(data,access_token,refresh_token,db:Session):
                         is_active = data["is_active"], 
                         is_delete =data["is_delete"])
     db_token = token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
-    db_last_song = last_songs(user_id=a,is_active =True,is_delete=False,created_by=data["created_by"])
-    db_recent = recents(user_id=a, song_id ={"songs":[]},is_active =True,is_delete=False,created_by=data["created_by"])
+    
     
    
     db.add(db_user)
@@ -63,10 +62,12 @@ def new_register(data,access_token,refresh_token,db:Session):
     db.flush()
     db_user.created_user_by = db_user.id
     db.commit()
+    db_last_song = last_songs(user_id=a,is_active =True,is_delete=False,created_user_by=db_user.id)
+    db_recent = recents(user_id=a, song_id ={"songs":[]},is_active =True,is_delete=False,created_user_by=db_user.id)
     db.add(db_last_song)
     db.add(db_recent)
     db.commit()
-    user = db_user
+    user = get_by_id(db_user.id,db)
     user.access_token = access_token
     user.refresh_token = refresh_token
     
@@ -91,8 +92,8 @@ def login_check(user,db):
             temp1.access_token = access_token_str
             temp1.refresh_token = refresh_token_str
             return temp1
-    else:
-        return False
+    # else:
+    #     return False
    
 
 def get_token_mail(tok,db):

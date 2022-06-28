@@ -34,7 +34,11 @@ async def view_podcast_details(id: int,db: Session = Depends(get_db),token: str 
 @router.put("/{id}")
 async def update_podcast_details(id: int,podcast : PodcastOptionalSchema = Depends() ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    print(podcast.author_id[0].split(","))
+    # # n = podcast.author_id[0].split(",")
+    # # print(podcast)
+    # # results = [int(i) for i in n]
+    # print(podcast.author_id)
+    # return podcast.author_id
     return update_podcast(db,id,podcast,s["sub"],file)
     
 
