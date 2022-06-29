@@ -20,7 +20,7 @@ def podcast_name_check(title,db):
 def podcast_get_all(db: Session,limit):
     return db.query(podcast).filter(podcast.is_delete == False).order_by(podcast.id).limit(limit).all()
 
-def podcast_get_by_id(db: Session, id: int):
+def podcast_get_by_id(db: Session, id):
     return db.query(podcast).filter(podcast.id == id,podcast.is_delete == False).first()
 
 def podcast_details(db,model,email,uploaded_file = None):

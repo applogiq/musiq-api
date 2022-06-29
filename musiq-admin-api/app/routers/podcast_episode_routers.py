@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends,Body,UploadFile,File,Form,Depends
+from fastapi import APIRouter,Request, Depends,Body,UploadFile,File,Form,Depends
 import os
 from typing import Optional,Union,List
 from sqlalchemy.orm import Session
@@ -11,36 +11,46 @@ from config.database import *
 from utils.auth_handler import decodeJWT
 from controllers.podcast_episode_controller import *
 
-router = APIRouter(tags=["podcast-episode"],prefix='/podcast-episode')
+router = APIRouter(tags=["podcast-episode"])
 
 http_bearer = JWTBearer()
 
-@router.post("/")
+@router.post("/podcast-episode")
 async def enter_podcast_episode_details(episode :EpisodeSchema = Depends() ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
     s = decodeJWT(token)
     return create_episode_details(db,episode,s["sub"],file)
     # return episode_name,file.filename
 
-@router.get("/")
+@router.get("/podcast-episode")
 async def view_all_episode_details(db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
     return get_all_episode(db,limit)
   
 
-@router.get("/{id}")
+@router.get("/podcast-episode/{id}")
 async def view_episode_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_episode_by_id(db,id)
 
-@router.get("/list/{podcast_id}")
+@router.get("/podcast-episode/list/{podcast_id}")
 async def view_episode_podcast_details(podcast_id: int,db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
     return get_episode_by_podcastid(db,podcast_id,limit)
 
-# @router.put("/{id}")
-# async def update_episode_details(id: int,episode : EpisodeOptinalSchema = Depends() ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-#     s = decodeJWT(token)
-#     print(episode.author_id[0].split(","))
-#     return update_episode(db,id,episode,s["sub"],file)
+@router.put("/podcast-episode/{id}")
+async def update_episode_details(id: int,episode : EpisodeOptinalSchema = Depends() ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    s = decodeJWT(token)
+    return update_episode(db,id,episode,s["sub"],file)
     
+@router.delete("/podcast-episode/{id}")
+async def delete_episode_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    return delete_episode(db,id)
 
-# @router.delete("/{id}")
-# async def delete_episode_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-#     return delete_episode(db,id)
+#########------- AUDIO STREAMING ---------#########
+
+@router.get("/podcast-audio")
+def stream_audio(id: str,request: Request,db: Session = Depends(get_db)):
+    episode = episode_get_by_id(db,id)
+    if episode:
+        return episode_response(db,id,request)
+    else:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False}) 
+    
+#########------- AUDIO STREAMING ---------#########

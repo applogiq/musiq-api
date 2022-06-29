@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends,Body,UploadFile,File,Request,HTTPExceptio
 import os
 from typing import Optional,Union
 from sqlalchemy.orm import Session
-from services.sample import song_check
+# from services.sample import song_check
 
 # from controllers.user_controller import *
 from schemas.song_schema import *

@@ -7,15 +7,15 @@ import base64
 
 
 # from utils.auth_handler import create_access_token
-from model.song_model import *
+from model.demo_genre_model import *
 from config.database import *
 from model.album_model import *
 from services.admin_user_service import *
 from services.album_service import *
 
-def song_check(db,artist_id):
+def demo_check(db):
     # query1 = db.query(songs).filter(songs.is_delete == False).all()
-    query1 = db.query(songs).filter(songs.artist_id.contains([artist_id])).all()
+    query1 = db.query(demo_genre).all()
     # query1 = db.query(songs.id, songs.name).filter(songs.artist_id[0].in_([artist_id])).all()
     #query1 = db.query(songs.album_id, songs.name).filter(songs.artist_id.in_([1,2])).all()
     # print(query1[1].artist_id)

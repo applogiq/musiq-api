@@ -21,8 +21,6 @@ class EpisodeSchema(BaseModel):
         }
 
 class EpisodeOptinalSchema(BaseModel):
-    podcast_id : Optional[int] = None
-    episode_number : Optional[str] = None
     episode_title : Optional[str] = None
     description : Optional[str] = None
     subtitles: Optional[str] = None
