@@ -6,6 +6,8 @@ from fastapi import HTTPException
 import os
 
 from model.playlist_song_model import playlist_songs
+from model.song_model import songs
+from model.album_model import albums
 from model.playlist_model import playlist
 from services.admin_user_service import admin_get_email
 
@@ -35,12 +37,8 @@ def playlist_song_detail(db: Session,playlists,email):
 def playlistsong_get_all(db: Session):
     return db.query(playlist_songs).filter(playlist_songs.is_delete == False).all()
 
-def playlistsong_get_by_playlistid(db: Session, playlist_id: int):
-    playlists = db.query(playlist_songs).filter(playlist_songs.playlist_id == playlist_id,playlist_songs.is_delete == False).all()
-    if playlists:
-        return playlists
-    else:
-        return False
+def playlistsong_get_by_playlistid(db: Session, id: int):
+    return db.query(playlist_songs,playlist.playlist_name,songs.song_id,songs.song_name,songs.album_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(songs,songs.id==playlist_songs.song_id).join(albums,albums.id == songs.album_id).join(playlist,playlist.id == playlist_songs.playlist_id).filter(playlist_songs.playlist_id == id,playlist_songs.is_delete == False).all()
 
 def playlistsong_get_by_id(db: Session, playlist_id: int):
     playlists = db.query(playlist_songs).filter(playlist_songs.id == playlist_id,playlist_songs.is_delete == False).first()

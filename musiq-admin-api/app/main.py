@@ -10,14 +10,14 @@ from sqlalchemy import exc as sa_exc
 from config.database import *
 from model.song_model import *
 from routers import admin_user_routers
-from routers import podcast_recent_routers,podcast_episode_routers,podcast_routers,podcast_author_routers,category_routers,aura_song_routers,user_routers,aura_routers,artist_routers,album_routers,song_routers,genre_routers,last_song_routers,recent_routers,favourite_routers,playlist_routers,playlist_song_routers
+from routers import podcast_history_routers,podcast_episode_routers,podcast_routers,podcast_author_routers,category_routers,aura_song_routers,user_routers,aura_routers,artist_routers,album_routers,song_routers,genre_routers,last_song_routers,recent_routers,favourite_routers,playlist_routers,playlist_song_routers
 
 from model.podcast_author_model import *
 from model.podcast_episode_model import *
 from model.podcast_model import *
 from model.category_model import *
-from model.podcast_recent_model import *
-from model.demo_genre_model import *
+# from model.podcast_recent_model import *
+
 
 # app = database.app
 
@@ -50,7 +50,7 @@ app.include_router(category_routers.router)
 app.include_router(podcast_author_routers.router)
 app.include_router(podcast_routers.router)
 app.include_router(podcast_episode_routers.router)
-app.include_router(podcast_recent_routers.router)
+app.include_router(podcast_history_routers.router)
 
 app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
         

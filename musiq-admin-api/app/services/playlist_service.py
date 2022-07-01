@@ -6,6 +6,7 @@ from fastapi import HTTPException
 import os
 
 from model.playlist_model import playlist
+from services.playlist_song_service import playlistsong_get_by_playlistid
 from services.admin_user_service import admin_get_email
 
 def playlist_detail(db: Session,playlists,email):
@@ -47,13 +48,24 @@ def playlist_get_by_id(db: Session, playlist_id: int):
     else:
         return False
     
-
 def playlist_get_by_userid(db: Session, user_id: int):
-    playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).all()
-    if playlists:
-        return playlists
-    else:
-        return False
+    playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    s = []
+    for i in range(0,len(playlists)):
+        if playlists[i].no_of_songs:  
+            a = playlistsong_get_by_playlistid(db,playlists[i].id)
+            s.append(a[0])
+        else:
+            a = playlist_get_by_id(db,playlists[i].id)
+            s.append(a)    
+    return s
+
+# def playlist_get_by_userid(db: Session, user_id: int):
+#     playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).all()
+#     if playlists:
+#         return playlists
+#     else:
+#         return False
 
 def playlist_delete(db: Session,playlist_id):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()

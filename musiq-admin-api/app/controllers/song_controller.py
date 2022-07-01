@@ -7,6 +7,20 @@ from fastapi.responses import StreamingResponse
 from services.song_service import *
 from services.album_service import *
 
+def get_trending_hits(db,limit):
+    db_song = trending_hits(db,limit)
+    if db_song:
+        return {"success":True,"message":"song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
+
+def get_new_release(db,limit):
+    db_song = new_release(db,limit)
+    if db_song:
+        return {"success":True,"message":"song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
+
 def enter_song_detail(db,song,email):
     db_song = song_detail(db,song,email)
     if db_song:

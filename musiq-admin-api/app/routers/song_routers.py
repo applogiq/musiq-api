@@ -54,6 +54,14 @@ async def delete_song(song_id: int,db: Session = Depends(get_db),token: str = De
     return song_delete(db,song_id)
     
 
+@router.get("/trending-hits")
+async def trending_hits_details(limit:int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):#,token: str = Depends(http_bearer)
+    return get_trending_hits(db,limit)
+
+@router.get("/new_release")
+async def new_release_details(limit: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    return get_new_release(db,limit)
+
 #########------- AUDIO STREAMING ---------#########
 
 @router.get("/audio")

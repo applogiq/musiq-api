@@ -66,7 +66,7 @@ def episode_response(db,id,request):
             request, file_path=file_location, content_type="audio/mp3" 
         )
     else:
-        raise HTTPException(status_code=404, detail={"success": False,"message":"music doesn't exist for this id"})
+        raise HTTPException(status_code=404, detail={"success": False,"message":"check your id...music doesn't exist for this id"})
 
 
 ####### AUDIO STREAMING ########
