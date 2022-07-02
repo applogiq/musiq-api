@@ -212,6 +212,7 @@ def follower_details(db:Session,user):
                             if temp.preference["artist"][i] == user.artist_id:
                                 temp.preference["artist"].pop(i)
                                 art.followers = num-1
+                                temp.is_preference = True
                             else:
                                 pass
                 else:
@@ -221,6 +222,7 @@ def follower_details(db:Session,user):
                 if user.artist_id not in temp.preference["artist"]:
                     temp.preference["artist"].append(user.artist_id)
                     art.followers = num + 1
+                    temp.is_preference = True
                 else:
                     raise HTTPException(status_code=400, detail={"success": False,"message":"this user already folowing this artist"})
         else:
@@ -229,7 +231,7 @@ def follower_details(db:Session,user):
     else:
         raise HTTPException(status_code=400, detail={"success": False,"message":"check your user id"})  
     db.commit()
-    return {"status": True,"message":"updated successfully"}
+    return {"status": True,"message":"updated successfully","records":temp.preference["artist"]}
 
 
 

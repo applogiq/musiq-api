@@ -11,6 +11,12 @@ from config.database import *
 from model.album_model import *
 from services.album_service import *
 
+def trending_hits(db,limit):
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.listeners.desc()).limit(limit).all()
+
+def new_release(db,limit):
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.released_date.desc()).limit(limit).all()
+
 def song_album_check(db,album_id,skip,limit):
     user = db.query(songs).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
     for i in range(0,len(user)):

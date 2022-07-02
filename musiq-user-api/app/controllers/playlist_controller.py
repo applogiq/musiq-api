@@ -7,7 +7,7 @@ from services.playlist_service import *
 def create_playlist_details(db: Session,playlists,email):
     db_playlist = playlist_detail(db,playlists,email)
     if db_playlist:
-        return {"success":True,"message": "playlist added successfully"}
+        return {"success":True,"message": "playlist added successfully","records":db_playlist,"total_records": len(db_playlist)}
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})
     
@@ -33,9 +33,9 @@ def update_playlist(db,playlist_id,name,email):
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})
 
-def delete_playlist(db,playlist_id):
-    playlists = playlist_delete(db,playlist_id)
-    if playlists:
-        return {"success":True,"message": "playlist deleted successfully"}
+def delete_playlist(db,playlist_id,email):
+    db_playlist = playlist_delete(db,playlist_id,email)
+    if db_playlist:
+        return {"success":True,"message": "playlist added successfully","records":db_playlist,"total_records": len(db_playlist)}
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})

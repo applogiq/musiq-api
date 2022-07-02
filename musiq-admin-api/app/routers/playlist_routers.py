@@ -38,5 +38,6 @@ async def update_playlist_details(playlist_id: int,name: str,db: Session = Depen
    
 @router.delete("/{playlist_id}")
 async def delete_playlist_details(playlist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    return delete_playlist(db,playlist_id)
+    s = decodeJWT(token)
+    return delete_playlist(db,playlist_id,s["sub"])
      

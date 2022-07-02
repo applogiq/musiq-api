@@ -15,14 +15,14 @@ http_bearer = JWTBearer()
 
 
 @router.get("/",response_model=AllrecentSchema)
-async def view_all_song_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+async def view_all_user_recent_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_all_recent(db)
 
 @router.get("/{user_id}")#,response_model=RecentresponseSchema
-async def view_song_details(user_id: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+async def view_user_recent_details(user_id: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_recent_song_list(db,user_id)
 
 @router.put("/")
-async def last_song_details(song: RecentSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):#
+async def recent_song_details(song: RecentSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):#
     s = decodeJWT(token)
     return user_recent_song(db,song,s["sub"])

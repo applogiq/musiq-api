@@ -31,6 +31,15 @@ async def view_all_song_details(db: Session = Depends(get_db),album_id: Union[in
 async def view_song_details(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_song_by_id(db, song_id)
 
+@router.get("/trending-hits")
+async def trending_hits_details(limit:int = 100,db: Session = Depends(get_db),token: str = Depends(http_bearer)):#,token: str = Depends(http_bearer)
+    return get_trending_hits(db,limit)
+
+@router.get("/new_release")
+async def new_release_details(limit: int = 100,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    return get_new_release(db,limit)
+
+
 # @router.get("/songs/{song_id}",response_model=SongresponseSchema)
 # async def view_song_details(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
 #     # song_check(db,song_id)

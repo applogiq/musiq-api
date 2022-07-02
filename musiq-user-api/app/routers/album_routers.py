@@ -16,25 +16,13 @@ http_bearer = JWTBearer()
 
 @router.get("/", response_model=AllalbumResponse)
 async def view_all_album_details(db: Session = Depends(get_db),skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
-    try:
-        temp = album_get_all(db,skip,limit)
-        if len(temp):
-            s = len(temp)
-        else:
-            s = 1
-        return {"success":True,"message": "Fetched Successfully","records": temp,"totalrecords" : s}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+    return get_all_album_detail(db,skip,limit)
 
 
 
 @router.get("/{id}", response_model=AlbumResponse)
 async def view_album_details(album_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    db_album= album_get_by_id(album_id,db)
-    if db_album:
-        return {"success":True,"message": "Fetched Successfully","records": db_album,"totalrecords" : 1}
-    else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+    return get_album_by_id(album_id,db)
 
 
 

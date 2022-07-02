@@ -24,7 +24,16 @@ def playlist_detail(db: Session,playlists,email):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return True
+    playlist1 = db.query(playlist).filter(playlist.user_id == playlists.user_id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    s = []
+    for i in range(0,len(playlist1)):
+        if playlist1[i].no_of_songs:  
+            a = playlistsong_get_by_playlistid(db,playlist1[i].id)
+            s.append(a[0])
+        else:
+            a = playlist_get_by_id(db,playlist1[i].id)
+            s.append(a)
+    return s
 
 def playlist_update(db,playlist_id,name,email):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
@@ -67,11 +76,20 @@ def playlist_get_by_userid(db: Session, user_id: int):
 #     else:
 #         return False
 
-def playlist_delete(db: Session,playlist_id):
+def playlist_delete(db: Session,playlist_id,email):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return True
-    else:
-        return False
+    temp = admin_get_email(email,db)
+    playlist1 = db.query(playlist).filter(playlist.user_id == temp.id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    s = []
+    for i in range(0,len(playlist1)):
+        if playlist1[i].no_of_songs:  
+            a = playlistsong_get_by_playlistid(db,playlist1[i].id)
+            s.append(a[0])
+        else:
+            a = playlist_get_by_id(db,playlist1[i].id)
+            print(a)
+            s.append(a)  
+    return s

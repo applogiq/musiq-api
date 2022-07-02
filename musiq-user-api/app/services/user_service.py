@@ -70,6 +70,7 @@ def new_register(data,access_token,refresh_token,db:Session):
     user = get_by_id(db_user.id,db)
     user.access_token = access_token
     user.refresh_token = refresh_token
+
     
     
     return user
@@ -149,9 +150,8 @@ def user_update(user_id,user,db,email):
             db.commit()
             # if commit(user_temp,db):
             temp = get_by_id(user_id,db)
-            return {"status": True,"message":"Updated Successfully","records":temp}
-        else:
-            raise HTTPException(status_code=404, detail={"success":False,"message":"check your id..user doesn't exist"})
+            return temp
+        return False
     else:
         raise HTTPException(status_code=403, detail={"success":False,"message":"not authenticated"})
 
@@ -161,7 +161,7 @@ def remove_image(user_id,db):
         user_temp.is_image = False
         # user_temp.img_link = None
         file = str(user_temp.register_id)+".png"
-        path = f"app/public/users/{file}"
+        path = f"{DIRECTORY}/users/{file}"
         os.remove(path)
         db.commit()
         return True
@@ -211,6 +211,7 @@ def follower_details(db:Session,user):
                             if temp.preference["artist"][i] == user.artist_id:
                                 temp.preference["artist"].pop(i)
                                 art.followers = num-1
+                                temp.is_preference = True
                             else:
                                 pass
                 else:
@@ -220,6 +221,7 @@ def follower_details(db:Session,user):
                 if user.artist_id not in temp.preference["artist"]:
                     temp.preference["artist"].append(user.artist_id)
                     art.followers = num + 1
+                    temp.is_preference = True
                 else:
                     raise HTTPException(status_code=400, detail={"success": False,"message":"this user already folowing this artist"})
         else:
@@ -228,7 +230,7 @@ def follower_details(db:Session,user):
     else:
         raise HTTPException(status_code=400, detail={"success": False,"message":"check your user id"})  
     db.commit()
-    return {"status": True,"message":"updated successfully"}
+    return {"status": True,"message":"updated successfully","records":temp.preference["artist"]}
 
 
 

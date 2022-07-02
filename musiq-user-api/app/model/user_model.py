@@ -17,6 +17,7 @@ class users(Base):
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
     preference = Column(NestedMutableJson)
+    is_preference = Column(Boolean,default=False)
     otp = Column(String)
     otp_time = Column(Float)
     is_image = Column(Boolean)

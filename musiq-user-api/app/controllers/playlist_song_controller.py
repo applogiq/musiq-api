@@ -12,17 +12,10 @@ def create_playlist_song(db: Session,playlists,email):
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})
 
-def get_all_playlist_song(db):
-    try:
-        users = playlistsong_get_all(db)
-        return {"success":True,"message":"details fetched successfully","records": users,"total_records" : len(users)}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
-
 def get_playlist_song_by_id(db,id):
     playlists = playlistsong_get_by_id(db,id)
     if playlists:
-        return {"success":True,"message":"details fetched successfully","records": playlists,"total_records" : len(playlists)}
+        return {"success":True,"message":"details fetched successfully","records": playlists,"total_records" : 1}
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 

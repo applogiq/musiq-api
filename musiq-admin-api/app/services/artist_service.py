@@ -53,7 +53,7 @@ def artist_detail(db: Session,artists,email):
                     is_delete = False,
                     created_by = temp.id,
                     is_active = 1,
-                    no_of_followers = 0)
+                    followers = 0)
 
     db.add(db_user)
     db.commit()
@@ -94,3 +94,6 @@ def artist_remove_image(db,user_id):
         db.commit()
         return True
     return False
+
+
+

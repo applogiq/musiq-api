@@ -6,6 +6,7 @@ from fastapi import HTTPException
 import os
 
 from model.playlist_model import playlist
+from services.playlist_song_service import playlistsong_get_by_playlistid
 from services.user_service import get_email
 
 def playlist_detail(db: Session,playlists,email):
@@ -23,7 +24,16 @@ def playlist_detail(db: Session,playlists,email):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return {"status": True,"message":"playlist is added successfully","records":db_user}
+    playlist1 = db.query(playlist).filter(playlist.user_id == playlists.user_id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    s = []
+    for i in range(0,len(playlist1)):
+        if playlist1[i].no_of_songs:  
+            a = playlistsong_get_by_playlistid(db,playlist1[i].id)
+            s.append(a[0])
+        else:
+            a = playlist_get_by_id(db,playlist1[i].id)
+            s.append(a)
+    return s
 
 def playlist_update(db,playlist_id,name,email):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
@@ -37,10 +47,8 @@ def playlist_update(db,playlist_id,name,email):
         user_temp.updated_user_by = temp.id
         user_temp.updated_at = datetime.now()
         db.commit()
-        return {'message': "data updated"}
-    else:
-        raise HTTPException(status_code=404, detail="playlist details doesn't exist")
-
+        return True
+    return False
 # def playlist_get_all(db: Session):
 #     return db.query(playlist).filter(playlist.is_delete == False).all()
 
@@ -50,20 +58,40 @@ def playlist_get_by_id(db: Session, playlist_id: int):
         return playlists
     else:
         return False
-    
 
 def playlist_get_by_userid(db: Session, user_id: int):
-    playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).all()
-    if playlists:
-        return playlists
-    else:
-        return False
+    playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    s = []
+    for i in range(0,len(playlists)):
+        if playlists[i].no_of_songs:  
+            a = playlistsong_get_by_playlistid(db,playlists[i].id)
+            s.append(a[0])
+        else:
+            a = playlist_get_by_id(db,playlists[i].id)
+            s.append(a)    
+    return s 
 
-def playlist_delete(db: Session,playlist_id):
+# def playlist_get_by_userid(db: Session, user_id: int):
+#     playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).all()
+#     if playlists:
+#         return playlists
+#     else:
+#         return False
+
+def playlist_delete(db: Session,playlist_id,email):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-        return {"message":"playlist details deleted"}
-    else:
-        raise HTTPException(status_code=404, detail="playlist details doesn't exist")
+    temp = get_email(email,db)
+    playlist1 = db.query(playlist).filter(playlist.user_id == temp.id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    s = []
+    for i in range(0,len(playlist1)):
+        if playlist1[i].no_of_songs:  
+            a = playlistsong_get_by_playlistid(db,playlist1[i].id)
+            s.append(a[0])
+        else:
+            a = playlist_get_by_id(db,playlist1[i].id)
+            print(a)
+            s.append(a)  
+    return s
