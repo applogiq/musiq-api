@@ -9,9 +9,9 @@ import os
 from model.podcast_model import podcast
 from model.podcast_history_model import podcast_history
 from model.podcast_episode_model import podcast_episode
-from services.admin_user_service import admin_get_email
+from services.user_service import get_email
 from config.database import DIRECTORY
-from services.podcast_author_service import *
+# from services.podcast_author_service import *
 
 import psycopg2
 from config.database import IPAddr
@@ -21,7 +21,7 @@ def podcast_history_detail(db: Session,history,email):
     # if historyname:
     #     raise HTTPException(status_code=400, detail={"success": False,"message":"this song is already register for this user"}) 
 
-    temp = admin_get_email(email,db)
+    temp = get_email(email,db)
     db_history = podcast_history(user_id = history.user_id,
                         podcast_id = history.podcast_id,
                         episode_number = history.episode_number,

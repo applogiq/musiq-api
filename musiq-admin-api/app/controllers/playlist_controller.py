@@ -7,21 +7,14 @@ from services.playlist_service import *
 def create_playlist_details(db: Session,playlists,email):
     db_playlist = playlist_detail(db,playlists,email)
     if db_playlist:
-        return {"success":True,"message": "playlist added successfully"}
+        return {"success":True,"message": "playlist added successfully","records":db_playlist,"total_records": len(db_playlist)}
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})
-
-def get_all_playlist(db):
-    try:
-        users = playlist_get_all(db)
-        return {"success":True,"message": "details fetched successfully","records": users,"total_records" : len(users)}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
     
 def get_playlist_by_id(db, playlist_id):
     playlists = playlist_get_by_id(db, playlist_id)
     if playlists:
-        return {"success":True,"message": "details fetched successfully","records": playlists,"total_records" : len(playlists)}
+        return {"success":True,"message": "details fetched successfully","records": playlists,"total_records" : 1}
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
@@ -40,9 +33,9 @@ def update_playlist(db,playlist_id,name,email):
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})
 
-def delete_playlist(db,playlist_id):
-    playlists = playlist_delete(db,playlist_id)
-    if playlists:
-        return {"success":True,"message": "playlist deleted successfully"}
+def delete_playlist(db,playlist_id,email):
+    db_playlist = playlist_delete(db,playlist_id,email)
+    if db_playlist:
+        return {"success":True,"message": "playlist added successfully","records":db_playlist,"total_records": len(db_playlist)}
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})

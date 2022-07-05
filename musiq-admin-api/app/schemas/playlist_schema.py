@@ -13,4 +13,9 @@ class PlaylistSchema(BaseModel):
             }
         }
 
-
+class UpdateSchema(BaseModel):
+    name : str
+    class Config:
+        scheme_extra = {
+            "name" : "new name"
+        }

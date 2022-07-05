@@ -18,12 +18,6 @@ def get_fav_details_by_userid(db, user_id):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
-def get_all_fav_song(db):
-    try:
-        db_fav = fav_get_all(db)
-        return {"success":True,"message":"details fetched succesfully","records": db_fav,"total_records" : len(db_fav)}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
 def delete_fav_song(db,fav):
     db_fav = fav_delete(db,fav)

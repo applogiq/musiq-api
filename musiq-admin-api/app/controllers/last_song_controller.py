@@ -4,12 +4,7 @@ from fastapi import HTTPException
 
 from services.last_song_service import *
 
-def get_all_last_song_details(db):
-    try:
-        last_song = last_song_get_all(db)
-        return {"success":True,"message": "details fetched successfully","records": last_song,"total_records" : len(last_song)}
-    except:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+
     
 def get_details_by_userid(db, user_id):
     last_song = last_song_get_by_userid(db, user_id)

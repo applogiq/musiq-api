@@ -23,8 +23,8 @@ class Responsealbum(BaseModel):
     no_of_songs: int
     album_name : str
     released_year : int
-    music_director : list = None
-    music_director_name: list = None
+    music_director : list = None 
+    music_director_name : list = None
     is_image : int
 
     class Config:

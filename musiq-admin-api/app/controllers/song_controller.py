@@ -21,12 +21,6 @@ def get_new_release(db,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
-def enter_song_detail(db,song,email):
-    db_song = song_detail(db,song,email)
-    if db_song:
-        return {"success":True,'message': "song details added","records": db_song}
-    else:
-        raise HTTPException(status_code=404, detail={"success": False,'message': "check your details"})
 
 def get_song_by_id(db, song_id):
     db_song = song_get_by_id(db, song_id)
@@ -55,21 +49,6 @@ def get_all_song(db, skip,limit):
         return {"success":True,"message":"song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
-
-def update_song(db,song_id,song,email):
-    db_song = song_update(db,song_id,song,email)
-    if db_song:
-        return {"status": True,"message":"updated Successfully","records":db_song}
-    else:
-        raise HTTPException(status_code=404, detail={"success": False,'message': "song details doesn't exist"})
-
-def song_delete(db: Session,song_id):
-    db_song = delete_song_details(db,song_id)
-    if db_song:
-        return {"success": True,"message":"song deleted"}
-    else:
-        raise HTTPException(status_code=404, detail={"success": False,'message': "song details doesn't exist"})
-
 
 def song_response(db,id,request):
     user_temp = song_music_check(db,id)

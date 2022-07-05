@@ -23,19 +23,6 @@ async def remove_favourites(fav:FavouriteSchema,db: Session = Depends(get_db),to
     return delete_fav_song(db,fav)
     
 
-@router.get("/")
-async def view_all_fav_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-    return get_all_fav_song(db)
-
-# @router.get("/{fav_id}")
-# async def view_artist_details(fav_id: int,db: Session = Depends(get_db)):
-#     pass
-#     # users = get_favourite(db, fav_id)
-    # if users:
-    #     return {"records": users,"total_records" : 1,"sucess":True}
-    # else:
-    #     raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
-
 @router.get("/{user_id}")
 async def view_fav_songs(user_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_fav_details_by_userid(db, user_id)
