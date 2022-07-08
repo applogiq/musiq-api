@@ -1,7 +1,4 @@
-from databases import Database
-from fastapi import Depends, FastAPI,Request
-from imp import reload
-# from matplotlib import artist
+from fastapi import FastAPI
 import uvicorn
 
 
