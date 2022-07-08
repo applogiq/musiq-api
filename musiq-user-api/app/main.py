@@ -49,5 +49,5 @@ app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app",host = IPAddr,port = 3000,reload=True)
+    uvicorn.run("main:app",host = IPAddr,port = 6060,reload=True)
 
