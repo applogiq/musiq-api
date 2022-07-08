@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 import socket
 from fastapi.staticfiles import StaticFiles
 from decouple import config
+from fastapi.middleware.cors import CORSMiddleware
 
 host_server = os.environ.get('host_server', 'localhost')
 db_server_port = urllib.parse.quote_plus(str(os.environ.get('db_server_port', '5432')))
@@ -39,12 +40,17 @@ app_password = config("APP_PASSWORD")
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
 
+        
 
 DIRECTORY = "D:\Srimathi\Project\MusiQ\public"
+# script_dir = os.path.dirname(__file__)
+# os.chdir("MusicQ/public")
+# st_abs_file_path = 
+# script_dir = sys.path.append('\MusiQ\public')
+# print(script_dir)
+# impath = os.path.join(script_dir, '..\MusiQ\public')
 
 
-
-        
 # app = FastAPI(title="Music Streaming API",
 #         version="2.5.0",
 #         description="This is a very custom OpenAPI schema")

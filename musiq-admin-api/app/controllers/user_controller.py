@@ -3,12 +3,11 @@ import re
 import base64
 from config.database import *
 import yagmail,math,random
-# from utils.security import get_password_hash
-# from services.user_service import login_check
 
 from services.user_service import *
 from utils.auth_handler import *
 from utils.security import get_password_hash
+from services.admin_user_service import *
 
 def password_check(passwd):  
     SpecialSym =['$', '@', '#', '%','!']
@@ -41,16 +40,15 @@ def email_validate(email):
     else:
         return False
 
-def register_user(user,db):
+def register_user(user,db,email):
     if (email_validate(user.email)) != True:
         raise HTTPException(status_code=422, detail="Invalid Email!!")
-    if get_email(user.email,db):
-        raise HTTPException(status_code=400, detail={"message": "email already exists","success":False})
-    if username_check(user.username,db):
-        raise HTTPException(status_code=400, detail={"message": "username already exists","success":False})
     if (password_check(user.password)) != True:
         return("Invalid Password !!"),(password_check(user.password))
- 
+    if username_check(user.username,db):
+        raise HTTPException(status_code=400, detail={"message": "username already exists","success":False})
+    if get_email(user.email,db):
+        raise HTTPException(status_code=400, detail={"message": "email already exists","success":False})
     access_token = create_access_token(user.email)
     access_token_str =  access_token.decode('UTF-8')
     refresh_token = create_refresh_token(user.email)
@@ -58,16 +56,17 @@ def register_user(user,db):
     user.password =  get_password_hash(user.password)
     print(user.password)
     dict1 = dict(user)
+    temp = admin_get_email(email,db)
+    
 
-    s = {"preference" : {"artist":[]},"is_active" : 1,"is_delete" : False}
+    s = {"preference" : {"artist":[]},"is_active" : True,"is_delete" : False,"created_by": temp.id}
     data = {**dict1,**s}
     data["access_token"] = access_token_str
     data["refresh_token"]= refresh_token_str
     try:
-        return {"status": True,"message":"Register Successfully","records": new_register(data,access_token_str,refresh_token_str,db)}
+        return {"status": True,"message":"Register Successfully","records":new_register(data,access_token_str,refresh_token_str,db)}
     except:
         raise HTTPException(status_code=422, detail={"message": "couldn't register,check your details","success":False})
-
 
 
 def login_user(user,db):
@@ -110,8 +109,7 @@ def email_otp(db,email):
         if otp_change(user,s,db):
             user = ('srimathi.k.applogiq@gmail.com')
             password = app_password
-            # to = "gowtham.r.applogiq@gmail.com"
-            to = "srimathiksl@gmail.com"
+            to = 'shajithali.s.applogiq@gmail.com'
 
             subject = 'Resetting Password'
             content = ['''Password Reset,
@@ -150,6 +148,16 @@ def password_change(db:Session,temp):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
+def get_all_user(db, skip, limit):
+    try:
+        users = user_get_all(db, skip, limit)
+        if len(users):
+            s = len(users)
+        else:
+            s = 1
+        return {"records": users,"totalrecords":s,"success": True}
+    except:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
 def get_user_by_id(user_id,db):
     db_user = get_by_id(user_id,db)
@@ -165,6 +173,9 @@ def update_user(user_id,user,db,email):
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "user details doesn't exist"})
 
-
-
-            
+def delete_user_details(db,user_id):
+    db_user = user_delete(db,user_id)
+    if db_user:
+        return {"success": True,"message":"user details deleted"}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "user details doesn't exist"})

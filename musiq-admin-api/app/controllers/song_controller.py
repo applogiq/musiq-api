@@ -21,6 +21,20 @@ def get_new_release(db,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
+def enter_new_song_detail(db,song,email):
+    db_song = song_new_detail(db,song,email)
+    if db_song:
+        return {"success":True,'message': "song details added","records": db_song}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "check your details"})
+
+
+def enter_song_detail(db,song,email):
+    db_song = song_detail(db,song,email)
+    if db_song:
+        return {"success":True,'message': "song details added","records": db_song}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "check your details"})
 
 def get_song_by_id(db, song_id):
     db_song = song_get_by_id(db, song_id)
@@ -50,6 +64,29 @@ def get_all_song(db, skip,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
+def update_song(db,song_id,song,email):
+    db_song = song_update(db,song_id,song,email)
+    if db_song:
+        return {"status": True,"message":"updated Successfully","records":db_song}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "song details doesn't exist"})
+
+def music_upload_details(db,id,file):
+    db_song = music_upload(db,id,file)
+    if db_song:
+        return {"status": True,"message":"updated Successfully","records":db_song}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "song details doesn't exist"})
+
+
+def song_delete(db: Session,song_id):
+    db_song = delete_song_details(db,song_id)
+    if db_song:
+        return {"success": True,"message":"song deleted"}
+    else:
+        raise HTTPException(status_code=404, detail={"success": False,'message': "song details doesn't exist"})
+
+
 def song_response(db,id,request):
     user_temp = song_music_check(db,id)
     if user_temp:
@@ -58,12 +95,20 @@ def song_response(db,id,request):
             alphabet = temp.album_name[0].upper()
         else:
             alphabet = "Mis" 
-        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs/{user_temp.song_id}.wav"
+        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs/{user_temp.song_id}.mp3"
         return range_requests_response(
-            request, file_path=file_location, content_type="audio/wav" 
+            request, file_path=file_location, content_type="audio/mp3" 
         )
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"music doesn't exist for this id"})
+
+
+def search_engine_details(db,data):
+    db_song = search_engine(db,data)
+    if db_song:
+        return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch"})
 
 
 ####### AUDIO STREAMING ########

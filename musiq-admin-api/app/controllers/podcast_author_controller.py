@@ -4,8 +4,8 @@ from fastapi import HTTPException
 
 from services.podcast_author_service import *
 
-def create_author_details(db,author_name,email,uploaded_file = None):
-    temp = author_details(db,author_name,email,uploaded_file)
+def create_author_details(db,author_name,email):
+    temp = author_details(db,author_name,email)
     if temp:
         return {"success":True,'message': "author details added","records": temp}
     else:
@@ -31,8 +31,8 @@ def get_author_by_id(db,id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
-def update_author(db,gen_id,author,email,file):
-    db_author = author_update(db,gen_id,author,email,file)
+def update_author(db,gen_id,author,email):
+    db_author = author_update(db,gen_id,author,email)
     if db_author:
         return {"status": True,"message":"author details updated Successfully","records":db_author}
     else:

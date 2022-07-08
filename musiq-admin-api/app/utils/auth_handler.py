@@ -43,13 +43,8 @@ def create_access_token(email):
     return token
 
 def decodeJWT(token: str) -> dict:
-    # try:
-    # s = access_token_check(token)
-    # print(1111111)
     decode_token = jwt.decode(token,ACCESS_SECRET_KEY, algorithms=[API_ALGORITHM])
     expires = decode_token.get("exp")
     return decode_token if expires >= time.time() else None
-    # except:
-    #     return {}
 
 

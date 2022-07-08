@@ -3,10 +3,12 @@ from typing import Dict,Union,List,Optional
 
 
 class PodcastAuthorSchema(BaseModel):
-    author : str
+    name : str
+    image: Optional[str] = Field(...) 
     class Config:
         schema_extra = {
             "example": {
-                    "author" :"{'author_name': 'name'}"
+                    "name" :"new_name",
+                    "image" : "dkfnsndfisdfhdfn"
             }
         }

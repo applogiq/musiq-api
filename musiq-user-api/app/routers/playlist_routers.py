@@ -28,9 +28,9 @@ async def view_user_playlist_details(user_id: int,db: Session = Depends(get_db),
     return get_playlist_by_userid(db, user_id)
 
 @router.put("/{playlist_id}")
-async def update_playlist_details(playlist_id: int,name: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+async def update_playlist_details(playlist_id: int,playlist: UpdateSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    return update_playlist(db,playlist_id,name,s["sub"])
+    return update_playlist(db,playlist_id,playlist.name,s["sub"])
    
 @router.delete("/{playlist_id}")
 async def delete_playlist_details(playlist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):

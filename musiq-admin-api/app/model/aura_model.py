@@ -23,7 +23,7 @@ class aura(Base):
     is_active = Column(Boolean,default=True)
 
 
-    # aura_song = relationship("aura_songs", backref="aura")
+    aura_song = relationship("aura_songs", backref="aura")
 
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

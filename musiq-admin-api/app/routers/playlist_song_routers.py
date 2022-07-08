@@ -19,6 +19,9 @@ async def enter_playlist_song_details(playlists:PlaylistsongSchema,db: Session =
     playlist_song = create_playlist_song(db,playlists,s["sub"])
     return playlist_song
 
+@router.get("/")
+async def view_all_playlist_details(db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+    return get_all_playlist_song(db)
 
 @router.get("/{id}")
 async def view_playlist_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):

@@ -22,9 +22,9 @@ router = APIRouter(tags=["author"],prefix='/podcast-author')
 http_bearer = JWTBearer()
 
 @router.post("/")
-async def enter_author_details(author_name : str = Form(...) ,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
+async def enter_author_details(author: PodcastAuthorSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
     s = decodeJWT(token)
-    return create_author_details(db,author_name,s["sub"],file)
+    return create_author_details(db,author,s["sub"])
     # return author
     
 
@@ -39,9 +39,9 @@ async def view_author_details(id: int,db: Session = Depends(get_db),token: str =
     
 
 @router.put("/{id}")
-async def update_author_details(id: int,author: Optional[str] = None,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
+async def update_author_details(id: int,author:PodcastAuthorSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    return update_author(db,id,author,s["sub"],file)
+    return update_author(db,id,author,s["sub"])
     
 
 @router.delete("/{id}")

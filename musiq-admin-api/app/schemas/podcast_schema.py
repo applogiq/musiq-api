@@ -8,6 +8,7 @@ class PodcastSchema(BaseModel):
     description : str = Field(...)
     author_id : list = None
     category_id : list = None
+    image: Optional[str] = Field(...)
     
     class Config:
         # orm_mode = True
@@ -16,7 +17,8 @@ class PodcastSchema(BaseModel):
                 "title" : "My podcast name",
                 "description" :"This is my podcast",
                 "author_id" : [1,2],
-                "category_id" : [1,2]
+                "category_id" : [1,2],
+                "image" : "dkfnsndfisdfhdfn"
             }
         }
 
@@ -25,6 +27,7 @@ class PodcastOptionalSchema(BaseModel):
     description : Optional[str] = None
     author_id : Optional[list] = None
     category_id : Optional[list] = None
+    image: Optional[str] = Field(...)
     
     class Config:
         orm_mode = True
@@ -33,6 +36,7 @@ class PodcastOptionalSchema(BaseModel):
                 "title" : "My podcast name",
                 "description" :"This is my podcast",
                 "author_id" : [1,2],
-                "category_id" : [1,2]
+                "category_id" : [1,2],
+                "image" : "dkfnsndfisdfhdfn"
             }
         }

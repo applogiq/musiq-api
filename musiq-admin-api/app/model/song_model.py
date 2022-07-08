@@ -9,6 +9,11 @@ import sqlalchemy
 from config.database import *
 from model.album_model import *
 
+
+
+
+
+
 class songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
@@ -31,6 +36,8 @@ class songs(Base):
     updated_by = Column(Integer,nullable=True)
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
+
+    # song = relationship("albums", backref="songs")
 
     last_song = relationship("last_songs",backref="songs")
     fav = relationship("favourites",backref="songs")

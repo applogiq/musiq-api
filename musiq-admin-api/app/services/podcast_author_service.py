@@ -3,6 +3,7 @@ from datetime import datetime
 from fastapi import HTTPException
 import shutil
 from typing import Optional
+import base64
 
 
 from model.podcast_author_model import podcast_author
@@ -21,12 +22,12 @@ def author_get_by_id(db: Session, id: int):
 
 
 
-def author_details(db,author_name,email,uploaded_file = None):
-    authorname = author_name_check(author_name,db)
+def author_details(db,author,email):
+    authorname = author_name_check(author.name,db)
     if authorname:
         raise HTTPException(status_code=400, detail="author is already register")
     temp = admin_get_email(email,db)
-    db_author = podcast_author(author_name = author_name,
+    db_author = podcast_author(author_name = author.name,
                     is_delete = False,
                     created_by =temp.id,
                     is_active = True)
@@ -35,36 +36,38 @@ def author_details(db,author_name,email,uploaded_file = None):
     db.commit()
     db.flush(db_author)
 
-    if uploaded_file:
+    if author.image:
+        s = base64.b64decode(author.image)
         filename = str(db_author.id)+".png"
         file_location = f"{DIRECTORY}/author/{filename}"
-        with open(file_location, "wb+") as file_object:
-            shutil.copyfileobj(uploaded_file.file, file_object)  
+        with open(file_location, "wb+") as f:
+            f.write(s)
 
         db_author.is_image = True
         db.commit()
     author = author_get_by_id(db,db_author.id)
     return author
 
-def author_update(db,id,author_name,email,files=None):
-    author = author_get_by_id(db,id)
-    if author:
-        if author_name:
-            authorname = author_name_check(author_name,db)
+def author_update(db,id,author,email):
+    author_id = author_get_by_id(db,id)
+    if author_id:
+        if author.name:
+            authorname = author_name_check(author.name,db)
             if authorname:
                 raise HTTPException(status_code=400, detail="author is already register")
-            author.author_name = author_name
-        if files:
+            author_id.author_name = author.name
+        if author.image:
+            s = base64.b64decode(author.image)
             filename = str(author.id)+".png"
             file_location = f"{DIRECTORY}/author/{filename}"
-            with open(file_location, "wb+") as file_object:
-                shutil.copyfileobj(files.file, file_object)  
+            with open(file_location, "wb+") as f:
+                f.write(s)
 
-            author.is_image = True
+            author_id.is_image = True
         temp = admin_get_email(email,db)
         db.updated_by = temp.id
         db.commit()
-        author = author_get_by_id(db,author.id)
+        author = author_get_by_id(db,author_id.id)
         return author
     return False
 
