@@ -61,4 +61,4 @@ def validation_exception_handler(request, err):
     
 #####to run the program
 if __name__ == "__main__":
-    uvicorn.run("main:app",port = 2000,reload=True)
+    uvicorn.run("main:app",port = 6070,reload=True)

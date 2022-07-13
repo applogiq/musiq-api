@@ -48,5 +48,5 @@ app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
 
 #####to run the program
 if __name__ == "__main__":
-    uvicorn.run("main:app",port = 3000,reload=True)
+    uvicorn.run("main:app",port = 6060,reload=True)
 
