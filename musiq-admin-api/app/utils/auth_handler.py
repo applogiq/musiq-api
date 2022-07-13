@@ -3,7 +3,6 @@ from typing import Optional
 import time
 import jwt
 from decouple import config
-# from services.user_service import *
 
 
 ACCESS_SECRET_KEY = config("ACCESS_SECRET")
@@ -12,6 +11,7 @@ API_ALGORITHM = config("ALGORITHM")
 API_ACCESS_TOKEN_EXPIRE_MINUTES =  60 * 24 * 5
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 10
 
+###to create refresh token
 def refresh_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
@@ -22,6 +22,7 @@ def refresh_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, REFRESH_SECRET_KEY, algorithm=API_ALGORITHM)
     return encoded_jwt
 
+###to create access token
 def access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
@@ -32,19 +33,21 @@ def access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, ACCESS_SECRET_KEY, algorithm=API_ALGORITHM)
     return encoded_jwt
 
-
+###call function for refresh token
 def create_refresh_token(email):
     expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
     return refresh_token(data={'sub': email}, expires_delta=expires)
 
+###call function for access token
 def create_access_token(email):
     access_token_expires = timedelta(minutes=API_ACCESS_TOKEN_EXPIRE_MINUTES)
     token = access_token(data={'sub': email}, expires_delta=access_token_expires)
     return token
 
+###main functin to decode token
 def decodeJWT(token: str) -> dict:
     decode_token = jwt.decode(token,ACCESS_SECRET_KEY, algorithms=[API_ALGORITHM])
     expires = decode_token.get("exp")
-    return decode_token if expires >= time.time() else None
+    return decode_token if expires >= time.time() else None #return whether token is valid or not
 
 

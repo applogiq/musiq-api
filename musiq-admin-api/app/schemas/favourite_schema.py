@@ -1,6 +1,6 @@
-from pydantic import BaseModel,Field
+from pydantic import BaseModel
 
-
+###to enter favourite song of particular user detail schema
 class FavouriteSchema(BaseModel):
     user_id : int
     song_id: int

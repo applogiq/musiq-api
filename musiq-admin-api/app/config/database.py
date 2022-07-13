@@ -1,16 +1,14 @@
 import urllib
-import os,sys
-from pyparsing import Diagnostics
+import os
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 import databases
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 import socket
-from fastapi.staticfiles import StaticFiles
 from decouple import config
-from fastapi.middleware.cors import CORSMiddleware
+
+
+##########################DATABASE CONNECTION#############################
 
 host_server = os.environ.get('host_server', 'localhost')
 db_server_port = urllib.parse.quote_plus(str(os.environ.get('db_server_port', '5432')))
@@ -34,24 +32,16 @@ def get_db():
         yield db
     finally:
         db.close()
+##########################DATABASE CONNECTION#############################
 
-
+############GETTING IPADDRESS#############
 app_password = config("APP_PASSWORD")
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
-
+############GETTING IPADDRESS#############
         
 
+####SPECIFY STATIC FILE ROUTE####
 DIRECTORY = "D:\Srimathi\Project\MusiQ\public"
-# script_dir = os.path.dirname(__file__)
-# os.chdir("MusicQ/public")
-# st_abs_file_path = 
-# script_dir = sys.path.append('\MusiQ\public')
-# print(script_dir)
-# impath = os.path.join(script_dir, '..\MusiQ\public')
 
-
-# app = FastAPI(title="Music Streaming API",
-#         version="2.5.0",
-#         description="This is a very custom OpenAPI schema")
 

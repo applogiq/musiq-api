@@ -3,6 +3,7 @@ from typing import Dict,List,Optional,Union
 # from datetime import time,date
 
 
+###to enter podcase details schema
 class PodcastSchema(BaseModel):
     title : str = Field(...)
     description : str = Field(...)
@@ -22,6 +23,7 @@ class PodcastSchema(BaseModel):
             }
         }
 
+###to update podcast details schema
 class PodcastOptionalSchema(BaseModel):
     title : Optional[str] = None
     description : Optional[str] = None

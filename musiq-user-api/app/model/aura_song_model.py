@@ -3,6 +3,7 @@ from sqlalchemy import   Boolean,DATE, Column, Integer,TIME, LargeBinary, String
 from sqlalchemy.orm import relationship
 import sqlalchemy
 
+###table creation for aura_song detail
 class aura_songs(Base):
     __tablename__ = "aura_songs"
      
@@ -15,10 +16,8 @@ class aura_songs(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-    # aura = relationship("aura")
-    # aura = relationship("songs")
 
 
-
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

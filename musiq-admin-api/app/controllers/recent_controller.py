@@ -4,6 +4,8 @@ from fastapi import HTTPException
 
 from services.recent_service import *
 
+
+###response of all user's recent list of songs
 def get_all_recent(db):
     try:
         users = recent_get_all(db)
@@ -16,6 +18,7 @@ def get_all_recent(db):
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch"})
 
 
+###response of single user's recent list of songs
 def get_recent_song_list(db,user_id):
     db_user = recent_song_check(db,user_id)
     if db_user:
@@ -28,6 +31,7 @@ def get_recent_song_list(db,user_id):
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch...check your id"})
 
 
+###response of entering songs in recent list for particular list
 def user_recent_song(db: Session,song,email):
     user_temp = recent_get_by_userid(db,song.user_id)
     if user_temp:

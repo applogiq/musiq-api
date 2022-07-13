@@ -1,7 +1,7 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Optional
 
-
+###to enter last heard song details of particular user schema
 class LastSchema(BaseModel):
     user_id : int = Field(...)
     song_id : int = Field(...)

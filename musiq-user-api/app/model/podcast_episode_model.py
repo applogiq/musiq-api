@@ -9,7 +9,7 @@ import sqlalchemy
 from config.database import *
 from model.podcast_model import *
 
-
+###table creation for podcast-episode detail
 class podcast_episode(Base):
     __tablename__ = "podcast_episode"
     id = Column(Integer, primary_key=True, index=True)
@@ -28,15 +28,7 @@ class podcast_episode(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-    # song = relationship("albums", backref="songs")
 
-    # last_song = relationship("last_songs",backref="songs")
-    # fav = relationship("favourites",backref="songs")
-    # aura = relationship("aura_songs",backref="songs")
-
-    # songs = relationship("artist")
-    # songs = relationship("genres")
-
-    
+###code to create all the table in this file      
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

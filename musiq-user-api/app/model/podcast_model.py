@@ -10,6 +10,7 @@ from config.database import *
 from model.podcast_author_model import *
 from model.category_model import *
 
+###table creation for song detail
 class podcast(Base):
     __tablename__ = "podcast"
     id = Column(Integer, primary_key=True, index=True)
@@ -29,15 +30,10 @@ class podcast(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-    # song = relationship("albums", backref="songs")
+    ###reference for foreign key usage
+    episode = relationship("podcast_episode",backref="podcast")
+    history = relationship("podcast_history",backref="podcast")
 
-    # last_song = relationship("last_songs",backref="songs")
-    # fav = relationship("favourites",backref="songs")
-    # aura = relationship("aura_songs",backref="songs")
-
-    # songs = relationship("artist")
-    # songs = relationship("genres")
-
-    
+###code to create all the table in this file    
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

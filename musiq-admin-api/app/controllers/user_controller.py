@@ -1,6 +1,5 @@
 from fastapi import HTTPException
 import re
-import base64
 from config.database import *
 import yagmail,math,random
 
@@ -9,6 +8,7 @@ from utils.auth_handler import *
 from utils.security import get_password_hash
 from services.admin_user_service import *
 
+###password validator
 def password_check(passwd):  
     SpecialSym =['$', '@', '#', '%','!']
     val = True  
@@ -33,6 +33,7 @@ def password_check(passwd):
         raise HTTPException(status_code=422, detail='Password should have at least one of the symbols $@#!%')
     return val
 
+###email validator
 def email_validate(email):
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     if(re.fullmatch(regex, email)):
@@ -40,6 +41,7 @@ def email_validate(email):
     else:
         return False
 
+###response create new user by admin
 def register_user(user,db,email):
     if (email_validate(user.email)) != True:
         raise HTTPException(status_code=422, detail="Invalid Email!!")
@@ -69,12 +71,14 @@ def register_user(user,db,email):
         raise HTTPException(status_code=422, detail={"message": "couldn't register,check your details","success":False})
 
 
+###login as user
 def login_user(user,db):
     if login_check(user,db):
         return {"status": True,"message":"login Successfully","records":login_check(user,db)}
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't login,check your details","success":False})
 
+###refresh expired access token
 def token_refresh(user,db):
     tok_user = get_token_mail(user.token,db)
     if tok_user:
@@ -87,14 +91,16 @@ def token_refresh(user,db):
     else:
         raise HTTPException(status_code=404, detail={"message": "Check your token!!!","success":False})
 
+###remove profile image of users
 def delete_profile(user_id,db):
     if remove_image(user_id,db):
         return {"success":True,'message': "profile image removed"}
     else:
         raise HTTPException(status_code=404, detail={"success":False,'message': "Check your id"})
 
+#############################OTP GENERATE & VERIFY & CHANGE PASSWORD#########################
 def generateOTP() :
-    print(11111)
+    '''Generate OTP for forget password of users'''
     digits = "0123456789"
     OTP = ""
     for i in range(6) :
@@ -102,7 +108,7 @@ def generateOTP() :
     return OTP
 
 def email_otp(db,email):
-    print(email.email,11111)
+    '''Send OTP to user's email'''
     user = get_email(email.email,db)
     if user:
         s = generateOTP()
@@ -123,6 +129,7 @@ def email_otp(db,email):
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
 def verify_otp(db:Session,temp):
+    '''verify received OTP'''
     user = get_email(temp.email,db)
     if user:
         if user.otp == temp.otp:
@@ -138,6 +145,7 @@ def verify_otp(db:Session,temp):
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
 def password_change(db:Session,temp):
+    '''To change password'''
     user = get_email(temp.email,db)
     if user:
         if (password_check(temp.password)) != True:
@@ -148,6 +156,9 @@ def password_change(db:Session,temp):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message":"check your email"})
 
+#############################OTP GENERATE & VERIFY & CHANGE PASSWORD#########################
+
+###return response of fetch all user details
 def get_all_user(db, skip, limit):
     try:
         users = user_get_all(db, skip, limit)
@@ -159,6 +170,7 @@ def get_all_user(db, skip, limit):
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
+###return response of get user details
 def get_user_by_id(user_id,db):
     db_user = get_by_id(user_id,db)
     if db_user:
@@ -166,6 +178,7 @@ def get_user_by_id(user_id,db):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
+###return the response of update user details 
 def update_user(user_id,user,db,email):
     db_user = user_update(user_id,user,db,email)
     if db_user:
@@ -173,6 +186,7 @@ def update_user(user_id,user,db,email):
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "user details doesn't exist"})
 
+###return the response of delete user details 
 def delete_user_details(db,user_id):
     db_user = user_delete(db,user_id)
     if db_user:

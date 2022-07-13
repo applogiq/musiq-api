@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from services.aura_service import *
 
-
+###response of getting all aura details
 def get_all_aura_details(db,limit):
     db_aura = aura_get_all(db,limit)
     if db_aura:
@@ -12,6 +12,7 @@ def get_all_aura_details(db,limit):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
+###response of fetching detail of particular aura
 def get_aura_details_by_id(db, aura_id):
     db_aura = aura_get_by_id(db, aura_id)
     if db_aura:

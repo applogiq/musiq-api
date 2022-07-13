@@ -1,6 +1,7 @@
 from pydantic import BaseModel,Field
 
 
+###to enter song in particular playlist details
 class PlaylistsongSchema(BaseModel):
     playlist_id : int
     song_id: int

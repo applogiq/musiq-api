@@ -9,6 +9,7 @@ import sqlalchemy
 from config.database import *
 from model.album_model import *
 
+###table for song detail
 class songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
@@ -32,13 +33,12 @@ class songs(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
+    ###reference for foreign key usage
     last_song = relationship("last_songs",backref="songs")
     fav = relationship("favourites",backref="songs")
-    # aura = relationship("aura_songs",backref="songs")
-
-    # songs = relationship("artist")
-    # songs = relationship("genres")
-
+    aura = relationship("aura_songs",backref="songs")
+    playlist_song = relationship("playlist_songs",backref="songs")
     
+###code to create all the table in this file    
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

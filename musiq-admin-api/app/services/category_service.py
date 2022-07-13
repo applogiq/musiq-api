@@ -5,15 +5,19 @@ from fastapi import HTTPException
 from model.category_model import categories
 from services.admin_user_service import admin_get_email
 
+###check category name before adding repitition
 def category_name_check(name,db):
     return db.query(categories).filter(categories.category_name == name,categories.is_delete == False).first()
-# 
+
+###get all category details
 def category_get_all(db: Session):
     return db.query(categories).filter(categories.is_delete == False).all()
 
+###get particular category details
 def category_get_by_id(db: Session, gen_id: int):
     return db.query(categories).filter(categories.id == gen_id,categories.is_delete == False).first()
-  
+
+###enter new category detail
 def category_detail(db: Session,category,email):
     categoryname = category_name_check(category.category_name,db)
    
@@ -31,6 +35,8 @@ def category_detail(db: Session,category,email):
     db.refresh(db_category)
     return db_category
 
+
+###update existing category details
 def category_update(db: Session,cat_id,category,email):
     user_temp1 = category_get_by_id(db,cat_id)
     if user_temp1:
@@ -51,6 +57,8 @@ def category_update(db: Session,cat_id,category,email):
     else:
         raise False
 
+
+###delete category details
 def category_delete(db: Session,cat_id):
     temp = category_get_by_id(db,cat_id)
     if temp:

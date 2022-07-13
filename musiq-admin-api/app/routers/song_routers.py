@@ -17,31 +17,36 @@ router = APIRouter(tags=["songs"])
 
 http_bearer = JWTBearer()
 
+###to enter song details with base64
 @router.post("/songs")
 async def enter_song_details(song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
     return enter_song_detail(db,song,s["sub"])
 
+###to enter details alone without music
 @router.post("/new/songs")
 async def enter_song_details(song: SongNewSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
     return enter_new_song_detail(db,song,s["sub"])
     
+###to upload music file by it's id
 @router.post("/songs/{id}")
 async def enter_song(id: int,file: Optional[UploadFile] = File(None),db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return music_upload_details(db,id,file)
     
-   
-@router.get("/songs")#,response_model=AllresponseSchema
+
+###to get all song details 
+@router.get("/songs")
 async def view_all_song_details(db: Session = Depends(get_db),album_id: Union[int, None] = None,artist_id:Union[int, None] = None,skip: int = 0, limit: int = 100,token: str = Depends(http_bearer)):
     if album_id:
-        return album_song_check(db,album_id,skip,limit)
+        return album_song_check(db,album_id,skip,limit) ###fetch songs from particular album
     elif artist_id:
-        return artist_song_check(db,artist_id,skip,limit)    
+        return artist_song_check(db,artist_id,skip,limit) ###fetch particular artist songs
     else:
-        return get_all_song(db, skip,limit)
+        return get_all_song(db, skip,limit) ###fetch all
 
 
+###to get particular song details by it's id
 @router.get("/songs/{song_id}")
 async def view_song_details(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_song_by_id(db, song_id)
@@ -52,21 +57,23 @@ async def view_song_details(song_id: int,db: Session = Depends(get_db),token: st
 #     # return song
 #     pass
 
+###to update existing  song details
 @router.put("/songs/{song_id}")
 async def update_song_details(song_id: int,song: SongSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
     return update_song(db,song_id,song,s["sub"])
     
-
+###to delete particular song details by their id
 @router.delete("/songs/{song_id}")
 async def delete_song(song_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return song_delete(db,song_id)
     
-
+###to get trending hits of all song
 @router.get("/trending-hits")
 async def trending_hits_details(limit:int = 100,db: Session = Depends(get_db),token: str = Depends(http_bearer)):#,token: str = Depends(http_bearer)
     return get_trending_hits(db,limit)
 
+###to get new release songs by its release date
 @router.get("/new_release")
 async def new_release_details(limit: int = 100,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_new_release(db,limit)
@@ -83,7 +90,8 @@ def stream_audio(song_id: str,request: Request,db: Session = Depends(get_db)):
     
 #########------- AUDIO STREAMING ---------#########
 
-#############search############
+
+###search functionality
 @router.get("/search")
-async def search_function(data: str,db: Session = Depends(get_db)):
+async def search_function(data: str,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return search_engine_details(db,data)

@@ -1,12 +1,12 @@
 from config.database import SessionLocal, engine
 from config.database import Base
-from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text,ForeignKey,Boolean
-from sqlalchemy.orm import relationship
+from sqlalchemy import   Column, Integer,TIMESTAMP,text,ForeignKey,Boolean
 import sqlalchemy
 from model.playlist_model import playlist
 from model.song_model import songs
 
 
+###table creation for playlist_song detail
 class playlist_songs(Base):
     __tablename__ = "playlist_songs"
      
@@ -23,10 +23,6 @@ class playlist_songs(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-    # aura = relationship("aura")
-    # aura = relationship("songs")
-
-
-
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

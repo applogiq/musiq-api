@@ -1,19 +1,14 @@
-from sqlalchemy import DATE,Column, Float, Integer, String,JSON,ForeignKey,TIME,Boolean
-from sqlalchemy_json import NestedMutableJson
+from sqlalchemy import DATE,Column, Integer, String,JSON,ForeignKey,TIME,Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
-from sqlalchemy.dialects.postgresql import JSONB, ARRAY
+from sqlalchemy.dialects.postgresql import ARRAY
 import sqlalchemy
 
 from config.database import *
 from model.album_model import *
 
-
-
-
-
-
+###table for song detail
 class songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
@@ -37,15 +32,14 @@ class songs(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-    # song = relationship("albums", backref="songs")
 
+    ###reference for foreign key usage
     last_song = relationship("last_songs",backref="songs")
     fav = relationship("favourites",backref="songs")
-    # aura = relationship("aura_songs",backref="songs")
+    aura = relationship("aura_songs",backref="songs")
+    playlist_song = relationship("playlist_songs",backref="songs")
 
-    # songs = relationship("artist")
-    # songs = relationship("genres")
 
-    
+###code to create all the table in this file 
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

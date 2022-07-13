@@ -1,6 +1,7 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Optional,List
 
+###to enter admin user details schema
 class AdminSchema(BaseModel):
     name : str = Field(...)
     email: str = Field(...)
@@ -16,6 +17,7 @@ class AdminSchema(BaseModel):
             }
         }
 
+###to update admin user details schema
 class AdminOptional(BaseModel):
     name : Optional[str] = Field(...)
     email : Optional[str] = Field(...)

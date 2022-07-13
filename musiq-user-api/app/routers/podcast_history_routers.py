@@ -17,25 +17,13 @@ router = APIRouter(tags=["podcast-history"],prefix='/podcast-history')
 
 http_bearer = JWTBearer()
 
+###to enter podcast history of particular user
 @router.post("/")
 async def enter_history_details(history : PodcastHistorySchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
     s = decodeJWT(token)
     return create_podcast_history(db,history,s["sub"])
 
-# @router.get("/")
-# async def view_all_history_details(db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
-#     # return get_all_history(db,limit)
-#     # return demo_check(db)
-#     pass
-  
-
+###to get podcast recents of paticular user by their id
 @router.get("/{id}")
 async def view_history_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_podcast_recent(id)
-    # pass
-    
-
-# @router.delete("/{id}")
-# async def delete_history_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
-#     # return delete_history(db,id)
-#     pass

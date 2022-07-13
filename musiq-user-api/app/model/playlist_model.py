@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 # from model.aura_song_model import aura_songs
 from model.user_model import users
 
-
+###table creation for user's playlist detail
 class playlist(Base):
     __tablename__ = "playlist"
      
@@ -24,9 +24,10 @@ class playlist(Base):
     updated_user_by = Column(Integer)
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
+    
+    ###reference for foreign key usage
+    playlist_song = relationship("playlist_songs",backref="playlist")
 
-
-    # playlist_song = relationship("playlist_songs", backref="playlist")
-
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

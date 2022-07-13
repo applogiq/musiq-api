@@ -6,9 +6,9 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 import sqlalchemy
 
-from config.database import engine
-from config.database import Base
+from config.database import *
 
+###create model for user table
 class users(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -32,13 +32,15 @@ class users(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
     
-
+    ###reference for foreign key usage
     recent = relationship("recents", backref="users")
     last = relationship("last_songs", backref="users")
     fav = relationship("favourites", backref="users")
-    # playlist_song = relationship("playlist", backref="users")
+    playlist_song = relationship("playlist", backref="users")
+    history = relationship("podcast_history", backref="users")
 
 
+###create model for table to store tokens
 class token(Base):
     __tablename__ = "token"
 
@@ -47,5 +49,6 @@ class token(Base):
     refresh_token = Column(String)
     access_token = Column(String)
 
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

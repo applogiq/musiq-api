@@ -1,6 +1,4 @@
-from sqlalchemy import Column, Float, Integer, String,Boolean
-from sqlalchemy_json import NestedMutableJson
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String,Boolean
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 import sqlalchemy
@@ -8,6 +6,7 @@ import sqlalchemy
 from config.database import engine
 from config.database import Base
 
+###table creation for admin user detail
 class admin_users(Base):
     __tablename__ = "admin_users"
     id = Column(Integer, primary_key=True, index=True)
@@ -23,12 +22,7 @@ class admin_users(Base):
     is_active = Column(Boolean,default=True)
     
 
-    # recent = relationship("recents", backref="users")
-    # last = relationship("last_songs", backref="users")
-    # fav = relationship("favourites", backref="users")
-    # playlist_song = relationship("playlist", backref="users")
-
-
+###to store admin token details
 class admin_token(Base):
     __tablename__ = "admin_token"
 
@@ -37,5 +31,6 @@ class admin_token(Base):
     refresh_token = Column(String)
     access_token = Column(String)
 
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

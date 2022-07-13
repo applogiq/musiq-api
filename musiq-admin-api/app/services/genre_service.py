@@ -5,15 +5,19 @@ from fastapi import HTTPException
 from model.genre_model import genres
 from services.admin_user_service import admin_get_email
 
+###check genre name before enter to avoid repitition
 def genre_name_check(name,db):
     return db.query(genres).filter(genres.genre_name == name,genres.is_delete == False).first()
 
+###get all genre details
 def genre_get_all(db: Session):
     return db.query(genres).filter(genres.is_delete == False).all()
 
+###get genre details by it's id
 def genre_get_by_id(db: Session, gen_id: int):
     return db.query(genres).filter(genres.id == gen_id,genres.is_delete == False).first()
   
+###Enter new genre detail
 def genre_detail(db: Session,genre,email):
     genrename = genre_name_check(genre.genre_name,db)
     a ="GN001"
@@ -34,6 +38,8 @@ def genre_detail(db: Session,genre,email):
     db.refresh(db_genre)
     return db_genre
 
+
+###update existing genre detail
 def genre_update(db: Session,gen_id,genre,email):
     user_temp1 = genre_get_by_id(db,gen_id)
     if user_temp1:
@@ -54,6 +60,8 @@ def genre_update(db: Session,gen_id,genre,email):
     else:
         raise False
 
+
+###delete genre detail by it's id
 def genre_delete(db: Session,gen_id):
     temp = genre_get_by_id(db,gen_id)
     if temp:

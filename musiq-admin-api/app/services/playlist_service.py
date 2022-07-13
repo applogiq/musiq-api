@@ -9,6 +9,7 @@ from model.playlist_model import playlist
 from services.playlist_song_service import playlistsong_get_by_playlistid
 from services.admin_user_service import admin_get_email
 
+###create new playlist for single user by id
 def playlist_detail(db: Session,playlists,email):
     playlistname =db.query(playlist).filter(playlist.playlist_name == playlists.playlist_name,playlist.user_id == playlists.user_id,playlist.is_delete == False).first()
     if playlistname:
@@ -35,6 +36,8 @@ def playlist_detail(db: Session,playlists,email):
             s.append(a)
     return s
 
+
+###update the existing playlist details
 def playlist_update(db,playlist_id,name,email):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
     temp = admin_get_email(email,db)
@@ -47,9 +50,12 @@ def playlist_update(db,playlist_id,name,email):
         return True
     return False
 
+
+###get all user playlist details
 def playlist_get_all(db: Session):
     return db.query(playlist).filter(playlist.is_delete == False).all()
 
+###get playlist details by id
 def playlist_get_by_id(db: Session, playlist_id: int):
     playlists = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
     if playlists:
@@ -57,6 +63,7 @@ def playlist_get_by_id(db: Session, playlist_id: int):
     else:
         return False
     
+###get single user's playlist details
 def playlist_get_by_userid(db: Session, user_id: int):
     playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).order_by(playlist.created_by).all()
     s = []
@@ -76,6 +83,8 @@ def playlist_get_by_userid(db: Session, user_id: int):
 #     else:
 #         return False
 
+
+###delete playlist details by id
 def playlist_delete(db: Session,playlist_id,email):
     user_temp = db.query(playlist).filter(playlist.id == playlist_id,playlist.is_delete == False).first()
     if user_temp:

@@ -3,6 +3,7 @@ from config.database import Base
 from sqlalchemy import Boolean,Column, Integer, String, TIMESTAMP,text
 import sqlalchemy
 
+###table creation for podcast's categories detail
 class categories(Base):
     __tablename__ = "categories"
      
@@ -16,6 +17,6 @@ class categories(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

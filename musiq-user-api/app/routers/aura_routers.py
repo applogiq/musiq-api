@@ -12,10 +12,12 @@ router = APIRouter(tags=["aura"],prefix="/aura")
 
 http_bearer = JWTBearer()
 
+###get all aura details
 @router.get("/")
 async def view_all_aura_details(db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
     return get_all_aura_details(db,limit)
-    
+
+###get single aura detail by it's id     
 @router.get("/{aura_id}")
 async def view_aura_details(aura_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_aura_details_by_id(db, aura_id)

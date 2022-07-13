@@ -4,7 +4,7 @@ from typing import Dict,List,Optional,Union
 
 from schemas.album_schema import Responsealbum
 
-
+###to enter song details using base64 
 class SongSchema(BaseModel):
     song_name : str = Field(...)
     artist_id : list = None
@@ -33,6 +33,7 @@ class SongSchema(BaseModel):
             }
         }
     
+###to enter song details without music
 class SongNewSchema(BaseModel):
     song_name : str = Field(...)
     artist_id : list = None
@@ -57,6 +58,7 @@ class SongNewSchema(BaseModel):
             }
         }
 
+###song response schema
 class SongResponse(SongSchema):
     song_id: str = Field(...)
     album_details: Responsealbum
@@ -64,7 +66,7 @@ class SongResponse(SongSchema):
     class Config:
         orm_mode = True
 
-
+###get all song response schema
 class AllresponseSchema(BaseModel):
     success: bool
     message: str
@@ -73,6 +75,7 @@ class AllresponseSchema(BaseModel):
     class Config:
         orm_mode = True
 
+##get song details by it's id schema
 class SongresponseSchema(BaseModel):
     success: bool
     message: str

@@ -14,24 +14,29 @@ router = APIRouter(tags=["playlist"],prefix='/playlist')
 
 http_bearer = JWTBearer()
 
+###enter new playlist detail for particular user
 @router.post("/")
 async def enter_playlist_details(playlists:PlaylistSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)): 
     s = decodeJWT(token)
     return create_playlist_details(db,playlists,s["sub"])
 
+###to get particular playlist details
 @router.get("/{playlist_id}")
 async def view_playlist_details(playlist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_playlist_by_id(db,playlist_id)
 
+###to get particular user's all playlist song details
 @router.get("/user/{user_id}")
 async def view_user_playlist_details(user_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_playlist_by_userid(db, user_id)
 
+###to update existing playlist details
 @router.put("/{playlist_id}")
 async def update_playlist_details(playlist_id: int,playlist: UpdateSchema,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
     return update_playlist(db,playlist_id,playlist.name,s["sub"])
    
+###to delete entire playlist details by their id
 @router.delete("/{playlist_id}")
 async def delete_playlist_details(playlist_id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)

@@ -15,11 +15,12 @@ router = APIRouter(tags=["podcast-episode"])
 
 http_bearer = JWTBearer()
 
-  
+###to get single episode details  
 @router.get("/podcast-episode/{id}")
 async def view_episode_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_episode_by_id(db,id)
 
+###to get particular podcast's episodes details
 @router.get("/podcast-episode/list/{podcast_id}")
 async def view_episode_podcast_details(podcast_id: int,db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
     return get_episode_by_podcastid(db,podcast_id,limit)

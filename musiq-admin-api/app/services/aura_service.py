@@ -10,6 +10,8 @@ from model.song_model import songs
 from model.aura_model import aura
 from services.admin_user_service import admin_get_email
 
+
+###create new aura
 def aura_detail(db: Session,auras,email):
     auraname =db.query(aura).filter(aura.aura_name == auras.aura_name,aura.is_delete == False).first()
     if auraname:
@@ -43,13 +45,15 @@ def aura_detail(db: Session,auras,email):
     db.refresh(db_user)
     return True
 
-
+###get all aura details
 def aura_get_all(db: Session):
     return db.query(aura).filter(aura.is_delete == False).all()
 
+###get aura details by id 
 def aura_get_by_id(db: Session, aura_id: int):
     return db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()
-    
+
+###update exisiting aura detail  
 def aura_update(db: Session,aura_id: int,auras,email):
     user_temp1 = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()
     if user_temp1:
@@ -75,7 +79,7 @@ def aura_update(db: Session,aura_id: int,auras,email):
 
     return False
        
-
+###delete aura detail
 def aura_delete(db: Session,aura_id):
     user_temp = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False).first()
     if user_temp:
@@ -84,6 +88,7 @@ def aura_delete(db: Session,aura_id):
         return True
     return False
     
+###remove image for particular aura
 def aura_image_delete(db: Session,aura_id: int):
     user_temp = db.query(aura).filter(aura.id == aura_id,aura.is_delete == False,aura.is_image == True).first()
     if user_temp:

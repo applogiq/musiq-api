@@ -1,11 +1,10 @@
 from config.database import *
-# from app.config.database import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP,text,Boolean
 import sqlalchemy
 from sqlalchemy.orm import relationship
-# from app.model.song_model import songs
 from sqlalchemy.dialects.postgresql import ARRAY
 
+###table creation for album detail
 class albums(Base):
     __tablename__ = "albums"
      
@@ -27,6 +26,6 @@ class albums(Base):
 
     song = relationship("songs", backref="albums")
 
-
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

@@ -1,12 +1,11 @@
-from config.database import SessionLocal,engine
-from config.database import Base
-from sqlalchemy import Boolean,Column, Integer, String, TIMESTAMP,text,ForeignKey
+from sqlalchemy import Boolean,Column, Integer, TIMESTAMP,text,ForeignKey
 import sqlalchemy
 
+from config.database import *
 from model.user_model import users
 from model.song_model import songs
 
-
+###table creation for user's favourite detail
 class favourites(Base):
     __tablename__ = "favourites"
      
@@ -19,6 +18,6 @@ class favourites(Base):
     created_user_by = Column(Integer)
     is_active = Column(Boolean,default=True)
 
-
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

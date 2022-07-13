@@ -9,12 +9,15 @@ from model.song_model import songs
 from services.user_service import *
 from services.song_service import *
 
+###get recent songs of single user by id
 def recent_get_by_userid(db,user_id):
     return db.query(recents).filter(recents.user_id == user_id,recents.is_delete == False).first()
 
+###get all user recent songs detail
 def recent_get_all(db):
     return db.query(recents).filter(recents.is_delete == False).all()
 
+###get recent songs of user in order
 def recent_song_check(db,user_id,limit):
     user = recent_get_by_userid(db,user_id)
     if user:
@@ -29,6 +32,7 @@ def recent_song_check(db,user_id,limit):
         return temp2
     return False
 
+###update recent song detail of single user
 def recent_update(db,user_id,data,email):
     temp = recent_get_by_userid(db,user_id)
     user = get_email(email,db)

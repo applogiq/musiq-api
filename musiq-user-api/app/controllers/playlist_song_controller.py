@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from services.playlist_song_service import *
 
-
+###response of  adding song in  particular playlist
 def create_playlist_song(db: Session,playlists,email):
     db_playlist = playlist_song_detail(db,playlists,email)
     if db_playlist:
@@ -12,6 +12,7 @@ def create_playlist_song(db: Session,playlists,email):
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})
 
+###response of getting particular song from particular playlist
 def get_playlist_song_by_id(db,id):
     playlists = playlistsong_get_by_id(db,id)
     if playlists:
@@ -19,6 +20,7 @@ def get_playlist_song_by_id(db,id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
+###response of getting list of songs of particular playlist
 def get_song_by_playlist_id(db, playlist_id):
     playlists = playlistsong_get_by_playlistid(db, playlist_id)
     if playlists:
@@ -26,6 +28,7 @@ def get_song_by_playlist_id(db, playlist_id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
+###response for removing song from particular playlist
 def delete_playlistsong(db: Session,playlist_id):
     db_song = playlistsong_delete(db,playlist_id)
     if db_song:

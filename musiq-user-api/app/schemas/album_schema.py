@@ -1,7 +1,7 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Union,List,Optional
 
-
+###to enter new album details schema
 class AlbumSchema(BaseModel):
     album_name : Optional[str]
     released_year : Optional[str]
@@ -17,6 +17,7 @@ class AlbumSchema(BaseModel):
             }
         }
 
+###structure of response strcuture of album details schema
 class Responsealbum(BaseModel):
     id: int
     album_id : str
@@ -30,22 +31,20 @@ class Responsealbum(BaseModel):
     class Config:
         orm_mode = True
 
+###to get album response by their id schema
 class AlbumResponse(BaseModel):
     success: bool
     message: str
     records: Responsealbum 
     totalrecords: int
-    
-
     class Config:
         orm_mode = True
 
+###to get all album details response schema
 class AllalbumResponse(BaseModel):
     success: bool
     message: str
     records: List[Responsealbum] = []
     totalrecords: int
-    
-    
     class Config:
         orm_mode = True

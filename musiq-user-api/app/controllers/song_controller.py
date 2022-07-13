@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from services.song_service import *
 from services.album_service import *
 
+###response of recent trending songs
 def get_trending_hits(db,limit):
     db_song = trending_hits(db,limit)
     if db_song:
@@ -14,6 +15,7 @@ def get_trending_hits(db,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
+###response of new release songs details
 def get_new_release(db,limit):
     db_song = new_release(db,limit)
     if db_song:
@@ -21,14 +23,15 @@ def get_new_release(db,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
-
+###get single song details response
 def get_song_by_id(db, song_id):
     db_song = song_get_by_id(db, song_id)
     if db_song:
         return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : 1}
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
-    
+
+###response of album based songs 
 def album_song_check(db,album_id,skip,limit):
     db_song = song_album_check_limit(db,album_id,skip,limit)
     if db_song:
@@ -36,6 +39,7 @@ def album_song_check(db,album_id,skip,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
+###response of artist based songs
 def artist_song_check(db,artist_id,skip,limit):
     db_song = song_artist_check_limit(db,artist_id,skip,limit)
     if db_song:
@@ -43,6 +47,7 @@ def artist_song_check(db,artist_id,skip,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
+###all song details response
 def get_all_song(db, skip,limit):
     db_song = song_get_all_limit(db, skip,limit)
     if db_song:
@@ -50,6 +55,15 @@ def get_all_song(db, skip,limit):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
+####response of search engine
+def search_engine_details(db,data):
+    db_song = search_engine(db,data)
+    if db_song:
+        return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch"})
+
+###music streaming response
 def song_response(db,id,request):
     user_temp = song_music_check(db,id)
     if user_temp:
@@ -64,7 +78,6 @@ def song_response(db,id,request):
         )
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"music doesn't exist for this id"})
-
 
 ####### AUDIO STREAMING ########
 

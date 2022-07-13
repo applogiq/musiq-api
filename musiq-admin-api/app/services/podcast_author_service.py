@@ -10,18 +10,20 @@ from model.podcast_author_model import podcast_author
 from services.admin_user_service import admin_get_email
 from config.database import DIRECTORY
 
-
+###check author name for avoiding repitition
 def author_name_check(name,db):
     return db.query(podcast_author).filter(podcast_author.author_name == name,podcast_author.is_delete == False).first()
 
+###get author details
 def author_get_all(db: Session,limit):
     return db.query(podcast_author).filter(podcast_author.is_delete == False).order_by(podcast_author.id).limit(limit).all()
 
+###get author details by id
 def author_get_by_id(db: Session, id: int):
     return db.query(podcast_author).filter(podcast_author.id == id,podcast_author.is_delete == False).first()
 
 
-
+###enter new author details 
 def author_details(db,author,email):
     authorname = author_name_check(author.name,db)
     if authorname:
@@ -48,6 +50,7 @@ def author_details(db,author,email):
     author = author_get_by_id(db,db_author.id)
     return author
 
+###update existing author details
 def author_update(db,id,author,email):
     author_id = author_get_by_id(db,id)
     if author_id:
@@ -71,7 +74,7 @@ def author_update(db,id,author,email):
         return author
     return False
 
-
+###delete author details
 def author_delete(db,id):
     temp = author_get_by_id(db,id)
     if temp:

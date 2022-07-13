@@ -15,6 +15,7 @@ from utils.auth_bearer import *
 from model.last_song_model import *
 from model.recent_model import *
 
+###to get every user detail with limit 
 def user_get_all(db: Session, skip: int = 0, limit: int = 100):
     user = db.query(users).filter(users.is_delete == False).offset(skip).limit(limit).all()
     if user:
@@ -22,13 +23,16 @@ def user_get_all(db: Session, skip: int = 0, limit: int = 100):
     else:
         return False
 
+###to get single user detail by id
 def get_by_id(id,db):
     return db.query(users).filter(users.id == id,users.is_delete==False).first()
 
+###to get user details by their email
 def get_email(email,db):
     user = db.query(users).filter(users.email == email,users.is_delete==False).first()
     return user
 
+###check username when register to avoid repetition
 def username_check(username,db: Session):
     user = db.query(users).filter(users.username == username,users.is_delete==False).first()
     return user
@@ -37,7 +41,7 @@ def username_check(username,db: Session):
 #     user = query(token).filter(token.access_token == token).first()
 #     return True
 
-
+###function to register new user
 def new_register(data,access_token,refresh_token,db:Session):
     a = 202201
     print(data)
@@ -70,11 +74,9 @@ def new_register(data,access_token,refresh_token,db:Session):
     user = get_by_id(db_user.id,db)
     user.access_token = access_token
     user.refresh_token = refresh_token
-
-    
-    
     return user
 
+###to login user and check user login details
 def login_check(user,db):
     temp = get_email(user.email,db)
     if temp:
@@ -96,10 +98,11 @@ def login_check(user,db):
     # else:
     #     return False
    
-
+###check refresh token
 def get_token_mail(tok,db):
     return db.query(token).filter(token.refresh_token == tok).first()
-       
+
+###update access token using refresh token     
 def update_tokens(email,access_token, refresh_token,db:Session):
     tok = db.query(token).filter(token.email == email).first()
     tok.access_token = access_token
@@ -107,6 +110,7 @@ def update_tokens(email,access_token, refresh_token,db:Session):
     db.commit()
     return True
 
+###upload image detail
 def image_upload(id,db:Session):
     temp = get_by_id(id,db)
     if temp:
@@ -114,6 +118,7 @@ def image_upload(id,db:Session):
         db.commit()
     return True
 
+###check whether there is image in user id
 def image_check(id,db:Session):
     return db.query(users).filter(users.id == id,users.is_delete == False,users.is_image == True).first()
 
@@ -123,6 +128,7 @@ def image_check(id,db:Session):
 #     db.commit()
 #     return True
 
+###function to update user details
 def user_update(user_id,user,db,email):
     user_temp = get_by_id(user_id,db)
     temp1 = get_email(email,db)
@@ -155,6 +161,7 @@ def user_update(user_id,user,db,email):
     else:
         raise HTTPException(status_code=403, detail={"success":False,"message":"not authenticated"})
 
+###to remove profile picture of user
 def remove_image(user_id,db):
     user_temp =  image_check(user_id,db)
     if user_temp:
@@ -168,6 +175,7 @@ def remove_image(user_id,db):
     else:
         return False
 
+###to store otp in database
 def otp_change(user,s,db):
     user_temp = get_by_id(user.id,db)
     if user_temp:
@@ -176,6 +184,7 @@ def otp_change(user,s,db):
         db.commit()
     return True
 
+###to update password when forget
 def update_password(email,password,db):
     user_temp = get_email(email,db)
     if user_temp:
@@ -194,6 +203,7 @@ def update_password(email,password,db):
 #     else:
 #         raise HTTPException(status_code=404, detail={"success": False,"message":"user doesn't exist"})
 
+###artist preference detail
 def follower_details(db:Session,user):
     temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==False).first()
     if temp:

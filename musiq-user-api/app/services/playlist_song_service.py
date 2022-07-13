@@ -11,6 +11,7 @@ from model.song_model import songs
 from model.playlist_model import playlist
 from services.user_service import *
 
+###enter playlist song details
 def playlist_song_detail(db: Session,playlists,email):
     playlistname = db.query(playlist_songs).filter(playlist_songs.playlist_id == playlists.playlist_id,playlist_songs.song_id == playlists.song_id,playlist_songs.is_delete == False).first()
     if playlistname:
@@ -34,16 +35,15 @@ def playlist_song_detail(db: Session,playlists,email):
         return True
     return False
 
+##get all playlistsong details
 def playlistsong_get_all(db: Session):
     return db.query(playlist_songs).filter(playlist_songs.is_delete == False).all()
 
+##get particular playlist's song details
 def playlistsong_get_by_playlistid(db: Session, id: int):
     return db.query(playlist_songs,playlist.playlist_name,songs.song_id,songs.song_name,songs.album_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(songs,songs.id==playlist_songs.song_id).join(albums,albums.id == songs.album_id).join(playlist,playlist.id == playlist_songs.playlist_id).filter(playlist_songs.playlist_id == id,playlist_songs.is_delete == False).all()
-    # if playlists:
-    #     return playlists
-    # else:
-    #     return False
 
+###get particular playlistsong details
 def playlistsong_get_by_id(db: Session, playlist_id: int):
     playlists = db.query(playlist_songs).filter(playlist_songs.id == playlist_id,playlist_songs.is_delete == False).first()
     if playlists:
@@ -51,6 +51,7 @@ def playlistsong_get_by_id(db: Session, playlist_id: int):
     else:
         return False
 
+###delete particular song from some playlist
 def playlistsong_delete(db: Session,playlist_id):
     user_temp = db.query(playlist_songs).filter(playlist_songs.id == playlist_id,playlist_songs.is_delete == False).first()
     if user_temp:

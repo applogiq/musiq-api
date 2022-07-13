@@ -2,11 +2,9 @@ from config.database import engine
 from config.database import Base
 from sqlalchemy import DATE, Column, Integer, String,TIMESTAMP,text,Boolean
 import sqlalchemy
-from sqlalchemy.orm import relationship
-# from app.model.album_model import albums
 
 
-
+###table creation for podcast-author detail
 class podcast_author(Base):
     __tablename__ = "podcast_author"
      
@@ -21,7 +19,7 @@ class podcast_author(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-    # album = relationship("albums", backref="artist")
 
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

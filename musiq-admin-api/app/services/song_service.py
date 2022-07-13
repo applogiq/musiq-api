@@ -6,16 +6,13 @@ import base64
 import shutil
 from mutagen.mp3 import MP3
 
-
-
-# from utils.auth_handler import create_access_token
 from model.song_model import *
 from config.database import *
 from model.album_model import *
-from model.artist_model import artist
 from services.admin_user_service import *
 from services.album_service import *
 
+###convert the seconds to HH:MM:SS format for song duration
 def convert(seconds):
     hours = seconds // 3600
     seconds %= 3600
@@ -23,30 +20,39 @@ def convert(seconds):
     seconds %= 60
     return(str(round(hours)).zfill(2), str(round(mins)).zfill(2), str(round(seconds)).zfill(2))
 
+###to get trending hits detail
 def trending_hits(db,limit):
     return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.listeners.desc()).limit(limit).all()
 
+###to get new release detail
 def new_release(db,limit):
     return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.released_date.desc()).limit(limit).all()
 
+###to check whether song name already used
 def song_name_check(db,name):
     return db.query(songs).filter(songs.song_name == name,songs.is_delete == False).first()
 
+###to fetch songs for particular album
 def song_album_check(db,album_id,skip,limit):
     return db.query(songs).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
 
+###to fetch particular song details for particular album
 def song_album_check_limit(db,album_id,skip,limit):
     return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
 
+###to fetch song details for particular artist
 def song_artist_check(db,artist_id,skip,limit):
     return db.query(songs).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
 
+###to fetch particular song details for particular artist
 def song_artist_check_limit(db,artist_id,skip,limit):
     return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
 
+###to check music is available for this id
 def song_music_check(db,song_id):
     return  db.query(songs).filter(songs.id == song_id,songs.is_delete == False,songs.is_music == True).first()
-     
+
+###enter new song details with song(base64)    
 def song_detail(db:Session,song,email):
     name =song_name_check(db,song.song_name)
     if name:
@@ -108,6 +114,7 @@ def song_detail(db:Session,song,email):
     db.refresh(db_user)
     return db_user
 
+###enter song details alone
 def song_new_detail(db:Session,song,email):
     name =song_name_check(db,song.song_name)
     if name:
@@ -147,6 +154,7 @@ def song_new_detail(db:Session,song,email):
     db.refresh(db_user)
     return db_user
 
+###upload music for particular id
 def music_upload(db,id,uploaded_file):
     db_song = song_get_by_id(db,id)
     if db_song:
@@ -180,8 +188,7 @@ def music_upload(db,id,uploaded_file):
     return False
 
 
-
-
+###get all song details
 def song_get_all(db: Session, skip,limit):
     user =  db.query(songs).filter(songs.is_delete == False).offset(skip).limit(limit).all()
     for i in range(0,len(user)):
@@ -192,11 +199,14 @@ def song_get_all(db: Session, skip,limit):
         print(user[i].album_id)
     return user
 
+
+#get all song particular details 
 def song_get_all_limit(db: Session, skip,limit):
     user = db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).offset(skip).limit(limit).all()
     return user
     
 
+###get particular song detail
 def song_get_by_id(db: Session, song_id: int):
     user = db.query(songs).filter(songs.id == song_id,songs.is_delete == False).first() 
     if user:
@@ -208,21 +218,13 @@ def song_get_by_id(db: Session, song_id: int):
     else:
         return False
 
-def song_get_by_id_limit(db: Session, song_id: int):
-    user = db.query().join(albums,albums.id == songs.album_id).filter(songs.id == song_id,songs.is_delete == False).all() 
-    print(len(user))
-    # user1 = db.query(songs).filter(artist.id.contains(songs[0].artist_id),songs.is_delete == False).all() 
-    # print(user1)
-    # if user:
-    #     album_details = db.query(albums).filter(albums.id == user.album_id,albums.is_delete == False).first()
-    #     user.duration = str(user.duration)
-    #     user.released_date = str(user.released_date)
-    #     user.album_details = album_details
-    return user
-    # else:
-    #     return False
+
+# ###get particular song particular detail
+# def song_get_by_id_limit(db: Session, song_id: int):
+#     return db.query().join(albums,albums.id == songs.album_id).filter(songs.id == song_id,songs.is_delete == False).all() 
 
 
+###to update song details
 def song_update(db: Session,song_id: int,song,email):
     user_temp1 = db.query(songs).filter(songs.id == song_id,songs.is_delete == False).first()
     if user_temp1:
@@ -280,7 +282,7 @@ def song_update(db: Session,song_id: int,song,email):
         result = song_get_by_id(db,song_id)
         return result
 
-    
+###to delete single song detail by id
 def delete_song_details(db: Session,song_id):
     user_temp = song_get_by_id(db,song_id)
     if user_temp:

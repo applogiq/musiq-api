@@ -7,15 +7,18 @@ from model.song_model import songs
 from services.user_service import *
 from services.song_service import *
 
+###get user's last song details
 def last_song_get_by_userid(db: Session, user_id: int):
     return db.query(last_songs).filter(last_songs.user_id == user_id,last_songs.is_delete == False).first()
 
+###get all user's last song details
 def last_song_get_all(db):
     return db.query(last_songs).filter(last_songs.is_delete == False).all()
 
-def last_song_get_by_id(db:Session,id):
-    return db.query(last_songs).filter(last_songs.id == id,last_songs.is_delete == False).first()
+# def last_song_get_by_id(db:Session,id):
+#     return db.query(last_songs).filter(last_songs.id == id,last_songs.is_delete == False).first()
 
+###Enter last heard song of particular details
 def user_last_song(db: Session,song,email):
     user_temp = last_song_get_by_userid(db,song.user_id)
     if user_temp:
@@ -36,6 +39,5 @@ def user_last_song(db: Session,song,email):
         else:
             pass
         db.commit()
-        return {'message': "song detail updated"}
-    else:
-        raise HTTPException(status_code=404, detail="Check your id!!!")
+        return True
+    return False

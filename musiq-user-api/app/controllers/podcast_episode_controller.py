@@ -4,6 +4,7 @@ from typing import BinaryIO,Optional
 
 from services.podcast_episode_service import *
 
+###response of getting particular episode detail
 def get_episode_by_id(db,id):
     episode = episode_get_by_id(db,id)
     if episode:
@@ -11,6 +12,7 @@ def get_episode_by_id(db,id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
+###response of list of episodes of particular podcast 
 def get_episode_by_podcastid(db,id,limit):
     episode = episode_get_by_podcastid(db,id,limit)
     if episode:
@@ -18,7 +20,7 @@ def get_episode_by_podcastid(db,id,limit):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
-
+####### AUDIO STREAMING ########
     
 def episode_response(db,id,request):
     user_temp = episode_audio_check(db,id)
@@ -34,9 +36,6 @@ def episode_response(db,id,request):
         )
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"check your id...music doesn't exist for this id"})
-
-
-####### AUDIO STREAMING ########
 
 def send_bytes_range_requests(
     file_obj: BinaryIO, start: int, end: int, chunk_size: int = 30_000 

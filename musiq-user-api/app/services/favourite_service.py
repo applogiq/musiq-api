@@ -8,7 +8,7 @@ from model.user_model import users
 from model.album_model import albums
 from services.user_service import get_email
 
-
+###Enter user's favourite detail
 def fav_song_detail(db: Session,fav,email):
     favname =db.query(favourites).filter(favourites.user_id == fav.user_id,favourites.song_id == fav.song_id).first()
     if favname:
@@ -27,6 +27,7 @@ def fav_song_detail(db: Session,fav,email):
     db.refresh(db_fav)
     return {"status": True,"message":"Updated Successfully","records":db_fav}
 
+###remove favourite song from single user
 def fav_delete(db: Session,fav):
     favname =db.query(favourites).filter(favourites.user_id == fav.user_id,favourites.song_id == fav.song_id).first()
     if not favname:
@@ -37,7 +38,7 @@ def fav_delete(db: Session,fav):
     return {"status": True,"message":"successfully deleted that song"}
 
 
-
+###fetch single user's favourite detai
 def fav_get_by_userid(db: Session, user_id: int):
     favs = db.query(favourites).filter(favourites.user_id == user_id,favourites.is_active == True).all()
     s = []

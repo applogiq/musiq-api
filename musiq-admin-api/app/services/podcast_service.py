@@ -13,16 +13,21 @@ from services.admin_user_service import admin_get_email
 from config.database import DIRECTORY
 from services.podcast_author_service import *
 
-
+###check podcast name for avoid repitition
 def podcast_name_check(title,db):
     return db.query(podcast).filter(podcast.title == title,podcast.is_delete == False).first()
 
+###get all podcast details
 def podcast_get_all(db: Session,limit):
     return db.query(podcast).filter(podcast.is_delete == False).order_by(podcast.id).limit(limit).all()
 
+
+###get single podcast details by id
 def podcast_get_by_id(db: Session, id):
     return db.query(podcast).filter(podcast.id == id,podcast.is_delete == False).first()
 
+
+###enter new podcast details
 def podcast_details(db,model,email):
     podcastname = podcast_name_check(model.title,db)
     if podcastname:
@@ -78,6 +83,7 @@ def podcast_details(db,model,email):
     return podcast_id
 
 
+###update existing podcast details
 def podcast_update(db,id,podcast,email):
     db_podcast = podcast_get_by_id(db,id)
     if db_podcast:
@@ -155,6 +161,8 @@ def podcast_update(db,id,podcast,email):
         return new_podcast
     return False
 
+
+###delete single podcast entirely by id
 def podcast_delete(db,id):
     temp = podcast_get_by_id(db,id)
     if temp:

@@ -10,6 +10,7 @@ from config.database import SessionLocal, engine
 from config.database import Base
 from model.user_model import users
 
+###table creation for recent list
 class recents(Base):
     __tablename__ = "recents"
     id = Column(Integer, primary_key=True, index=True)
@@ -26,6 +27,6 @@ class recents(Base):
     is_active = Column(Boolean,default=True)
 
 
-
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

@@ -15,6 +15,8 @@ from services.admin_user_service import admin_get_email
 from config.database import DIRECTORY
 from services.podcast_service import *
 
+
+###to convert seconds to HH:MM:SS format
 def convert(seconds):
     hours = seconds // 3600
     seconds %= 3600
@@ -22,32 +24,42 @@ def convert(seconds):
     seconds %= 60
     return(str(round(hours)).zfill(2), str(round(mins)).zfill(2), str(round(seconds)).zfill(2))
 
+###to check presence of any episode
 def episode_audio_check(db,id):
     return  db.query(podcast_episode).filter(podcast_episode.id == id,podcast_episode.is_delete == False,podcast_episode.is_audio == True).first()
 
+###get podcast details by id
 def get_podcast_name(id,db):
     return db.query(podcast).filter(podcast.id == id,podcast.is_delete == False).first()
 
+
+###check repitition of episode name
 def episode_name_check(id,title,db):
-    print(3333)
     return db.query(podcast_episode).filter(podcast_episode.episode_title == title,podcast_episode.podcast_id == id,podcast_episode.is_delete == False).first()
 
+
+###get all episodes of all podcast
 def episode_get_all(db: Session,limit):
     return db.query(podcast_episode).filter(podcast_episode.is_delete == False).order_by(podcast_episode.id).limit(limit).all()
 
+
+###get episode by its id
 def episode_get_by_id(db: Session, id: int):
-    print(33333333344444444444)
     return db.query(podcast_episode).filter(podcast_episode.id == id,podcast_episode.is_delete == False).first()
 
+
+###get all episode detail for particular podcast by id
 def episode_get_by_podcastid(db: Session, id: int,limit):
-    print(333333333333333333333)
     return db.query(podcast_episode).filter(podcast_episode.podcast_id == id,podcast_episode.is_delete == False).order_by(podcast_episode.episode_number).limit(limit).all()
 
+
+###enter new podcast details for particular podcast
 def episode_details(db,model,email,uploaded_file = None):
     podcastname = episode_name_check(model.podcast_id,model.episode_title,db)
     if podcastname:
         raise HTTPException(status_code=400, detail="Episode name is already chosen for this podcast")
     temp = admin_get_email(email,db)
+    ##to count episode number
     a = 1
     while db.query(podcast_episode).filter(podcast_episode.podcast_id == model.podcast_id,podcast_episode.episode_number == a).first():
         a = a + 1
@@ -87,7 +99,6 @@ def episode_details(db,model,email,uploaded_file = None):
         audio = MP3(uploaded_file.file)
         s = convert(audio.info.length)
         duration =f"{s[0]}:{s[1]}:{s[2]}"
-        print(duration)
         db_podcast.duration = duration
         # duration############
         db_podcast.is_audio = True
@@ -96,6 +107,7 @@ def episode_details(db,model,email,uploaded_file = None):
     return podcast_id
 
 
+###update podcast episode details from existing details
 def episode_update(db,id,model,email,uploaded_file):
     episodes =episode_get_by_id(db,id)
     if episodes:
@@ -140,6 +152,8 @@ def episode_update(db,id,model,email,uploaded_file):
         return podcast_id
     return False
 
+
+##to delete episode details from particular podcast
 def episode_delete(db,id):
     temp = episode_get_by_id(db,id)
     if temp:

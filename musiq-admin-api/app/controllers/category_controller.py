@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from services.category_service import *
 
-
+###response of creating category detail
 def create_category_details(db,category,email):
     temp = category_detail(db,category,email)
     if temp:
@@ -12,6 +12,7 @@ def create_category_details(db,category,email):
     else:
         return {'message': "check your details","success": False}
 
+###response of getting all category details
 def get_all_category_details(db):
     try:
         temp = category_get_all(db)
@@ -19,6 +20,7 @@ def get_all_category_details(db):
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
+###response of fetching detail of particular category
 def get_category_by_id(db, category_id):
     db_category = category_get_by_id(db, category_id)
     if db_category:
@@ -26,6 +28,7 @@ def get_category_by_id(db, category_id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
+###response of updating existing category detail
 def update_category(db,cat_id,category,email):
     db_category = category_update(db,cat_id,category,email)
     if db_category:
@@ -33,6 +36,7 @@ def update_category(db,cat_id,category,email):
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "category details doesn't exist"})
 
+###response for delete the category detail
 def delete_category_details(db,category_id):
     db_category = category_delete(db,category_id)
     if db_category:

@@ -1,13 +1,12 @@
-from config.database import SessionLocal, engine
+from config.database import engine
 from config.database import Base
-from sqlalchemy_json import NestedMutableJson
-from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text,ForeignKey,Boolean
+from sqlalchemy import Column, Integer, String, TIMESTAMP,text,ForeignKey,Boolean
 import sqlalchemy
-from sqlalchemy.orm import relationship
-# from model.aura_song_model import aura_songs
 from model.user_model import users
+from sqlalchemy.orm import relationship
 
 
+###table creation for user's playlist detail
 class playlist(Base):
     __tablename__ = "playlist"
      
@@ -25,8 +24,10 @@ class playlist(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
+    ###reference for foreign key usage
+    playlist_song = relationship("playlist_songs",backref="playlist")
 
-    # playlist_song = relationship("playlist_songs", backref="playlist")
 
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

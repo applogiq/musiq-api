@@ -1,8 +1,8 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Optional,List
 
-# from schemas.user_schema import UserResponse
 
+###to enter user's podcast history schema
 class PodcastHistorySchema(BaseModel):
     user_id : int = Field(...)
     podcast_id : int

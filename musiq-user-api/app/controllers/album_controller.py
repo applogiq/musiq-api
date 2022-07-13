@@ -5,20 +5,9 @@ import shutil
 import base64
 from fastapi import HTTPException
 
-# from model.song_model import songs
-from model.album_model import albums
 from services.album_service import *
 
-# def album_detail(db: Session,album):
-#     if albumname_check(album.name,db):
-#         raise HTTPException(status_code=400, detail="Album is already register")
-#     # if album_create(db,album):
-#         # return {"message":"data added"}
-#     try:
-#         return {"status": True,"message":"data added","records":album_create(db,album)}
-#     except:
-#         raise HTTPException(status_code=422, detail={"message": "couldn't create,check your details","success":False})
-
+###response of getting all album details
 def get_all_album_detail(db,skip,limit):
     try:
         temp = album_get_all(db,skip,limit)
@@ -30,6 +19,7 @@ def get_all_album_detail(db,skip,limit):
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
+###response of fetching detail of particular album
 def get_album_by_id(album_id,db):
     db_album= album_get_by_id(album_id,db)
     if db_album:

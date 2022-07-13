@@ -10,6 +10,7 @@ from config.database import SessionLocal, engine
 from config.database import Base
 from model.user_model import users
 
+###table creation for podcast-history detail
 class podcast_history(Base):
     __tablename__ = "podcast_history"
     id = Column(Integer, primary_key=True, index=True)
@@ -22,5 +23,7 @@ class podcast_history(Base):
     created_by = Column(Integer,nullable=True)
     created_user_by = Column(Integer,nullable=True)
 
+
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

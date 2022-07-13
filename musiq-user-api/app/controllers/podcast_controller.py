@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from services.podcast_service import *
 
 
-
+###response of getting all podcast details
 def get_all_podcast(db,limit):
     try:
         users = podcast_get_all(db,limit)
@@ -16,7 +16,7 @@ def get_all_podcast(db,limit):
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch"})
 
         
-
+###response of fetching detail of particular podcast
 def get_podcast_by_id(db,id):
     podcast = podcast_get_by_id(db,id)
     if podcast:

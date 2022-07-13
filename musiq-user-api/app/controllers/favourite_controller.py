@@ -4,6 +4,7 @@ from fastapi import HTTPException
 
 from services.favourite_service import *
 
+###response of adding favourite song for particular user
 def favourite_detail(db: Session,fav,email):
     db_fav = fav_song_detail(db,fav,email)
     if db_fav:
@@ -11,6 +12,7 @@ def favourite_detail(db: Session,fav,email):
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "check your details"})
 
+###response of getting particular user's favourite detail
 def get_fav_details_by_userid(db, user_id):
     db_fav = fav_get_by_userid(db, user_id)
     if db_fav:
@@ -18,7 +20,7 @@ def get_fav_details_by_userid(db, user_id):
     else:
         raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch,check your id"})
 
-
+###response for removing song from from particular user's favourites
 def delete_fav_song(db,fav):
     db_fav = fav_delete(db,fav)
     if db_fav:

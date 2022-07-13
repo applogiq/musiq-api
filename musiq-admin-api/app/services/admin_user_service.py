@@ -1,17 +1,14 @@
 from requests import Session
-from fastapi import Depends,HTTPException
 from datetime import datetime
-import os,time
 
-from sqlalchemy import null
 from utils.security import get_password_hash
-# from utils.auth_handler import create_access_token
 from model.user_model import *
 from utils.security import verify_password
 from config.database import *
 from utils.auth_handler import create_access_token,create_refresh_token
 from model.admin_user_model import *
 
+###to get all admin user details
 def admin_get_all(db: Session, skip: int = 0, limit: int = 100):
     user = db.query(admin_users).filter(admin_users.is_delete == False).offset(skip).limit(limit).all()
     if user:
@@ -19,15 +16,17 @@ def admin_get_all(db: Session, skip: int = 0, limit: int = 100):
     else:
         return False
 
+###get admin details by their id
 def admin_get_by_id(id,db):
     return db.query(admin_users).filter(admin_users.id == id,admin_users.is_delete==False).first()
 
+###get admin details by their email
 def admin_get_email(email,db):
     user = db.query(admin_users).filter(admin_users.email == email,admin_users.is_delete==False).first()
     return user
 
 
-
+###register new admin user details
 def new_admin_register(data,access_token,refresh_token,db:Session):
     db_user = admin_users(name = data["name"],
                     email = data["email"], 
@@ -45,6 +44,7 @@ def new_admin_register(data,access_token,refresh_token,db:Session):
     db.commit()
     return True
 
+###to login admin user
 def admin_login_check(user,db):
     temp =admin_get_email(user.email,db)
     if temp:
@@ -67,9 +67,11 @@ def admin_login_check(user,db):
         return False
    
 
+###check refresh token details
 def admin_get_token_mail(tok,db):
     return db.query(admin_token).filter(admin_token.refresh_token == tok).first()
        
+###update access token
 def admin_update_tokens(email,access_token, refresh_token,db:Session):
     tok = db.query(admin_token).filter(admin_token.email == email).first()
     tok.email = email
@@ -78,6 +80,7 @@ def admin_update_tokens(email,access_token, refresh_token,db:Session):
     db.commit()
     return True
 
+###update existing admin user details
 def admin_update(user_id,user,db,email):
     user_temp = admin_get_by_id(user_id,db)
     if user_temp:
@@ -96,7 +99,7 @@ def admin_update(user_id,user,db,email):
         return temp
     return False
         
-
+###delete admin user details
 def admin_delete(db:Session,user_id):
     user_temp = admin_get_by_id(user_id,db)
     if user_temp:

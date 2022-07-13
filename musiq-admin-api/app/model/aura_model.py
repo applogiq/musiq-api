@@ -1,11 +1,11 @@
 from config.database import *
 from sqlalchemy_json import NestedMutableJson
-from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text,Boolean
+from sqlalchemy import Column, Integer,String,TIMESTAMP,text,Boolean
 import sqlalchemy
 from sqlalchemy.orm import relationship
-# from app.model.aura_song_model import aura_songs
 
 
+###table creation for aura(current-mood) detail
 class aura(Base):
     __tablename__ = "aura"
      
@@ -22,8 +22,8 @@ class aura(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-
     aura_song = relationship("aura_songs", backref="aura")
 
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

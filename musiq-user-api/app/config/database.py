@@ -11,6 +11,8 @@ import socket
 from fastapi.staticfiles import StaticFiles
 from decouple import config
 
+##########################DATABASE CONNECTION#############################
+
 host_server = os.environ.get('host_server', 'localhost')
 db_server_port = urllib.parse.quote_plus(str(os.environ.get('db_server_port', '5432')))
 database_name = os.environ.get('database_name', 'music')
@@ -33,19 +35,18 @@ def get_db():
         yield db
     finally:
         db.close()
+        
+##########################DATABASE CONNECTION#############################
 
-
+############GETTING IPADDRESS#############
 app_password = config("APP_PASSWORD")
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
 
 
+####SPECIFY STATIC FILE ROUTE####
 DIRECTORY = "D:\Srimathi\Project\MusiQ\public"
 
 
 
         
-# app = FastAPI(title="Music Streaming API",
-#         version="2.5.0",
-#         description="This is a very custom OpenAPI schema")
-

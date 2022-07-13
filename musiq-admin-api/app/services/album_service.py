@@ -10,20 +10,23 @@ from config.database import *
 from model.artist_model import *
 from  services.admin_user_service import *
 
+###get album details by id
 def album_get_by_id(id,db):
     return db.query(albums).filter(albums.id == id,albums.is_delete==False).first()
 
+###get all album details
 def album_get_all(db: Session, skip: int = 0, limit: int = 100):
     return db.query(albums).filter(albums.is_delete == False).offset(skip).limit(limit).all()
 
+###check album name to avoid reptition
 def albumname_check(albumname,db: Session):
     return db.query(albums).filter(albums.album_name == albumname,albums.is_delete==False).first()
     
-
+###check whether album image is uploaded or not
 def album_image_check(album_id,db: Session):
     return db.query(albums).filter(albums.id == album_id,albums.is_delete == False,albums.is_image == True).first()
     
-    
+###Enter new album details   
 def album_create(db,album,email):
     a ="AL001"
     while db.query(albums).filter(albums.album_id == a).first():
@@ -86,6 +89,8 @@ def album_create(db,album,email):
     db.refresh(db_album)
     return db_album
 
+
+###update existing album details
 def album_update(db: Session,album_id: int,album,email):
     user_temp1 = album_get_by_id(album_id,db)
     if user_temp1:
@@ -162,6 +167,8 @@ def album_update(db: Session,album_id: int,album,email):
         return temp1
     return False
 
+
+###remove album image by it's id
 def album_image_delete(db: Session,album_id: int):
     user_temp = album_image_check(album_id,db)
     if user_temp:

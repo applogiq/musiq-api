@@ -1,10 +1,5 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
-from fastapi import HTTPException
-import shutil
-from typing import Optional
-import os
-
 
 from model.podcast_model import podcast
 from model.podcast_history_model import podcast_history
@@ -16,11 +11,8 @@ from config.database import DIRECTORY
 import psycopg2
 from config.database import IPAddr
 
+###enter single user podcast history details
 def podcast_history_detail(db: Session,history,email):
-    # historyname =db.query(historyourites).filter(historyourites.user_id == history.user_id,historyourites.song_id == history.song_id).first()
-    # if historyname:
-    #     raise HTTPException(status_code=400, detail={"success": False,"message":"this song is already register for this user"}) 
-
     temp = get_email(email,db)
     db_history = podcast_history(user_id = history.user_id,
                         podcast_id = history.podcast_id,
@@ -35,6 +27,7 @@ def podcast_history_detail(db: Session,history,email):
     db.refresh(db_history)
     return db_history
 
+###get podcast recents of single user by using stored procedure in postgres database
 def podcast_recent_user(id):
     conn = psycopg2.connect(user="postgres",
                             password="12345678",

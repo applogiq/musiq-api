@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from .auth_handler import decodeJWT
 
 
-
+###class for decode token operation
 class JWTBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
         super(JWTBearer,self).__init__(auto_error=auto_error)
@@ -23,8 +23,7 @@ class JWTBearer(HTTPBearer):
         isTokenValid: bool = False
 
         try:
-            payload = decodeJWT(jwtoken)
-            # print(payload)
+            payload = decodeJWT(jwtoken)  #cal main function to decode token
         except:
             payload = None
         if payload:

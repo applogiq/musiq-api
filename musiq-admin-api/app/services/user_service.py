@@ -14,6 +14,7 @@ from services.admin_user_service import *
 from model.last_song_model import *
 from model.recent_model import *
 
+###to get every user detail with limit 
 def user_get_all(db: Session, skip: int = 0, limit: int = 100):
     user = db.query(users).filter(users.is_delete == False).offset(skip).limit(limit).all()
     if user:
@@ -21,25 +22,24 @@ def user_get_all(db: Session, skip: int = 0, limit: int = 100):
     else:
         return False
 
+###to get single user detail by id
 def get_by_id(id,db):
     return db.query(users).filter(users.id == id,users.is_delete==False).first()
 
+###to get user details by their email
 def get_email(email,db):
     user = db.query(users).filter(users.email == email,users.is_delete==False).first()
     return user
 
+###check username when register to avoid repetition
 def username_check(username,db: Session):
     user = db.query(users).filter(users.username == username,users.is_delete==False).first()
     return user
 
-# def access_token_check(token):
-#     user = query(token).filter(token.access_token == token).first()
-#     return True
 
-
+###function to register new user
 def new_register(data,access_token,refresh_token,db:Session):
     a = 202201
-    # print(data)
     while db.query(users).filter(users.register_id == a).first():
         a = a+1
     data["register_id"] = a
@@ -55,35 +55,22 @@ def new_register(data,access_token,refresh_token,db:Session):
     db_token = token(email = data["email"], access_token=access_token,refresh_token = refresh_token)
     db_last_song = last_songs(user_id=a,is_active =True,is_delete=False,created_by=data["created_by"])
     db_recent = recents(user_id=a, song_id ={"songs":[]},is_active =True,is_delete=False,created_by=data["created_by"])
-    # 
-    
-    
+
     user = db_user
 
     user.access_token = access_token
     user.refresh_token = refresh_token
     db.add(db_user)
     db.add(db_token)
-    # db.add(db_last_song)
-    # db.add(db_recent)
     db.commit()
     db.flush()
   
     db.add(db_last_song)
     db.add(db_recent)
-    db.commit()
-    
-
-    print(db_user)
-        # temp = db.query(users).filter(users.email == data["email"]).first()
-        # db_user.created_by = db_user.id
-        # db.commit()
-        # id = db_user.id
-        # print(db_user.id,2222222)
-        # print(db_user,3333)
-        
+    db.commit()   
     return db_user
 
+###to login user and check user login details
 def login_check(user,db):
     temp = get_email(user.email,db)
     if temp:
@@ -91,10 +78,8 @@ def login_check(user,db):
         if verify_password(user.password,temp.password):
             access_token = create_access_token(user.email)
             access_token_str = access_token.decode('UTF-8')
-            # temp.access_token = access_token_str
             refresh_token = create_refresh_token(user.email)
             refresh_token_str = refresh_token.decode('UTF-8')
-            # temp.refresh_token = refresh_token_str
             tok.access_token = access_token_str
             tok.refresh_token = refresh_token_str
             db.commit()
@@ -106,9 +91,11 @@ def login_check(user,db):
         return False
    
 
+###check refresh token
 def get_token_mail(tok,db):
     return db.query(token).filter(token.refresh_token == tok).first()
        
+###update access token using refresh token
 def update_tokens(email,access_token, refresh_token,db:Session):
     tok = db.query(token).filter(token.email == email).first()
     tok.access_token = access_token
@@ -116,6 +103,8 @@ def update_tokens(email,access_token, refresh_token,db:Session):
     db.commit()
     return True
 
+
+###upload image detail
 def image_upload(id,db:Session):
     temp = get_by_id(id,db)
     if temp:
@@ -123,11 +112,12 @@ def image_upload(id,db:Session):
         db.commit()
     return True
 
+###check whether there is image in user id
 def image_check(id,db:Session):
     return db.query(users).filter(users.id == id,users.is_delete == False,users.is_image == True).first()
 
 
-
+###function to update user details
 def user_update(user_id,user,db,email):
     user_temp = get_by_id(user_id,db)
     if user_temp:
@@ -157,11 +147,12 @@ def user_update(user_id,user,db,email):
         return temp
     return False
 
+
+###to remove profile picture of user
 def remove_image(user_id,db):
     user_temp =  image_check(user_id,db)
     if user_temp:
         user_temp.is_image = False
-        # user_temp.img_link = None
         file = str(user_temp.register_id)+".png"
         path = f"{DIRECTORY}/users/{file}"
         os.remove(path)
@@ -170,6 +161,7 @@ def remove_image(user_id,db):
     else:
         return False
 
+###to store otp in database
 def otp_change(user,s,db):
     user_temp = get_by_id(user.id,db)
     if user_temp:
@@ -178,6 +170,7 @@ def otp_change(user,s,db):
         db.commit()
     return True
 
+###to update password when forget
 def update_password(email,password,db):
     user_temp = get_email(email,db)
     if user_temp:
@@ -187,6 +180,8 @@ def update_password(email,password,db):
     else:
         return False
     
+
+###delete the user
 def user_delete(db:Session,user_id):
     user_temp = db.query(users).filter(users.id == user_id,users.is_delete == False).first()
     if user_temp:
@@ -195,6 +190,7 @@ def user_delete(db:Session,user_id):
         return True
     return False
     
+###artist preference detail
 def follower_details(db:Session,user):
     temp = db.query(users).filter(users.register_id == user.user_id,users.is_delete==False).first()
     if temp:

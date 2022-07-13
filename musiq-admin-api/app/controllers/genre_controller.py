@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from services.genre_service import *
 
-
+###response of creating genre detail
 def create_genre_details(db,genre,email):
     temp = genre_detail(db,genre,email)
     if temp:
@@ -12,6 +12,7 @@ def create_genre_details(db,genre,email):
     else:
         return {'message': "check your details","success": False}
 
+###response of getting all genre details
 def get_all_genre_details(db):
     try:
         temp = genre_get_all(db)
@@ -19,6 +20,7 @@ def get_all_genre_details(db):
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
+###response of fetching detail of particular genre
 def get_genre_by_id(db, genre_id):
     db_genre = genre_get_by_id(db, genre_id)
     if db_genre:
@@ -26,6 +28,7 @@ def get_genre_by_id(db, genre_id):
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
 
+###response of updating existing genre detail
 def update_genre(db,gen_id,genre,email):
     db_genre = genre_update(db,gen_id,genre,email)
     if db_genre:
@@ -33,6 +36,7 @@ def update_genre(db,gen_id,genre,email):
     else:
         raise HTTPException(status_code=404, detail={"success": False,'message': "genre details doesn't exist"})
 
+###response for delete the genre detail
 def delete_genre_details(db,genre_id):
     db_genre = genre_delete(db,genre_id)
     if db_genre:

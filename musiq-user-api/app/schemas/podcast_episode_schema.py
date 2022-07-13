@@ -2,7 +2,7 @@ from pydantic import BaseModel,Field
 from typing import Dict,List,Optional,Union
 # from datetime import time,date
 
-
+###to enter episode for particular podcast schema
 class EpisodeSchema(BaseModel):
     podcast_id : int = Field(...)
     episode_title : str = Field(...)
@@ -20,6 +20,7 @@ class EpisodeSchema(BaseModel):
             }
         }
 
+###to update episode details by their id
 class EpisodeOptinalSchema(BaseModel):
     episode_title : Optional[str] = None
     description : Optional[str] = None

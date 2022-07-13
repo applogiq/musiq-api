@@ -1,6 +1,7 @@
 from pydantic import BaseModel,Field
 from typing import Dict,Optional,List
 
+###register schema
 class UserSchema(BaseModel):
     username : str = Field(...)
     fullname : str = Field(...)
@@ -18,6 +19,7 @@ class UserSchema(BaseModel):
             }
         }
 
+###login schema
 class UserLoginSchema(BaseModel):
     email: str = Field(...)
     password: str = Field(...)
@@ -30,6 +32,7 @@ class UserLoginSchema(BaseModel):
             }
         }
 
+###update access token schema using refresh token
 class Refresh_token(BaseModel):
     token: str = Field(...)
     class Config:
@@ -39,6 +42,7 @@ class Refresh_token(BaseModel):
             }
         }
 
+###artist preference schema
 class FollowerSchema(BaseModel):
     user_id : int
     artist_id: str
@@ -52,6 +56,7 @@ class FollowerSchema(BaseModel):
             }
         }
 
+###for update user details
 class UserOptional(BaseModel):
     username : Optional[str] = Field(...)
     fullname : Optional[str] = Field(...)
@@ -66,18 +71,19 @@ class UserOptional(BaseModel):
             }
         }
 
+###to send otp when forget password
 class OtpSend(BaseModel):
     email : str
     class Config:
         orm_mode = True
    
-
-
+###to verify otp
 class OtpVerify(OtpSend):
     otp : str
     class Config:
         orm_mode = True
 
+###change password schema
 class PasswordSchema(OtpSend):
     password : str
     class Config:

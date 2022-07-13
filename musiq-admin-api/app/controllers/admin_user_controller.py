@@ -8,7 +8,7 @@ from utils.security import get_password_hash
 from config.database import *
 from controllers.user_controller import *
 
-
+###reponse of registering admin details
 def register_admin(user,db):
     if (email_validate(user.email)) != True:
         raise HTTPException(status_code=422, detail="Invalid Email!!")
@@ -33,12 +33,14 @@ def register_admin(user,db):
     else:
         raise HTTPException(status_code=422, detail={"message": "couldn't register,check your details","success":False})
 
+###login as admin
 def login_admin(user,db):
     if admin_login_check(user,db):
         return {"status": True,"message":"login Successfully","records":admin_login_check(user,db)}
     else:
         raise HTTPException(status_code=404, detail={"message": "couldn't login,check your details","success":False})
 
+###refresh expired admin access token
 def admin_token_refresh(user,db):
     tok_user = admin_get_token_mail(user.token,db)
     if tok_user:
@@ -51,7 +53,7 @@ def admin_token_refresh(user,db):
     else:
         raise HTTPException(status_code=404, detail={"message": "Check your token!!!","success":False})
 
-
+###return response of fetch all admin user details
 def get_all_admin_details(db, skip, limit):
     try:
         users = admin_get_all(db, skip, limit)
@@ -59,6 +61,7 @@ def get_all_admin_details(db, skip, limit):
     except:
         raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
 
+###return response of get admin details by their id
 def get_admin_by_id(admin_id,db):
     admin = admin_get_by_id(admin_id,db)
     if admin:
@@ -66,6 +69,7 @@ def get_admin_by_id(admin_id,db):
     else:
         raise HTTPException(status_code=422, detail={"message": "Couldn't fetch...Check your id","success":False})
 
+###return the response of update admin user details 
 def update_admin(admin_id,admin,db,email):
     db_admin =  admin_update(admin_id,admin,db,email)
     if db_admin:
@@ -73,6 +77,7 @@ def update_admin(admin_id,admin,db,email):
     else:
         raise HTTPException(status_code=404, detail={"success":False,'message':"admin details doesn't exist"})
 
+###return the response of delete admin user details 
 def delete_admin_details(db,admin_id):
     db_admin = admin_delete(db,admin_id)
     if db_admin:

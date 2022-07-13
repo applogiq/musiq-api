@@ -12,38 +12,38 @@ router = APIRouter(tags=["users"],prefix='/users')
 
 http_bearer = JWTBearer()
 
+###to create user by admin
 @router.post("/register",status_code=201)
 async def create_user(user: UserSchema,response: Response, db: Session = Depends(get_db)):
-    # s = decodeJWT(tokens)
     return register_user(user,db)
     
-
+###to login as user
 @router.post("/login")
 async def user_login(user: UserLoginSchema,db: Session = Depends(get_db)):
     return login_user(user,db)
     
-
+###to refresh access token
 @router.post("/token-refresh")
 def refresh_token(user: Refresh_token,db: Session = Depends(get_db)):
     return token_refresh(user,db)
     
-
+###to ger single user details by their id
 @router.get("/{user_id}")
 async def get_user_details(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     return get_user_by_id(user_id,db)
 
+###artist preference of particular user - follow/unfollow
 @router.put('/follow')
 def artist_following(user: FollowerSchema,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     return follower_details(db,user)
     
-
+###to update existing user details
 @router.put("/{user_id}")
 async def update_user_details(user_id: int,user: UserOptional,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     s = decodeJWT(tokens)
     return update_user(user_id,user,db,s["sub"])
     
-
-
+###to remove profile image of user by their id
 @router.delete("/image/{user_id}")
 async def remove_profile_image(user_id: int,db: Session = Depends(get_db),tokens: str = Depends(http_bearer)):
     return delete_profile(user_id,db)

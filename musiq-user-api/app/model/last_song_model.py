@@ -5,11 +5,12 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 import sqlalchemy
 
-from config.database import SessionLocal, engine
+from config.database import *
 from config.database import Base
 from model.user_model import users
 from model.song_model import songs
 
+###table creation for user's last-song detail
 class last_songs(Base):
     __tablename__ = "last_song"
     id = Column(Integer, primary_key=True, index=True)
@@ -26,9 +27,7 @@ class last_songs(Base):
     updated_user_by = Column(Integer,nullable=True)
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
-    # last = relationship("users")
-    # last = relationship("songs")
-    # songs = relationship("artist")
 
+###code to create all the table in this file
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

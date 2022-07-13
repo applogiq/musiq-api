@@ -2,11 +2,9 @@ from config.database import engine
 from config.database import Base
 from sqlalchemy import DATE, Column, Integer, String,TIMESTAMP,text,Boolean
 import sqlalchemy
-from sqlalchemy.orm import relationship
-# from app.model.album_model import albums
 
 
-
+###table creation for artist detail
 class artist(Base):
     __tablename__ = "artist"
      
@@ -15,7 +13,6 @@ class artist(Base):
     artist_name = Column(String(255), nullable=False)
     followers = Column(Integer) 
     is_image = Column(Boolean)
-    # img_link = Column(String)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
@@ -24,7 +21,6 @@ class artist(Base):
     is_delete = Column(Boolean)
     is_active = Column(Boolean)
 
-    # album = relationship("albums", backref="artist")
-
+ ###code to create all the table in this file   
 metadata = sqlalchemy.MetaData()
 Base.metadata.create_all(bind=engine)

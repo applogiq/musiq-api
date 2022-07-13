@@ -15,6 +15,7 @@ router = APIRouter(tags=["podcast"],prefix='/podcast')
 
 http_bearer = JWTBearer()
 
+###to create podcast details
 @router.post("/")
 async def enter_podcast_details(podcast_name : PodcastSchema ,db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
     s = decodeJWT(token)
@@ -22,26 +23,23 @@ async def enter_podcast_details(podcast_name : PodcastSchema ,db: Session = Depe
     return create_podcast_details(db,podcast_name,s["sub"])
     # return podcast_name.filename
 
+###to get all podcast details
 @router.get("/")
 async def view_all_podcast_details(db: Session = Depends(get_db),limit: int = 100,token: str = Depends(http_bearer)):
     return get_all_podcast(db,limit)
   
-
+###to get particular podcast details by it's id
 @router.get("/{id}")
 async def view_podcast_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return get_podcast_by_id(db,id)
 
+###to update existing podcast details
 @router.put("/{id}")
 async def update_podcast_details(id: int,podcast : PodcastOptionalSchema  ,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     s = decodeJWT(token)
-    # # n = podcast.author_id[0].split(",")
-    # # print(podcast)
-    # # results = [int(i) for i in n]
-    # print(podcast.author_id)
-    # return podcast.author_id
     return update_podcast(db,id,podcast,s["sub"])
     
-
+###to delete entire podcast details by it's id
 @router.delete("/{id}")
 async def delete_podcast_details(id: int,db: Session = Depends(get_db),token: str = Depends(http_bearer)):
     return delete_podcast(db,id)

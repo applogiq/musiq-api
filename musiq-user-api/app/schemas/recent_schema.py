@@ -1,8 +1,7 @@
 from pydantic import BaseModel,Field
-from typing import Dict,Optional,List
+from typing import List
 
-# from schemas.user_schema import UserResponse
-
+###to enter recent song details for particular user schema
 class RecentSchema(BaseModel):
     user_id : int = Field(...)
     song_id : int
@@ -14,6 +13,7 @@ class RecentSchema(BaseModel):
             }
         }
 
+###base recent response schema
 class Recentresponse(BaseModel):
     user_id : int = Field(...)
     song_id : dict = Field(...)
@@ -21,6 +21,7 @@ class Recentresponse(BaseModel):
     class Config:
         orm_mode = True
 
+###get all user's recent list schema
 class AllrecentSchema(BaseModel):
     records: List[Recentresponse] = []
     totalrecords: int
@@ -28,10 +29,10 @@ class AllrecentSchema(BaseModel):
     class Config:
         orm_mode = True
 
-class RecentresponseSchema(BaseModel):
-    records: Recentresponse
-    totalrecords: int
-    success: bool
+# class RecentresponseSchema(BaseModel):
+#     records: Recentresponse
+#     totalrecords: int
+#     success: bool
 
-    class Config:
-        orm_mode = True
+#     class Config:
+#         orm_mode = True
