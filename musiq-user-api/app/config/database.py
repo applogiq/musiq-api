@@ -15,9 +15,9 @@ from decouple import config
 
 host_server = os.environ.get('host_server', 'localhost')
 db_server_port = urllib.parse.quote_plus(str(os.environ.get('db_server_port', '5432')))
-database_name = os.environ.get('database_name', 'music')
+database_name = os.environ.get('database_name', 'musiq')
 db_username = urllib.parse.quote_plus(str(os.environ.get('db_username', 'postgres')))
-db_password = urllib.parse.quote_plus(str(os.environ.get('db_password', '12345678')))
+db_password = urllib.parse.quote_plus(str(os.environ.get('db_password', 'Applogiq123')))
 ssl_mode = urllib.parse.quote_plus(str(os.environ.get('ssl_mode', 'prefer')))
 
 DATABASE_URL = 'postgresql://{}:{}@{}:{}/{}?sslmode={}'.format(db_username, db_password, host_server, db_server_port, database_name, ssl_mode)
@@ -45,7 +45,7 @@ IPAddr=socket.gethostbyname(hostname)
 
 
 ####SPECIFY STATIC FILE ROUTE####
-DIRECTORY = "D:\Srimathi\Project\MusiQ\public"
+DIRECTORY = "/var/www/musiq-api/public/"
 
 
 
