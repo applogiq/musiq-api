@@ -45,7 +45,7 @@ IPAddr=socket.gethostbyname(hostname)
 
 
 ####SPECIFY STATIC FILE ROUTE####
-DIRECTORY = "/var/www/musiq-api/public/"
+DIRECTORY = "/var/www/musiq-api/public"
 
 
 
