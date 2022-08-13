@@ -9,7 +9,7 @@ from config.database import DIRECTORY
 # from services.podcast_author_service import *
 
 import psycopg2
-from config.database import IPAddr
+# from config.database import IPAddr
 
 ###enter single user podcast history details
 def podcast_history_detail(db: Session,history,email):

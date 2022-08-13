@@ -72,9 +72,9 @@ def song_response(db,id,request):
             alphabet = temp.album_name[0].upper()
         else:
             alphabet = "Mis" 
-        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs/{user_temp.song_id}.mp3"
+        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs/{user_temp.song_id}.wav"
         return range_requests_response(
-            request, file_path=file_location, content_type="audio/mp3" 
+            request, file_path=file_location, content_type="audio/wav" 
         )
     else:
         raise HTTPException(status_code=404, detail={"success": False,"message":"music doesn't exist for this id"})

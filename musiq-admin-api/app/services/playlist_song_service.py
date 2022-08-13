@@ -42,7 +42,7 @@ def playlistsong_get_all(db: Session):
 
 ##get particular playlist's song details
 def playlistsong_get_by_playlistid(db: Session, id: int):
-    return db.query(playlist_songs,playlist.id,playlist.playlist_name,playlist.no_of_songs,songs.song_id,songs.song_name,songs.album_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(songs,songs.id==playlist_songs.song_id).join(albums,albums.id == songs.album_id).join(playlist,playlist.id == playlist_songs.playlist_id).filter(playlist_songs.playlist_id == id,playlist_songs.is_delete == False).all()
+    return db.query(playlist_songs,playlist.id,playlist.playlist_name,songs.song_id,songs.song_name,songs.album_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(songs,songs.id==playlist_songs.song_id).join(albums,albums.id == songs.album_id).join(playlist,playlist.id == playlist_songs.playlist_id).filter(playlist_songs.playlist_id == id,playlist_songs.is_delete == False).all()
 
 ###get particular playlistsong details
 def playlistsong_get_by_id(db: Session, playlist_id: int):

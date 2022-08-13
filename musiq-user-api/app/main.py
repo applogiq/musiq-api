@@ -12,7 +12,7 @@ app = FastAPI(title="Music Streaming API",
               redoc_url='/api/v1/redoc',
               openapi_url='/openapi.json',
               servers=[
-                        {"url": "https://example.com", "description": "Staging environment"},
+                        {"url": "https://api-musiq.applogiq.org/api/v1", "description": "Staging environment"},
                         # {"url": "https://prod.example.com", "description": "Production environment"},
                     ],
                     root_path="/api/v1")

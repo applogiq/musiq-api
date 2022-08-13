@@ -16,13 +16,13 @@ app = FastAPI(title="Music Streaming API",
               redoc_url='/api/v1/redoc',
               openapi_url='/openapi.json',
               servers=[
-                        {"url": "https://example.com", "description": "Staging environment"},
+                        {"url": "https://admin-api-musiq.applogiq.org/api/v1", "description": "Staging environment"},
                         # {"url": "https://prod.example.com", "description": "Production environment"},
                     ],
                     root_path="/api/v1")
 
 app.include_router(admin_user_routers.router)
-app.include_router(user_routers.router)
+ 
 app.include_router(artist_routers.router)
 app.include_router(album_routers.router)
 app.include_router(song_routers.router)

@@ -51,17 +51,17 @@ def admin_login_check(user,db):
         tok = db.query(admin_token).filter(admin_token.email == user.email).first()
         if verify_password(user.password,temp.password):
             access_token = create_access_token(user.email)
-            access_token_str = access_token
+            # access_token_str = access_token.decode('UTF-8')
             # temp.access_token = access_token_str
             refresh_token = create_refresh_token(user.email)
-            refresh_token_str = refresh_token
+            # refresh_token_str = refresh_token.decode('UTF-8')
             # temp.refresh_token = refresh_token_str
-            tok.access_token = access_token_str
-            tok.refresh_token = refresh_token_str
+            tok.access_token = access_token
+            tok.refresh_token = refresh_token
             db.commit()
             temp1 = admin_get_email(user.email,db)
-            temp1.access_token = access_token_str
-            temp1.refresh_token = refresh_token_str
+            temp1.access_token = access_token
+            temp1.refresh_token = refresh_token
             return temp1
     else:
         return False

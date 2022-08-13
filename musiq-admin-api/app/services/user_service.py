@@ -78,16 +78,14 @@ def login_check(user,db):
         if verify_password(user.password,temp.password):
             access_token = create_access_token(user.email)
             # access_token_str = access_token.decode('UTF-8')
-            access_token_str = access_token
             refresh_token = create_refresh_token(user.email)
             # refresh_token_str = refresh_token.decode('UTF-8')
-            refresh_token_str = refresh_token
-            tok.access_token = access_token_str
-            tok.refresh_token = refresh_token_str
+            tok.access_token = access_token
+            tok.refresh_token = refresh_token
             db.commit()
             temp1 = get_email(user.email,db)
-            temp1.access_token = access_token_str
-            temp1.refresh_token = refresh_token_str
+            temp1.access_token = access_token
+            temp1.refresh_token = refresh_token
             return temp1
     else:
         return False
