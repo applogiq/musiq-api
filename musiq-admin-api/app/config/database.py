@@ -8,6 +8,7 @@ import socket
 from decouple import config
 
 
+
 ##########################DATABASE CONNECTION#############################
 
 host_server = os.environ.get('host_server', 'localhost')
