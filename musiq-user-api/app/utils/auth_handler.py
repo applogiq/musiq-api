@@ -9,8 +9,8 @@ from decouple import config
 ACCESS_SECRET_KEY = config("ACCESS_SECRET")
 REFRESH_SECRET_KEY = config("REFRESH_SECRET")
 API_ALGORITHM = config("ALGORITHM")
-API_ACCESS_TOKEN_EXPIRE_MINUTES =  60 * 24 * 5
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 10
+API_ACCESS_TOKEN_EXPIRE_MINUTES =  60 * 24 * 365
+REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 365
 
 ###to create refresh token
 def refresh_token(data: dict, expires_delta: Optional[timedelta] = None):
