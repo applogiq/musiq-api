@@ -11,7 +11,7 @@ from controllers.user_controller import *
 ###reponse of registering admin details
 def register_admin(user,db):
     if (email_validate(user.email)) != True:
-        raise HTTPException(status_code=422, detail="Invalid Email!!")
+        raise HTTPException(status_code=422, detail={"message":"Invalid Email!!","success":False})
     if (password_check(user.password)) != True:
         return("Invalid Password !!"),(password_check(user.password))
     if admin_get_email(user.email,db):

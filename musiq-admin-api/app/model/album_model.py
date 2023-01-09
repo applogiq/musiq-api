@@ -26,6 +26,3 @@ class albums(Base):
 
     song = relationship("songs", backref="albums")
 
-###code to create all the table in this file
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

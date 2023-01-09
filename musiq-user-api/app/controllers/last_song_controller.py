@@ -10,7 +10,7 @@ def get_details_by_userid(db, user_id):
     if last_song:
         return {"success":True,"message": "details fetched successfully","records": last_song,"total_records" : 1}
     else:
-        raise HTTPException(status_code=404, detail={"message": "couldn't fetch,check your id","success":False})
+        raise HTTPException(status_code=404, detail={"message": "Check your details","success":False})
 
 ####response of updating last heard song of particular user
 def enter_last_song(db: Session,song,email):

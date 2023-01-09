@@ -34,7 +34,6 @@ def artist_home_page(db,email):
     length = len(artist_pref.preference["artist"])
     if length < limit:
         result = {}
-        print(artist_pref.preference["artist"])
         artists = db.query(artist).filter(artist.artist_id.in_(artist_pref.preference["artist"]),artist.is_delete == False).all()
         artist1 = db.query(artist).filter(artist.artist_id.notin_(artist_pref.preference["artist"]),artist.is_delete == False).limit(limit-length).all()
         for i in range(0,len(artist1)):

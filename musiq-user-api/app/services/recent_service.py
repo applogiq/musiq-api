@@ -33,12 +33,44 @@ def recent_song_check(db,user_id,limit):
     return False
 
 ###update recent song detail of single user
-def recent_update(db,user_id,data,email):
-    temp = recent_get_by_userid(db,user_id)
-    user = get_email(email,db)
-    temp.song_id["songs"] = data
-    temp.updated_at = datetime.now()
-    temp.updated_user_by = user.id
-    db.commit()
-    temp1 = recent_get_by_userid(db,user_id)
-    return temp1
+def recent_update(db,song,email):#data
+    user_temp = recent_get_by_userid(db,song.user_id)
+    if user_temp:
+        if song_get_by_id(db,song.song_id):
+            temp = []
+            if len(user_temp.song_id["songs"]):
+                temp = list(user_temp.song_id["songs"])
+            if len(user_temp.song_id["songs"]) > 1:
+                count = len(user_temp.song_id["songs"])
+            else:
+                count = 1
+            if count == 30:  
+                if song.song_id in temp:
+                    for i in range(0,count):
+                        if i < len(user_temp.song_id["songs"]):
+                            if song.song_id == temp[i]:
+                                temp.pop(i)
+                                temp.append(song.song_id)
+                else:
+                    temp.pop(0)
+                    temp.append(song.song_id)
+            elif count < 30:
+                if song.song_id in temp:
+                    for i in range(0,count):
+                        if i < len(user_temp.song_id["songs"]):
+                            if song.song_id == temp[i]:
+                                temp.pop(i)
+                                temp.append(song.song_id)
+                else:
+                    temp.append(song.song_id)
+
+            # update = recent_update(db,song.user_id,temp,email) 
+            db_recent = recent_get_by_userid(db,song.user_id)
+            user = get_email(email,db)
+            db_recent.song_id["songs"] = temp
+            db_recent.updated_at = datetime.now()
+            db_recent.updated_user_by = user.id
+            db.commit()
+            response = recent_get_by_userid(db,song.user_id)
+            return response
+    return False

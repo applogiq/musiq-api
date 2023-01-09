@@ -27,6 +27,10 @@ def user_get_all(db: Session, skip: int = 0, limit: int = 100):
 def get_by_id(id,db):
     return db.query(users).filter(users.id == id,users.is_delete==False).first()
 
+###to get single user detail by id
+def get_by_register_id(id,db):
+    return db.query(users).filter(users.register_id == id,users.is_delete==False).first()
+
 ###to get user details by their email
 def get_email(email,db):
     user = db.query(users).filter(users.email == email,users.is_delete==False).first()

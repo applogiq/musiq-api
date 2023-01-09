@@ -6,26 +6,30 @@ from model.favourite_model import favourites
 from model.song_model import songs
 from model.user_model import users
 from model.album_model import albums
-from services.user_service import get_email
+from services.user_service import get_email,get_by_id
+from services.song_service import *
 
 ###Enter user's favourite detail
 def fav_song_detail(db: Session,fav,email):
-    favname =db.query(favourites).filter(favourites.user_id == fav.user_id,favourites.song_id == fav.song_id).first()
-    if favname:
-        raise HTTPException(status_code=400, detail={"success": False,"message":"this song is already register for this user"}) 
+    if get_by_id(fav.user_id,db):
+        if song_get_by_id(db,fav.song_id):
+            favname =db.query(favourites).filter(favourites.user_id == fav.user_id,favourites.song_id == fav.song_id).first()
+            if favname:
+                raise HTTPException(status_code=400, detail={"success": False,"message":"this song is already register for this user"}) 
 
-    temp = get_email(email,db)
-    db_fav = favourites(user_id = fav.user_id,
-                        song_id = fav.song_id,
-                        is_active = True,
-                        created_user_by = temp.id,
-                        created_at = datetime.now()
-                        )
+            temp = get_email(email,db)
+            db_fav = favourites(user_id = fav.user_id,
+                                song_id = fav.song_id,
+                                is_active = True,
+                                created_user_by = temp.id,
+                                created_at = datetime.now()
+                                )
 
-    db.add(db_fav)
-    db.commit()
-    db.refresh(db_fav)
-    return {"status": True,"message":"Updated Successfully","records":db_fav}
+            db.add(db_fav)
+            db.commit()
+            db.refresh(db_fav)
+            return {"status": True,"message":"Updated Successfully","records":db_fav}
+    return False
 
 ###remove favourite song from single user
 def fav_delete(db: Session,fav):

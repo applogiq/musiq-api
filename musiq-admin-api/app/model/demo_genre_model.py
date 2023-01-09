@@ -13,5 +13,3 @@ class demo_genre(Base):
     id = Column(Integer, primary_key=True, index=True)
     genre_name = Column(String)
 
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

@@ -8,6 +8,9 @@ from config.database import *
 from routers import admin_user_routers
 from routers import podcast_history_routers,podcast_episode_routers,podcast_routers,podcast_author_routers,category_routers,aura_song_routers,user_routers,aura_routers,artist_routers,album_routers,song_routers,genre_routers,last_song_routers,recent_routers,favourite_routers,playlist_routers,playlist_song_routers
 
+###code to create all the table in this file
+Base.metadata.create_all(bind=engine)
+
 ##### Customizing our swagger 
 app = FastAPI(title="Music Streaming API",
               description="This is a very custom OpenAPI schema",

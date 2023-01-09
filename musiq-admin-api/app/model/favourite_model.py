@@ -18,6 +18,3 @@ class favourites(Base):
     created_user_by = Column(Integer)
     is_active = Column(Boolean,default=True)
 
-###code to create all the table in this file
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

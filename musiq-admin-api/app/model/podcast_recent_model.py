@@ -28,6 +28,3 @@ class podcast_recents(Base):
     is_active = Column(Boolean,default=True)
 
 
-
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

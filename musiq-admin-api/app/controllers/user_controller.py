@@ -44,7 +44,7 @@ def email_validate(email):
 ###response create new user by admin
 def register_user(user,db,email):
     if (email_validate(user.email)) != True:
-        raise HTTPException(status_code=422, detail="Invalid Email!!")
+        raise HTTPException(status_code=422, detail={"message": "Invalid Email!!","success":False})
     if (password_check(user.password)) != True:
         return("Invalid Password !!"),(password_check(user.password))
     if username_check(user.username,db):

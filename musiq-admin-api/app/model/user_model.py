@@ -48,7 +48,3 @@ class token(Base):
     email = Column(String)
     refresh_token = Column(String)
     access_token = Column(String)
-
-###code to create all the table in this file
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

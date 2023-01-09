@@ -27,7 +27,3 @@ class playlist(Base):
     ###reference for foreign key usage
     playlist_song = relationship("playlist_songs",backref="playlist")
 
-
-###code to create all the table in this file
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

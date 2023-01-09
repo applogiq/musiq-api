@@ -39,7 +39,3 @@ class songs(Base):
     aura = relationship("aura_songs",backref="songs")
     playlist_song = relationship("playlist_songs",backref="songs")
 
-
-###code to create all the table in this file 
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

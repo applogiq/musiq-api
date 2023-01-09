@@ -33,7 +33,3 @@ class podcast(Base):
     episode = relationship("podcast_episode",backref="podcast")
     history = relationship("podcast_history",backref="podcast")
 
-
-###code to create all the table in this file
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

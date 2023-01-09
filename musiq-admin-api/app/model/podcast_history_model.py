@@ -24,6 +24,3 @@ class podcast_history(Base):
     created_user_by = Column(Integer,nullable=True)
 
 
-###code to create all the table in this file
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

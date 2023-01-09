@@ -23,6 +23,3 @@ class playlist_songs(Base):
     is_delete = Column(Boolean,default=False)
     is_active = Column(Boolean,default=True)
 
-###code to create all the table in this file
-metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)

@@ -12,7 +12,7 @@ from services.album_service import *
 ###response of creating album detail
 def create_album_detail(db: Session,album,email):
     if albumname_check(album.album_name,db):
-        raise HTTPException(status_code=400, detail="Album is already register")
+        raise HTTPException(status_code=400, detail={"message":"Album is already register","success":False})
     try:
         return {"status": True,"message":"data added","records":album_create(db,album,email)}
     except:

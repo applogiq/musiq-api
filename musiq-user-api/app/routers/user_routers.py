@@ -23,9 +23,9 @@ async def user_login(user: UserLoginSchema,db: Session = Depends(get_db)):
     return login_user(user,db)
     
 ###to refresh access token
-@router.post("/token-refresh")
-def refresh_token(user: Refresh_token,db: Session = Depends(get_db)):
-    return token_refresh(user,db)
+# @router.post("/token-refresh")
+# def refresh_token(user: Refresh_token,db: Session = Depends(get_db)):
+#     return token_refresh(user,db)
     
 ###to ger single user details by their id
 @router.get("/{user_id}")
