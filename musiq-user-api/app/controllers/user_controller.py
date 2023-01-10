@@ -116,7 +116,7 @@ def email_otp(db,email):
             user = ('srimathi.k.applogiq@gmail.com')
             password = app_password
             to = email.email
-            # to = "shajithali.s.applogiq@gmail.com"
+            # to = "sriram.m.applogiq@gmail.com"
             subject = 'Resetting Password'
             content = ['''Password Reset,
                         This OTP valid for next 30 minutes''',s]
