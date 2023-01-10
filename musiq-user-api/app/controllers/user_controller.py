@@ -115,8 +115,13 @@ def email_otp(db,email):
         if otp_change(user,s,db):
             user = ('srimathi.k.applogiq@gmail.com')
             password = app_password
+<<<<<<< Updated upstream
             to = email.email
             # to = "shajithali.s.applogiq@gmail.com"
+=======
+            # to = "gowtham.r.applogiq@gmail.com"
+            to = "sriram.m.applogiq@gmail.com"
+>>>>>>> Stashed changes
             subject = 'Resetting Password'
             content = ['''Password Reset,
                         This OTP valid for next 30 minutes''',s]
