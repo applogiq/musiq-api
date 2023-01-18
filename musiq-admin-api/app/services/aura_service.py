@@ -16,9 +16,13 @@ def aura_detail(db: Session,auras,email):
     auraname =db.query(aura).filter(aura.aura_name == auras.aura_name,aura.is_delete == False).first()
     if auraname:
         raise HTTPException(status_code=400, detail="aura is already register")
-    a ="AUR001"
-    while db.query(aura).filter(aura.aura_id == a).first():
-        a = "AUR00" + str(int(a[-1])+1)
+
+    aura_length = len(db.query(aura).all())
+    if aura_length:
+        b = aura_length+1
+    else:
+        b = 1
+    a = "AL00"+str(b)
     
     temp = admin_get_email(email,db)
     if auras.image:

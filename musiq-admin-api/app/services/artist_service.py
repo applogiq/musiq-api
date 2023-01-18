@@ -29,12 +29,18 @@ def artist_get_by_id(db,id):
 ###get all artist detail
 def artist_detail(db: Session,artists,email):
     artistname =db.query(artist).filter(artist.artist_name == artists.artist_name,artist.is_delete == False).first()
-    a ="AR00"
+    
     if artistname:
         raise HTTPException(status_code=400, detail="artist is already register")
-    a ="AR001"
-    while db.query(artist).filter(artist.artist_id == a).first():
-        a = "AR00" + str(int(a[-1])+1)
+    b = 1
+    artist_length = len(db.query(artist).all())
+    if artist_length:
+        b = artist_length+1
+    else:
+        b = 1
+    a = "AR00"+str(b)
+    # while db.query(artist).filter(artist.artist_id == a).first():
+    #     a = "AR00" + str(int(a[-1])+1)
     if artists.image:
         s = base64.b64decode(artists.image)
         filename = a+".png"
@@ -47,8 +53,6 @@ def artist_detail(db: Session,artists,email):
         image = False
         # link = null
     temp = admin_get_email(email,db)
-    print(email,222222)
-    print(temp.id)
     db_user = artist(artist_name = artists.artist_name,
                     artist_id = a,
                     is_image = image,

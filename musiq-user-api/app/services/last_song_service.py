@@ -1,9 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
-from fastapi import HTTPException
 
 from model.last_song_model import last_songs
-from model.song_model import songs
 from services.user_service import *
 from services.song_service import *
 

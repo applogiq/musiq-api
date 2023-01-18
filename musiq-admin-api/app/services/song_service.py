@@ -70,8 +70,14 @@ def song_detail(db:Session,song,email):
         raise HTTPException(status_code=400, detail="Enter Your album id")
 
     a ="SG001"
-    while db.query(songs).filter(songs.song_id == a).first():
-        a = "SG00" + str(int(a[-1])+1)
+    song_length = len(db.query(songs).all())
+    if song_length:
+        b = song_length+1
+    else:
+        b = 1
+    a = "SG00"+str(b)
+    # while db.query(songs).filter(songs.song_id == a).first():
+    #     a = "SG00" + str(int(a[-1])+1)
     if song.music:
         s = base64.b64decode(song.music)
         filename1 = a +"."+"wav"

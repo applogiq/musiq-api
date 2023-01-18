@@ -1,11 +1,9 @@
 from requests import Session
-from fastapi import Depends,HTTPException
+from fastapi import HTTPException
 import base64
 from datetime import datetime
 import os,time
 
-from sqlalchemy import null
-# from utils.auth_handler import create_access_token
 from model.user_model import *
 from model.artist_model import *
 from utils.security import verify_password
@@ -48,7 +46,6 @@ def username_check(username,db: Session):
 ###function to register new user
 def new_register(data,access_token,refresh_token,db:Session):
     a = 202201
-    print(data)
     while db.query(users).filter(users.register_id == a).first():
         a = a+1
     data["register_id"] = a

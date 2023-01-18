@@ -1,9 +1,6 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
-import shutil
-import base64
 from fastapi import HTTPException
-import os
 
 from model.playlist_model import playlist
 from services.playlist_song_service import playlistsong_get_by_playlistid

@@ -4,7 +4,6 @@ from fastapi import HTTPException
 
 from model.favourite_model import favourites
 from model.song_model import songs
-from model.user_model import users
 from model.album_model import albums
 from services.user_service import get_email,get_by_id
 from services.song_service import *

@@ -20,11 +20,16 @@ def genre_get_by_id(db: Session, gen_id: int):
 ###Enter new genre detail
 def genre_detail(db: Session,genre,email):
     genrename = genre_name_check(genre.genre_name,db)
-    a ="GN001"
     if genrename:
         raise HTTPException(status_code=400, detail="genre is already register")
-    while db.query(genres).filter(genres.genre_id == a).first():
-        a = "GN00" + str(int(a[-1])+1)
+    genre_length = len(db.query(genres).all())
+    if genre_length:
+        b = genre_length+1
+    else:
+        b = 1
+    a = "GN00"+str(b)
+    # while db.query(genres).filter(genres.genre_id == a).first():
+    #     a = "GN00" + str(int(a[-1])+1)
     temp = admin_get_email(email,db)
     db_genre = genres(genre_name = genre.genre_name,
                     genre_id = a,

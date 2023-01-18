@@ -28,10 +28,15 @@ def album_image_check(album_id,db: Session):
     
 ###Enter new album details   
 def album_create(db,album,email):
-    a ="AL001"
-    while db.query(albums).filter(albums.album_id == a).first():
-        a = "AL00" + str(int(a[-1])+1)
-    
+    album_length = len(db.query(albums).all())
+    if album_length:
+        b = album_length+1
+    else:
+        b = 1
+    a = "AL00"+str(b)
+    # a ="AL001"
+    # while db.query(albums).filter(albums.album_id == a).first():
+    #     a = "AL00" + str(int(a[-1])+1)
     if album.album_name[0].isalpha():
         alphabet = album.album_name[0].upper()
     else:

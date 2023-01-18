@@ -1,12 +1,5 @@
 from sqlalchemy.orm import Session
-from datetime import datetime
-import shutil
-import base64
-from fastapi import HTTPException
-import os
-from config.database import DIRECTORY
 
-from model.song_model import songs
 from model.aura_model import aura
 
 ###get all aura details
