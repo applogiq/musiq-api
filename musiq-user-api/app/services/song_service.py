@@ -65,14 +65,15 @@ def song_get_all_limit(db: Session, skip,limit):
 
 ###get particular song detail
 def song_get_by_id(db: Session, song_id: int):
-    user = db.query(songs).filter(songs.id == song_id,songs.is_delete == False).first() 
-    # print(album_details,1111111)
-    if user:
-        album_details = db.query(albums).filter(albums.id == user.album_id,albums.is_delete == False).first()
-        user.duration = str(user.duration)
-        user.released_date = str(user.released_date)
-        user.album_details = album_details
-        return user
+    db_song = db.query(songs).filter(songs.id == song_id,songs.is_delete == False).first() 
+    if db_song:
+        album_details = db.query(albums).filter(albums.id == db_song.album_id,albums.is_delete == False).first()
+        artist_details = db.query(artist).filter(artist.id.in_(db_song.artist_id),artist.is_delete == False).all()
+        db_song.duration = str(db_song.duration)
+        db_song.released_date = str(db_song.released_date)
+        db_song.album_details = album_details
+        db_song.artist_details = artist_details
+        return db_song
     else:
         return False
 
