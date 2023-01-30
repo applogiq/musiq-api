@@ -39,6 +39,6 @@ def update_playlist(db,playlist_id,name,email):
 def delete_playlist(db,playlist_id,email):
     db_playlist = playlist_delete(db,playlist_id,email)
     if db_playlist:
-        return {"success":True,"message": "playlist added successfully","records":db_playlist,"total_records": len(db_playlist)}
+        return {"success":True,"message": "playlist deleted successfully"}
     else:
         raise HTTPException(status_code=404, detail={"message": "check your details","success":False})

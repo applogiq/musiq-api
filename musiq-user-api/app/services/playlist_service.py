@@ -42,17 +42,12 @@ def playlist_update(db,playlist_id,name,email):
     if user_temp:
         if name:
             user_temp.playlist_name = name
-        # if playlists.song_id:
-        #     user_temp.song_id = playlists.song_id
         
         user_temp.updated_user_by = temp.id
         user_temp.updated_at = datetime.now()
         db.commit()
         return True
     return False
-# def playlist_get_all(db: Session):
-#     return db.query(playlist).filter(playlist.is_delete == False).all()
-
 
 ###get playlist details by id
 def playlist_get_by_id(db: Session, playlist_id: int):
@@ -75,12 +70,6 @@ def playlist_get_by_userid(db: Session, user_id: int):
             s.append(a)    
     return s 
 
-# def playlist_get_by_userid(db: Session, user_id: int):
-#     playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).all()
-#     if playlists:
-#         return playlists
-#     else:
-#         return False
 
 ###delete playlist details by id
 def playlist_delete(db: Session,playlist_id,email):
@@ -88,15 +77,17 @@ def playlist_delete(db: Session,playlist_id,email):
     if user_temp:
         user_temp.is_delete = True
         db.commit()
-    temp = get_email(email,db)
-    playlist1 = db.query(playlist).filter(playlist.user_id == temp.id,playlist.is_delete == False).order_by(playlist.created_by).all()
-    s = []
-    for i in range(0,len(playlist1)):
-        if playlist1[i].no_of_songs:  
-            a = playlistsong_get_by_playlistid(db,playlist1[i].id)
-            s.append(a[0])
-        else:
-            a = playlist_get_by_id(db,playlist1[i].id)
-            print(a)
-            s.append(a)  
-    return s
+        return True
+    return False
+    # temp = get_email(email,db)
+    # playlist1 = db.query(playlist).filter(playlist.user_id == temp.id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    # s = []
+    # for i in range(0,len(playlist1)):
+    #     if playlist1[i].no_of_songs:  
+    #         a = playlistsong_get_by_playlistid(db,playlist1[i].id)
+    #         s.append(a[0])
+    #     else:
+    #         a = playlist_get_by_id(db,playlist1[i].id)
+    #         print(a)
+    #         s.append(a)  
+    # return s
