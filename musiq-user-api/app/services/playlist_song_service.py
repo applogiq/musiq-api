@@ -39,7 +39,7 @@ def playlistsong_get_all(db: Session):
 
 ##get particular playlist's song details
 def playlistsong_get_by_playlistid(db: Session, id: int):
-    return db.query(playlist_songs,playlist.id,playlist.playlist_name,playlist.no_of_songs,songs.song_id,songs.song_name,songs.album_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(songs,songs.id==playlist_songs.song_id).join(albums,albums.id == songs.album_id).join(playlist,playlist.id == playlist_songs.playlist_id).filter(playlist_songs.playlist_id == id,playlist_songs.is_delete == False).all()
+    return db.query(playlist_songs,playlist.id,playlist.playlist_name,playlist.no_of_songs,songs.song_id,songs.song_name,songs.album_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(songs,songs.id==playlist_songs.song_id).join(albums,albums.id == songs.album_id).join(playlist,playlist.id == playlist_songs.playlist_id).filter(playlist_songs.playlist_id == id,playlist_songs.is_delete == False).all()
 
 ###get particular playlistsong details
 def playlistsong_get_by_id(db: Session, playlist_id: int):
@@ -52,8 +52,13 @@ def playlistsong_get_by_id(db: Session, playlist_id: int):
 ###delete particular song from some playlist
 def playlistsong_delete(db: Session,playlist_id):
     user_temp = db.query(playlist_songs).filter(playlist_songs.id == playlist_id,playlist_songs.is_delete == False).first()
+
     if user_temp:
         user_temp.is_delete = True
+        temp = db.query(playlist).filter(playlist.id == user_temp.playlist_id,playlist.is_delete == False).first()
+        if temp:
+            s = temp.no_of_songs 
+            temp.no_of_songs = s-1
         db.commit()
         return True
     return False

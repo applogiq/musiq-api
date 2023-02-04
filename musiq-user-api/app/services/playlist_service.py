@@ -23,7 +23,7 @@ def playlist_detail(db: Session,playlists,email):
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-        db_playlist = db.query(playlist).filter(playlist.user_id == playlists.user_id,playlist.is_delete == False).order_by(playlist.created_by).all()
+        db_playlist = db.query(playlist).filter(playlist.user_id == playlists.user_id,playlist.is_delete == False).order_by(playlist.playlist_name).all()
         s = []
         for i in range(0,len(db_playlist)):
             if db_playlist[i].no_of_songs != 0:  
@@ -59,7 +59,7 @@ def playlist_get_by_id(db: Session, playlist_id: int):
 
 ###get single user's playlist details
 def playlist_get_by_userid(db: Session, user_id: int):
-    playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).order_by(playlist.created_by).all()
+    playlists = db.query(playlist).filter(playlist.user_id == user_id,playlist.is_delete == False).order_by(playlist.playlist_name).all()
     s = []
     for i in range(0,len(playlists)):
         if playlists[i].no_of_songs:  

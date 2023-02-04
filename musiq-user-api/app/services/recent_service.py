@@ -26,7 +26,7 @@ def recent_song_check(db,user_id,limit):
         # temp = db.query(recents).filter(songs.id.in_(s)).limit(limit).all()
         temp2 = []
         for i in s:
-            temp = db.query(songs.id,songs.song_name,albums.album_id,albums.album_name,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.id == i).limit(limit).all()
+            temp = db.query(songs.id,songs.song_name,songs.duration,albums.album_id,albums.album_name,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.id == i).limit(limit).all()
             temp2.append(temp)
         temp2 = temp2[::-1]
         return temp2
@@ -64,7 +64,6 @@ def recent_update(db,song,email):#data
                 else:
                     temp.append(song.song_id)
 
-            # update = recent_update(db,song.user_id,temp,email) 
             db_recent = recent_get_by_userid(db,song.user_id)
             user = get_email(email,db)
             db_recent.song_id["songs"] = temp

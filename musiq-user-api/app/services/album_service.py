@@ -1,10 +1,5 @@
 from requests import Session
-from fastapi import Depends,HTTPException
-from datetime import datetime
-import os,time
-import base64
 
-# from utils.auth_handler import create_access_token
 from model.album_model import *
 from config.database import *
 from model.artist_model import *
