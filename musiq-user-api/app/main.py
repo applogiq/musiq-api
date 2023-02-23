@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 
 from config.database import *
-from routers import podcast_episode_routers,podcast_history_routers,playlist_song_routers,podcast_routers,aura_song_routers,aura_routers,favourite_routers,user_routers,artist_routers,album_routers,song_routers,recent_routers,last_song_routers,playlist_routers
+from routers import podcast_episode_routers,podcast_history_routers,playlist_song_routers,podcast_routers,aura_song_routers,aura_routers,favourite_routers,user_routers,artist_routers,album_routers,song_routers,recent_routers,last_song_routers,playlist_routers,premium_routers,user_payment_routers
 
 ##### Customizing our swagger 
 app = FastAPI(title="Music Streaming API",
@@ -33,6 +33,8 @@ app.include_router(aura_song_routers.router)
 app.include_router(podcast_routers.router)
 app.include_router(podcast_episode_routers.router)
 app.include_router(podcast_history_routers.router)
+app.include_router(premium_routers.router)
+app.include_router(user_payment_routers.router)
 
 app.mount("/api/v1",app)
 
@@ -45,6 +47,8 @@ def validation_exception_handler(request, err):
 ####to enable static file control
 app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")
 
+###code to create all the table in this file
+Base.metadata.create_all(bind=engine)
 
 #####to run the program
 if __name__ == "__main__":

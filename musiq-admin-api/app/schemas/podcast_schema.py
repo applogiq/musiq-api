@@ -29,7 +29,7 @@ class PodcastOptionalSchema(BaseModel):
     description : Optional[str] = None
     author_id : Optional[list] = None
     category_id : Optional[list] = None
-    image: Optional[str] = Field(...)
+    image: Optional[str]= None
     
     class Config:
         orm_mode = True

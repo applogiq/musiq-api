@@ -16,6 +16,7 @@ class albums(Base):
     music_director = Column(ARRAY(Integer))
     music_director_name = Column(ARRAY(String))
     is_image = Column(Boolean,default=False)
+    premium_status = Column(String,default="free")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True),nullable=True)

@@ -22,9 +22,11 @@ class users(Base):
     otp = Column(String)
     otp_time = Column(Float)
     is_image = Column(Boolean,default=False)
+    premium_status = Column(String,default="free") 
+    subscription_end_date = Column(TIMESTAMP(timezone=True),nullable=True) 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
-    updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
+    updated_at = Column(TIMESTAMP(timezone=True),server_default=text('now()'))
     created_by = Column(Integer,nullable=True)
     created_user_by = Column(Integer,nullable=True)
     updated_by = Column(Integer,nullable=True)

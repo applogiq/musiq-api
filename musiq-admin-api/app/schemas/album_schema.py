@@ -7,13 +7,15 @@ class AlbumSchema(BaseModel):
     released_year : Optional[str]
     music_director :list = None
     image : Optional[str]
+    premium_status : str = Field(...)
     class Config:
         schema_extra = {
             "example":{
                 "album_name" : "Movie name",
                 "released_year" : "2009",
                 "music_director" : [1,2],
-                "image" : "hbdhebrjherhwejrdsdsmfsmdf"
+                "image" : "hbdhebrjherhwejrdsdsmfsmdf",
+                "premium_status": "premium"
             }
         }
 
@@ -37,8 +39,7 @@ class AlbumResponse(BaseModel):
     message: str
     records: Responsealbum 
     totalrecords: int
-    
-
+    premium_status: str
     class Config:
         orm_mode = True
 
@@ -47,6 +48,17 @@ class AllalbumResponse(BaseModel):
     success: bool
     message: str
     records: List[Responsealbum] = []
-    totalrecords: int   
+    totalrecords: int
+    premium_status: str
     class Config:
         orm_mode = True
+
+class PremiumUpdate(BaseModel):
+    premium_status : str = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example":{
+                "premium_status": "1-month"
+            }
+        }

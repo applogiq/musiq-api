@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config.database import *
 from routers import admin_user_routers
-from routers import podcast_history_routers,podcast_episode_routers,podcast_routers,podcast_author_routers,category_routers,aura_song_routers,user_routers,aura_routers,artist_routers,album_routers,song_routers,genre_routers,last_song_routers,recent_routers,favourite_routers,playlist_routers,playlist_song_routers
+from routers import podcast_history_routers,podcast_episode_routers,podcast_routers,podcast_author_routers,category_routers,aura_song_routers,user_routers,aura_routers,artist_routers,album_routers,song_routers,genre_routers,last_song_routers,recent_routers,favourite_routers,playlist_routers,playlist_song_routers,premium_routers
 
 ###code to create all the table in this file
 Base.metadata.create_all(bind=engine)
@@ -42,6 +42,7 @@ app.include_router(podcast_author_routers.router)
 app.include_router(podcast_routers.router)
 app.include_router(podcast_episode_routers.router)
 app.include_router(podcast_history_routers.router)
+app.include_router(premium_routers.router)
 
 ####to enable static file control
 app.mount("/public", StaticFiles(directory=DIRECTORY), name="public")

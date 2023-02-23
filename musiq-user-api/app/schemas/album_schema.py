@@ -37,6 +37,7 @@ class AlbumResponse(BaseModel):
     message: str
     records: Responsealbum 
     totalrecords: int
+    premium_status: str
     class Config:
         orm_mode = True
 
@@ -46,5 +47,6 @@ class AllalbumResponse(BaseModel):
     message: str
     records: List[Responsealbum] = []
     totalrecords: int
+    premium_status: str
     class Config:
         orm_mode = True

@@ -1,7 +1,7 @@
 from requests import Session
 from fastapi import Depends,HTTPException
 from datetime import datetime
-import os,time
+import os
 import base64
 import shutil
 from mutagen.mp3 import MP3
@@ -22,11 +22,11 @@ def convert(seconds):
 
 ###to get trending hits detail
 def trending_hits(db,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.listeners.desc()).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.listeners.desc()).limit(limit).all()
 
 ###to get new release detail
 def new_release(db,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.released_date.desc()).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.released_date.desc()).limit(limit).all()
 
 ###to check whether song name already used
 def song_name_check(db,name):
@@ -38,7 +38,7 @@ def song_album_check(db,album_id,skip,limit):
 
 ###to fetch particular song details for particular album
 def song_album_check_limit(db,album_id,skip,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
 
 ###to fetch song details for particular artist
 def song_artist_check(db,artist_id,skip,limit):
@@ -46,7 +46,7 @@ def song_artist_check(db,artist_id,skip,limit):
 
 ###to fetch particular song details for particular artist
 def song_artist_check_limit(db,artist_id,skip,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
 
 ###to check music is available for this id
 def song_music_check(db,song_id):
@@ -81,13 +81,12 @@ def song_detail(db:Session,song,email):
     if song.music:
         s = base64.b64decode(song.music)
         filename1 = a +"."+"wav"
-        temp = album_get_by_id(song.album_id,db)
-        num = temp.no_of_songs
-        if temp.album_name[0].isalpha():
-            alphabet = temp.album_name[0].upper()
+        num = album.no_of_songs
+        if album.album_name[0].isalpha():
+            alphabet = album.album_name[0].upper()
         else:
             alphabet = "Mis"
-        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{temp.album_name}/songs"
+        file_location = f"{DIRECTORY}/music/tamil/{alphabet}/{album.album_name}/songs"
         if os.path.exists(file_location):
             pass    
         else:
@@ -96,12 +95,12 @@ def song_detail(db:Session,song,email):
         with open(file_location2, 'wb') as f:
             f.write(s)
 
-        temp.no_of_songs = num+1
+        album.no_of_songs = num+1
         
         music = True
     else:
         music = False
-    temp = admin_get_email(email,db)
+    db_admin = admin_get_email(email,db)
     db_user = songs(song_name =  song.song_name.title(),
                     song_id = a,
                     artist_id = song.artist_id,
@@ -111,9 +110,10 @@ def song_detail(db:Session,song,email):
                     released_date =  song.released_date,
                     song_size = song.song_size,
                     label =  song.label,
+                    premium_status = album.premium_status,
                     is_active = True, 
                     is_delete = False, 
-                    created_by = temp.id, 
+                    created_by = db_admin.id, 
                     is_music = music)
     db.add(db_user)
     db.commit()
@@ -151,6 +151,7 @@ def song_new_detail(db:Session,song,email):
                     lyrics = song.lyrics,
                     released_date =  song.released_date,
                     song_size = song.song_size,
+                    premium_status = album.premium_status,
                     label =  song.label,
                     is_active = True, 
                     is_delete = False, 
@@ -208,7 +209,7 @@ def song_get_all(db: Session, skip,limit):
 
 #get all song particular details 
 def song_get_all_limit(db: Session, skip,limit):
-    user = db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).offset(skip).limit(limit).all()
+    user = db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).offset(skip).limit(limit).all()
     return user
     
 
@@ -302,3 +303,6 @@ def delete_song_details(db: Session,song_id):
 ####################SEARCH ENGINE########################
 def search_engine(db,data):
     return db.query(songs.id,songs.song_name,songs.song_id,albums.album_name,albums.album_id,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.song_name.ilike(f'%{data}%')|albums.album_name.ilike(f'%{data}%')).all()
+
+
+            

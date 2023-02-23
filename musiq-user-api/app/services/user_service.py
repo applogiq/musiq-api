@@ -39,9 +39,7 @@ def username_check(username,db: Session):
     user = db.query(users).filter(users.username == username,users.is_delete==False).first()
     return user
 
-# def access_token_check(token):
-#     user = query(token).filter(token.access_token == token).first()
-#     return True
+
 
 ###function to register new user
 def new_register(data,access_token,refresh_token,db:Session):
@@ -84,11 +82,7 @@ def login_check(user,db):
         tok = db.query(token).filter(token.email == user.email).first()
         if verify_password(user.password,temp.password):
             access_token = create_access_token(user.email)
-            # access_token_str = access_token.decode('UTF-8')
-            # temp.access_token = access_token_str
             refresh_token = create_refresh_token(user.email)
-            # refresh_token_str = refresh_token.decode('UTF-8')
-            # temp.refresh_token = refresh_token_str
             tok.access_token = access_token
             tok.refresh_token = refresh_token
             db.commit()
@@ -123,11 +117,7 @@ def image_upload(id,db:Session):
 def image_check(id,db:Session):
     return db.query(users).filter(users.id == id,users.is_delete == False,users.is_image == True).first()
 
-# def commit(user,db):
-#     temp = db.query(users).filter(users.email == user.name,users.is_delete == 0,users.is_image == 1).first()
-#     temp.items = user.items
-#     db.commit()
-#     return True
+
 
 ###function to update user details
 def user_update(user_id,user,db,email):

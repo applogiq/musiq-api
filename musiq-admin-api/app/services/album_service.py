@@ -61,7 +61,6 @@ def album_create(db,album,email):
             pass    
         else:
             os.makedirs(file_location)
-            # print(111111111111111)
         file_location2 = f"{file_location}/{filename1}"
         with open(file_location2, 'wb') as f:
             f.write(s)
@@ -71,7 +70,6 @@ def album_create(db,album,email):
 
     temp = admin_get_email(email,db)   
     name =db.query(artist).filter(artist.id.in_(album.music_director)).all()
-    # print(temp4[0].name)
     artist_name = []
     for i in name:
         artist_name.append(i.artist_name)
@@ -83,6 +81,7 @@ def album_create(db,album,email):
                     music_director = album.music_director,
                     music_director_name = artist_name,
                     no_of_songs = 0,
+                    premium_status = album.premium_status,
                     is_image = image,
                     is_delete = False,
                     created_by = temp.id,
@@ -161,6 +160,9 @@ def album_update(db: Session,album_id: int,album,email):
             with open(file_location2, 'wb') as f:
                 f.write(s)
             user_temp1.is_image = True
+        
+        if album.premium_status:
+            user_temp1.premium_status = album.premium_status
 
         temp = admin_get_email(email,db)
         user_temp1.updated_at = datetime.now()

@@ -88,3 +88,4 @@ class PasswordSchema(OtpSend):
     password : str
     class Config:
         orm_mode = True
+

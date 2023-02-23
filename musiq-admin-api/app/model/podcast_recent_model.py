@@ -1,12 +1,7 @@
-from enum import unique
-from sqlalchemy import DATE, Column, Integer,TIME, LargeBinary, String, JSON,ForeignKey,Boolean
-from sqlalchemy_json import NestedMutableJson
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer,TIME,ForeignKey,Boolean
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
-import sqlalchemy
 
-from config.database import SessionLocal, engine
 from config.database import Base
 from model.user_model import users
 

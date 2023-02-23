@@ -7,11 +7,11 @@ from services.album_service import *
 
 ###to get trending hits detail
 def trending_hits(db,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.listeners.desc()).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.listeners.desc()).limit(limit).all()
 
 ###to get new release detail
 def new_release(db,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.released_date.desc()).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).order_by(songs.released_date.desc()).limit(limit).all()
 
 ###to check whether song name already used
 def song_album_check(db,album_id,skip,limit):
@@ -26,7 +26,7 @@ def song_album_check(db,album_id,skip,limit):
 
 ###to fetch particular song details for particular album
 def song_album_check_limit(db,album_id,skip,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.album_id == album_id,songs.is_delete == False).offset(skip).limit(limit).all()
 
 ###to fetch song details for particular artist
 def song_artist_check(db,artist_id,skip,limit):
@@ -41,7 +41,7 @@ def song_artist_check(db,artist_id,skip,limit):
 
 ###to fetch particular song details for particular artist
 def song_artist_check_limit(db,artist_id,skip,limit):
-    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
+    return db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.artist_id.contains([artist_id]),songs.is_delete == False).offset(skip).limit(limit).all()
 
 ###to check music is available for this id
 def song_music_check(db,song_id):
@@ -60,7 +60,7 @@ def song_get_all(db: Session, skip,limit):
 
 #get all song particular details 
 def song_get_all_limit(db: Session, skip,limit):
-    user = db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).offset(skip).limit(limit).all()
+    user = db.query(songs.id,songs.song_name,songs.lyrics,songs.is_music,songs.artist_id,songs.duration,albums.album_id,albums.album_name,albums.music_director_name,albums.premium_status,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.is_delete == False).offset(skip).limit(limit).all()
     return user
 
 ###get particular song detail
@@ -79,4 +79,4 @@ def song_get_by_id(db: Session, song_id: int):
 
 ####################SEARCH ENGINE########################
 def search_engine(db,data):
-    return db.query(songs.id,songs.song_name,songs.song_id,songs.duration,albums.album_name,albums.album_id,albums.music_director_name).join(albums,albums.id == songs.album_id).filter(songs.song_name.ilike(f'%{data}%')|albums.album_name.ilike(f'%{data}%')).all()
+    return db.query(songs.id,songs.song_name,songs.song_id,songs.duration,albums.album_name,albums.album_id,albums.premium_status,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.song_name.ilike(f'%{data}%')|albums.album_name.ilike(f'%{data}%')).all()

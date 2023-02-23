@@ -41,4 +41,3 @@ class songs(Base):
     
 ###code to create all the table in this file    
 metadata = sqlalchemy.MetaData()
-Base.metadata.create_all(bind=engine)
