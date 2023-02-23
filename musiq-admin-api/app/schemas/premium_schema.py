@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Dict,List,Optional,Union
+from typing import Optional
 # from datetime import time,date
 
 
@@ -14,7 +14,7 @@ class PremiumSchema(BaseModel):
         # orm_mode = True
         schema_extra = {
             "example":{
-                "title" : "1 Month",
+                "title" : "1 month",
                 "price" :199,
                 "compare_price" : 200,
                 "validity" : 30 
@@ -31,7 +31,7 @@ class PremiumOptionalSchema(BaseModel):
         # orm_mode = True
         schema_extra = {
             "example":{
-                "title" : "1 Month",
+                "title" : "1 month",
                 "price" :199,
                 "compare_price" : 200,
                 "validity" : 30 

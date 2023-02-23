@@ -12,6 +12,6 @@ class UserPaymentSchema(BaseModel):
          schema_extra = {
                 "example":{ 
                     "user_id":1,
-                    "payment_price":500,
-                    "premier_status":"silver"
+                    "payment_price":300,
+                    "premier_status":"1 month"
                 }}
