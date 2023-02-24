@@ -18,3 +18,8 @@ http_bearer = JWTBearer()
 async def create_payment(payment:UserPaymentSchema,response:Response,db:Session = Depends(get_db),tokens:str = Depends(http_bearer)):
     s = decodeJWT(tokens)
     return create_user_payment(payment,db,s["sub"])
+
+@router.post("/callback")
+async def callback_details(payment:CallBackSchema,db:Session = Depends(get_db),tokens:str = Depends(http_bearer)):
+    s = decodeJWT(tokens)
+    return callback_controller(payment,db,s["sub"])
