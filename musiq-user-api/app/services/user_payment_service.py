@@ -14,17 +14,15 @@ def create_payment_service(payment,db,email):
 
         if temp.id != payment.user_id:
             raise HTTPException(status_code=403, detail={"success": False,'message': "Unauthorized"})
-        
-        payment_details=create_payment(payment.payment_price,payment.premier_status)
     
         if payment.premier_status=="free":
             db_user=db.query(users).filter(users.id==payment.user_id,users.is_delete==False).first()
-
             db_user.premium_status=payment.premier_status
             db_user.subscription_end_date= None
             db.commit()
             result = "No records"
         else:
+            payment_details=create_payment(payment.payment_price,payment.premier_status)
             db_payment=UsersPayment(user_id=payment.user_id,
                                 razorpay_order_id=payment_details["id"],
                                 payment_price=payment.payment_price,
