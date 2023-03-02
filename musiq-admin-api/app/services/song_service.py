@@ -136,11 +136,16 @@ def song_new_detail(db:Session,song,email):
             raise HTTPException(status_code=400, detail={"success": False,'message': "Check your album id"})
     else:
         raise HTTPException(status_code=400, detail="Enter Your album id")
-
+    # a ="SG001"
+    # while db.query(songs).filter(songs.song_id == a).first():
+    #     a = "SG00" + str(int(a[-1])+1)
     a ="SG001"
-    while db.query(songs).filter(songs.song_id == a).first():
-        a = "SG00" + str(int(a[-1])+1)
-    
+    song_length = len(db.query(songs).all())
+    if song_length:
+        b = song_length+1
+    else:
+        b = 1
+    a = "SG00"+str(b)
     temp = admin_get_email(email,db)
     db_user = songs(song_name =  song.song_name.title(),
                     song_id = a,
