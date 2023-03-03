@@ -1,6 +1,5 @@
 from fastapi import HTTPException
-import re
-from typing import BinaryIO,Optional
+from typing import BinaryIO
 from fastapi import status,HTTPException,Request
 from fastapi.responses import StreamingResponse
 
