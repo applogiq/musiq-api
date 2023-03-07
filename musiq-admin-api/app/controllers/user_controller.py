@@ -56,7 +56,6 @@ def register_user(user,db,email):
     refresh_token = create_refresh_token(user.email)
     # refresh_token_str = refresh_token.decode('UTF-8')
     user.password =  get_password_hash(user.password)
-    print(user.password)
     dict1 = dict(user)
     temp = admin_get_email(email,db)
     
@@ -135,7 +134,6 @@ def verify_otp(db:Session,temp):
     if user:
         if user.otp == temp.otp:
             s = time.time() - user.otp_time
-            print(s)
             if s <= 1800:
                 return {"success":True,"message":"verified successfully"}
             else:

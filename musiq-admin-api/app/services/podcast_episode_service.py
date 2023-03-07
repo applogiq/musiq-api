@@ -84,8 +84,6 @@ def episode_details(db,model,email,uploaded_file = None):
             alphabet = podcast_id.title[0].upper()
         else:
             alphabet = "Mis"
-        print(podcast_id.title)
-        print(alphabet)
         file_location = f"{DIRECTORY}/podcast/{alphabet}/{podcast_id.title}/episodes"
         if not os.path.exists(file_location):
             os.makedirs(file_location)
@@ -141,7 +139,6 @@ def episode_update(db,id,model,email,uploaded_file):
             audio = MP3(uploaded_file.file)
             s = convert(audio.info.length)
             duration =f"{s[0]}:{s[1]}:{s[2]}"
-            print(duration)
             episodes.duration = duration
             episodes.is_audio = True
 

@@ -19,7 +19,6 @@ http_bearer = JWTBearer()
 @router.post("/")
 async def enter_podcast_details(podcast_name : PodcastSchema ,db: Session = Depends(get_db),token: str = Depends(http_bearer)): #
     s = decodeJWT(token)
-    print(podcast_name.title)
     return create_podcast_details(db,podcast_name,s["sub"])
     # return podcast_name.filename
 

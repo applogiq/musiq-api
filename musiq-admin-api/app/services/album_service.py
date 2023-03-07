@@ -73,8 +73,6 @@ def album_create(db,album,email):
     artist_name = []
     for i in name:
         artist_name.append(i.artist_name)
-        print(artist_name)
-
     db_album = albums(album_name = album.album_name,
                     album_id = a,
                     released_year = album.released_year,
@@ -131,7 +129,6 @@ def album_update(db: Session,album_id: int,album,email):
             artist_name = []
             for i in name:
                 artist_name.append(i.artist_name)
-                print(artist_name)
             user_temp1.music_director = album.music_director
             user_temp1.music_director_name = artist_name
 

@@ -21,7 +21,6 @@ def song_album_check(db,album_id,skip,limit):
         user[i].released_date = str(user[i].released_date)
         album_details = album_get_by_id(user[i].album_id,db)
         user[i].album_details = album_details
-        print(user[i].album_id)
     return user
 
 ###to fetch particular song details for particular album
@@ -36,7 +35,6 @@ def song_artist_check(db,artist_id,skip,limit):
         user[i].released_date = str(user[i].released_date)
         album_details = album_get_by_id(user[i].album_id,db)
         user[i].album_details = album_details
-        print(user[i].album_id)
     return user
 
 ###to fetch particular song details for particular artist
@@ -55,7 +53,6 @@ def song_get_all(db: Session, skip,limit):
         user[i].released_date = str(user[i].released_date)
         album_details = album_get_by_id(user[i].album_id,db)
         user[i].album_details = album_details
-        print(user[i].album_id)
     return user
 
 #get all song particular details 

@@ -99,6 +99,5 @@ def playlist_delete(db: Session,playlist_id,email):
             s.append(a[0])
         else:
             a = playlist_get_by_id(db,playlist1[i].id)
-            print(a)
             s.append(a)  
     return s

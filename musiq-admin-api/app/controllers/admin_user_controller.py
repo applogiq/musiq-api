@@ -21,7 +21,6 @@ def register_admin(user,db):
     refresh_token = create_refresh_token(user.email)
     # refresh_token_str = refresh_token.decode('UTF-8')
     user.password =  get_password_hash(user.password)
-    print(user.password)
     dict1 = dict(user)
 
     s = {"is_active" : True,"is_delete" : False}

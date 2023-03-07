@@ -44,6 +44,5 @@ def podcast_recent_user(id):
         s = row[0].replace('(', '').replace(')', '').split(",")
         n={"user_id":s[0],"podcast_id":s[1],"episode_number":s[2],"paused_timing":s[3]}
         a.append(n)
-        print(s)
     cur.close()
     return a
