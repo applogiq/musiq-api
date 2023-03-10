@@ -1,10 +1,4 @@
 from sqlalchemy.orm import Session
-from datetime import datetime
-from fastapi import HTTPException
-import shutil
-from typing import Optional
-import os
-
 
 from model.premium_status_model import premium
 from config.database import DIRECTORY

@@ -48,7 +48,7 @@ def fav_get_by_userid(db: Session, user_id: int):
     if favs:
         for i in range(0,len(favs)):
             s.append(favs[i].song_id)
-            temp = db.query(songs.id,songs.song_name,songs.duration,albums.album_id,albums.album_name,albums.premium_status,albums.music_director_name).join(songs,albums.id == songs.album_id).filter(songs.id.in_(s)).all()
+            temp = db.query(songs.id,songs.song_name,songs.duration,albums.album_id,albums.album_name,albums.premium_status,albums.music_director_name,albums.is_image).join(songs,albums.id == songs.album_id).filter(songs.id.in_(s)).all()
         return temp
 
     else:
