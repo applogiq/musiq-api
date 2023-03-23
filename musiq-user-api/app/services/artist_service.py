@@ -27,7 +27,7 @@ def artist_home_page(db,email):
     temp = get_email(email,db)
     artist_pref = get_by_id(temp.id,db)
     length = len(artist_pref.preference["artist"])
-    if length < limit:
+    if limit >= length:
         result = {}
         artists = db.query(artist).filter(artist.artist_id.in_(artist_pref.preference["artist"]),artist.is_delete == False).all()
         artist1 = db.query(artist).filter(artist.artist_id.notin_(artist_pref.preference["artist"]),artist.is_delete == False).limit(limit-length).all()
