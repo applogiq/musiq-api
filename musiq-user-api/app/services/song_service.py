@@ -76,4 +76,4 @@ def song_get_by_id(db: Session, song_id: int):
 
 ####################SEARCH ENGINE########################
 def search_engine(db,data):
-    return db.query(songs.id,songs.song_name,songs.song_id,songs.duration,albums.album_name,albums.album_id,albums.premium_status,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.song_name.ilike(f'%{data}')|albums.album_name.ilike(f'%{data}'),songs.is_delete == False).all()
+    return db.query(songs.id,songs.song_name,songs.song_id,songs.duration,albums.album_name,albums.album_id,albums.premium_status,albums.music_director_name,albums.is_image).join(albums,albums.id == songs.album_id).filter(songs.song_name.ilike(f'{data}%')|albums.album_name.ilike(f'{data}%'),songs.is_delete == False).all()
