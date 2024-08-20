@@ -1,0 +1,33 @@
+from config.database import SessionLocal, engine
+from config.database import Base
+from sqlalchemy_json import NestedMutableJson
+from sqlalchemy import   DATE, Column, Integer,TIME, LargeBinary, String, JSON,TIMESTAMP,text,ForeignKey,Boolean
+import sqlalchemy
+from sqlalchemy.orm import relationship
+# from model.aura_song_model import aura_songs
+from model.user_model import users
+
+###table creation for user's playlist detail
+class playlist(Base):
+    __tablename__ = "playlist"
+     
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer,ForeignKey("users.id"))
+    playlist_name = Column(String(255), nullable=False)
+    no_of_songs = Column(Integer)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))
+    updated_at = Column(TIMESTAMP(timezone=True),nullable=True)
+    created_by = Column(Integer)
+    created_user_by = Column(Integer)
+    updated_by = Column(Integer)
+    updated_user_by = Column(Integer)
+    is_delete = Column(Boolean,default=False)
+    is_active = Column(Boolean,default=True)
+    
+    ###reference for foreign key usage
+    playlist_song = relationship("playlist_songs",backref="playlist")
+
+###code to create all the table in this file
+metadata = sqlalchemy.MetaData()
+Base.metadata.create_all(bind=engine)

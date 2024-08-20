@@ -1,0 +1,27 @@
+from pydantic import BaseModel,Field
+from typing import Dict,List,Optional,Union
+# from datetime import time,date
+
+###to enter episode for particular podcast schema
+class EpisodeSchema(BaseModel):
+    podcast_id : int = Field(...)
+    episode_title : str = Field(...)
+    description : str = Field(...)
+    subtitles: str = Field(...)
+    
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example":{
+                "podcast_id" : 1,
+                "episode_title" : "My podcast name",
+                "description" :"This is my podcast",
+                "subtitles" : "ndfndfnm dmnd cmncn ndfmsdnf ndjdcns" 
+            }
+        }
+
+###to update episode details by their id
+class EpisodeOptinalSchema(BaseModel):
+    episode_title : Optional[str] = None
+    description : Optional[str] = None
+    subtitles: Optional[str] = None

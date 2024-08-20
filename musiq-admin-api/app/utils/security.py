@@ -1,0 +1,17 @@
+import bcrypt
+from requests import Session
+from model.user_model import users
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+###to encode password 
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+###to decode hashed password
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+

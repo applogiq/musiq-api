@@ -1,0 +1,36 @@
+from fastapi import HTTPException
+import re
+
+from services.artist_service import *
+
+###response of getting all artist details
+def get_all_artist_detail(db,skip,limit):
+    db_artist = artist_get_all(db,skip,limit)
+    if db_artist:
+        return {"success":True,"message":"details fetched succesfully","records": db_artist,"total_records" : len(db_artist)}
+    else:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+
+###response of fetching detail of particular artist
+def get_artist_detail_by_id(db,artist_id):
+    db_artist = artist_get_by_id(db,artist_id)
+    if db_artist:
+        return {"success":True,"message":"details fetched succesfully","records": db_artist,"total_records" : 1}
+    else:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+
+###response of fetching detail of particular list of srtist foe homepage
+def get_homepage_artist_detail(db,email):
+    db_artist = artist_home_page(db,email)
+    if db_artist:
+        return {"success":True,"message":"details fetched succesfully","records": db_artist,"total_records" : len(db_artist)}
+    else:
+        raise HTTPException(status_code=404, detail={"message": "couldn't fetch","success":False})
+
+####response of search engine
+def artist_search_engine_details(db,data):
+    db_song = artist_search_engine(db,data)
+    if db_song:
+        return {"success":True,"message":"Song details fetched successfully","records": db_song,"totalrecords" : len(db_song)}
+    else:
+        raise HTTPException(status_code=404, detail={"success":False,"message": "couldn't fetch"})
